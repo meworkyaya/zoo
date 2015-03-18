@@ -25,7 +25,6 @@ namespace DbBest.ZooPark
         public uint CeilsAmount { get; set; }
         public uint FoodPackagesAmount { get; set; }
 
-
         public List<Animal> Animals;            // list with animals that live at Zoo
         public List<Ceil> Ceils;                // list with ceils that are at Zoo
         public List<Food> FoodPackages;         // list with food packages that are at Zoo

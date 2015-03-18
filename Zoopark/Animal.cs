@@ -8,7 +8,7 @@ namespace DbBest.ZooPark
 {
     public class Animal
     {
-        public int Type { get; protected set; }
+        public AnimalTypes Type { get; protected set; }
 
     }
 }
