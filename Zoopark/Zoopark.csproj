@@ -7,7 +7,7 @@
     <ProjectGuid>{FE81D052-6003-4EC7-BEFF-42B1E3CC8A62}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ZooPark</RootNamespace>
+    <RootNamespace>DbBest.ZooPark</RootNamespace>
     <AssemblyName>Zoopark</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animal.cs" />
+    <Compile Include="Ceil.cs" />
+    <Compile Include="Food.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Zoo.cs" />
