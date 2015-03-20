@@ -9,21 +9,38 @@ namespace DbBest.ZooPark
     /// <summary>
     /// types of animals
     /// </summary>
-    enum AnimalTypes { Alpha, Beta, Cann  }
+    public enum AnimalTypes { Alpha, Beta, Cann  }
 
     /// <summary>
     /// food types
     /// </summary>
-    enum FoodTypes { FoodOne, FoodTwo, FoodThree, FoodForth }
+    public enum FoodTypes { FoodOne, FoodTwo, FoodThree, FoodForth }
 
-    enum CeilTypes { CeilOne, CeilTwo } 
+    public enum CeilTypes { CeilOne, CeilTwo } 
 
 
     public class Zoo
     {
         public uint AnimalsAmount { get; set; }
+
+
+        #region ceilModel
+        // for model of animal palcement to ceils
+        public uint AnimalTypesAmount { get; set; }     // amount of types of animal
         public uint CeilsAmount { get; set; }
+
+        #endregion
+
+
+        #region foodModel
+        // for model of giving food to animals
+
         public uint FoodPackagesAmount { get; set; }
+
+        public uint FoodTypesAmount { get; set; }     // amount of types of food
+
+        #endregion
+
 
         public List<Animal> Animals;            // list with animals that live at Zoo
         public List<Ceil> Ceils;                // list with ceils that are at Zoo
@@ -31,20 +48,40 @@ namespace DbBest.ZooPark
 
         #region init
 
-        public Zoo(uint animals = 10, uint ceils = 15, uint foodPackage = 40)
+        public Zoo(uint animals = 10, uint animalsTypes = 3, uint ceils = 15, uint foodPackage = 40, uint foodTypes = 3)
         {
-            this.AnimalsAmount        = animals;
-            this.CeilsAmount          = ceils;
-            this.FoodPackagesAmount    = foodPackage;
-
             Animals = new List<Animal>();
             Ceils = new List<Ceil>();
             FoodPackages = new List<Food>();
 
+            SetupZooModel(animals, animalsTypes, ceils, foodPackage, foodTypes);
+        }
+
+
+        public void SetupZooModel(uint animals = 10, uint animalsTypes = 3,  uint ceils = 15, uint foodPackages = 40, uint foodTypes = 3)
+        {
+            // ceils model
+            AnimalsAmount = animals;
+            AnimalTypesAmount = animalsTypes;
+            CeilsAmount = ceils;
+
+            // food model
+            FoodPackagesAmount = foodPackages;
+            FoodTypesAmount = foodTypes;
+
             InitAnimals(AnimalsAmount);
             InitCeils(CeilsAmount);
             InitFood(FoodPackagesAmount);
-        }        
+        }
+
+
+        public void CreateFreshFoodTaskModel( uint animals = 10, uint foodPackage = 40, uint foodTypes = 3 ){
+            SetupZooModel(animals, 0, 0, foodPackage, foodTypes);
+        }
+        public void CreatePlacementTaskModel(uint animals = 10, uint animalsTypes = 3, uint ceils = 15, )
+        {
+            SetupZooModel(animals, animalsTypes, ceils, 0, 0);
+        }
 
         /// <summary>
         /// init animals
