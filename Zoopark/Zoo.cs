@@ -201,6 +201,63 @@ namespace DbBest.ZooPark
 
 
 
+        #region display debug
+
+        public string GetAnimalsDisplay()
+        {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+
+            sb.AppendFormat("Animals; {0} items ==================================== \r\n", Animals.Count);
+            foreach (Animal a in Animals)
+            {
+                count++;
+                
+                sb.AppendFormat("{0}: \t{1}", count, a.DisplayAnimal(1));
+            }
+
+            return sb.ToString();
+        }
+
+
+        public string GetFoodDisplay()
+        {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+
+            sb.AppendFormat("Food Storage; {0} items ==================================== \r\n", FoodPackagesAmount);
+            foreach (var pair in FoodStorage)
+            {
+                count++;
+
+                sb.AppendFormat("{0}: type: {1} | Amount: \t{2} \r\n", count, pair.Key, pair.Value );
+            }
+
+            return sb.ToString();
+        }
+
+
+
+        public string GetDisplayZooDebugInfo()
+        {
+            string spacer = "\r\n";
+            string sa = GetAnimalsDisplay();
+            string sf = GetFoodDisplay();
+
+            string result = sa + spacer + sf;
+
+            return result;           
+        }
+
+
+        public void DisplayZooDebugInfo()
+        {
+            DisplayMessage(GetDisplayZooDebugInfo());
+        }
+        
+        #endregion
+
+
         public void DisplayMessage(string message)
         {
             Console.WriteLine(message);

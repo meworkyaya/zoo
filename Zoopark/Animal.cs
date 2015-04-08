@@ -54,5 +54,19 @@ namespace DbBest.ZooPark
             _food_2 = -1;
         }
 
+        public string DisplayAnimal( int mode = 0 )
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Type: {0}", Type);
+
+            if ( mode == 1) {
+                sb.AppendFormat(" | Food 1:  {0} | Food 2: {0}", _food_1, _food_2);
+            }
+
+            sb.Append("\r\n");
+
+            return sb.ToString();
+        }
+
     }
 }
