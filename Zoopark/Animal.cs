@@ -62,9 +62,6 @@ namespace DbBest.ZooPark
             if ( mode == 1) {
                 sb.AppendFormat(" | Food 1:  {0} | Food 2: {0}", _food_1, _food_2);
             }
-
-            sb.Append("\r\n");
-
             return sb.ToString();
         }
 

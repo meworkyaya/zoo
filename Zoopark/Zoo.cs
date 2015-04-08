@@ -134,7 +134,7 @@ namespace DbBest.ZooPark
             // !! attention: at cycle we dont step to last step; last setp we set after end of cycle becasue we cant set random value at last step
             for (int i = 1; i < typesAmount; i++)
             {
-                FoodTypeAmount = _rnd.Next(1, Left + 1);
+                FoodTypeAmount = _rnd.Next(0, Left);
                 FoodStorage[i] = FoodTypeAmount;
                 Left -= FoodTypeAmount;
             }
@@ -214,10 +214,32 @@ namespace DbBest.ZooPark
                 count++;
                 
                 sb.AppendFormat("{0}: \t{1}", count, a.DisplayAnimal(1));
+                sb.Append("\r\n");
             }
+            
 
             return sb.ToString();
         }
+
+
+        public string GetCeilsDisplay()
+        {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+
+            sb.AppendFormat("Ceils; {0} items; types of animals: ==================================== \r\n", Ceils.Count );
+            foreach (var pair in Ceils)
+            {
+                count++;
+
+                // sb.AppendFormat("{0}: animal : {1} | Amount: \t{2} \r\n", count, pair.Type);
+                sb.AppendFormat("{0} ", pair.Type);
+            }
+            sb.Append("\r\n");
+
+            return sb.ToString();
+        }
+
 
 
         public string GetFoodDisplay()
@@ -225,7 +247,7 @@ namespace DbBest.ZooPark
             StringBuilder sb = new StringBuilder();
             int count = 0;
 
-            sb.AppendFormat("Food Storage; {0} items ==================================== \r\n", FoodPackagesAmount);
+            sb.AppendFormat("Food Types: {0} types; Food Storage: {1} items ==================================== \r\n", FoodTypesAmount, FoodPackagesAmount);
             foreach (var pair in FoodStorage)
             {
                 count++;
@@ -243,8 +265,9 @@ namespace DbBest.ZooPark
             string spacer = "\r\n";
             string sa = GetAnimalsDisplay();
             string sf = GetFoodDisplay();
+            string sc = GetCeilsDisplay();
 
-            string result = sa + spacer + sf;
+            string result = sa + spacer + sf + spacer + sc;
 
             return result;           
         }
