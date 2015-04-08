@@ -10,7 +10,7 @@ namespace DbBest.ZooPark
     {
         static void Main(string[] args)
         {
-            Zoo ZooInstance = new Zoo(animals: 40, ceils: 15, foodPackage: 40);
+            Zoo ZooInstance = new Zoo(animals: 40, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4);
             ZooInstance.Run();
 
             Console.ReadLine();     // wait to see output

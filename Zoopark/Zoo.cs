@@ -8,33 +8,31 @@ namespace DbBest.ZooPark
 {
     public class Zoo
     {
-
-        public uint AnimalsAmount { get; set; }
-
-        #region ceilModel
-
-        // for model of animal palcement to ceils
+        // common Model Part
         public uint AnimalTypesAmount { get; set; }     // amount of types of animal
+        public uint AnimalsAmount { get; set; }         // mount of animals
 
+        public List<Animal> Animals;                    // list with animals that live at Zoo: index - id of animal;
+        public Dictionary<uint,ZooAnimalsRules> AnimalsRules;      // dict of rules for each type of Animal: <type of animal, animalRule>
+
+
+        // ceil Model
         public uint CeilsAmount { get; set; }
+        public List<Ceil> Ceils;                        // list with ceils that are at Zoo: index - id of ceil; value: id of animal
 
-        #endregion
 
-
-        #region foodModel
-        // for model of giving food to animals
-
+        // food Model
         public uint FoodPackagesAmount { get; set; }
+        public uint FoodTypesAmount { get; set; }       // amount of types of food
 
-        public uint FoodTypesAmount { get; set; }     // amount of types of food
-
-        #endregion
+        public Dictionary<uint,uint> FoodStorage;       // list with amount of food packages of each type that are at Zoo: <type of food : amount of food>
 
 
-        public List<Animal>         Animals;            // list with animals that live at Zoo: index - id of animal;
-        public List<Ceil>           Ceils;              // list with ceils that are at Zoo: index - id of ceil
-        public List<FoodType>       FoodStorage;        // list with amount of food packages of each type that are at Zoo: index - type of food
-        public List<ZooAnimalsRules>   AnimalsRules;    // list of rules for each type of Animal
+        // results
+        public List<List<uint>> CeilsResults;           // results for ceils: array of array of <id of ceil => animal id>
+        public List<List<Animal>> FoodResults;          // results for foods: array of array of <id of animal : animal with food settings>
+
+
 
 
         #region init
@@ -43,13 +41,13 @@ namespace DbBest.ZooPark
         {
             Animals = new List<Animal>();
             Ceils = new List<Ceil>();
-            FoodStorage = new List<FoodType>();
+            FoodStorage = new Dictionary<uint, uint>();
 
-            SetupZooModel(animals, animalsTypes, ceils, foodPackage, foodTypes);
+            GenerateZooModel(animals, animalsTypes, ceils, foodPackage, foodTypes);
         }
 
 
-        public void SetupZooModel(uint animals = 10, uint animalsTypes = 3,  uint ceils = 15, uint foodPackages = 40, uint foodTypes = 3)
+        public void GenerateZooModel(uint animals = 10, uint animalsTypes = 3,  uint ceils = 15, uint foodPackages = 40, uint foodTypes = 3)
         {
             // ceils model
             AnimalsAmount = animals;
@@ -60,6 +58,10 @@ namespace DbBest.ZooPark
             FoodPackagesAmount = foodPackages;
             FoodTypesAmount = foodTypes;
 
+            Animals.Clear();
+            Ceils.Clear();
+            FoodStorage.Clear();
+
             InitAnimals(AnimalsAmount);
             InitCeils(CeilsAmount);
             InitFood(FoodPackagesAmount);
@@ -67,11 +69,11 @@ namespace DbBest.ZooPark
 
 
         public void CreateFreshFoodTaskModel( uint animals = 10, uint foodPackage = 40, uint foodTypes = 3 ){
-            SetupZooModel(animals, 0, 0, foodPackage, foodTypes);
+            GenerateZooModel(animals, 0, 0, foodPackage, foodTypes);
         }
         public void CreatePlacementTaskModel(uint animals = 10, uint animalsTypes = 3, uint ceils = 15 )
         {
-            SetupZooModel(animals, animalsTypes, ceils, 0, 0);
+            GenerateZooModel(animals, animalsTypes, ceils, 0, 0);
         }
 
         /// <summary>
