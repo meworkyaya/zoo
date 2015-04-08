@@ -43,11 +43,11 @@ namespace DbBest.ZooPark
 
                 if (bits[i] < _base)
                 {
-                    break;
+                    return;
                 }
                 else
                 {
-                    bits[i] = _base - 1;
+                    bits[i] = 0;
                 }
             }
 
@@ -75,6 +75,16 @@ namespace DbBest.ZooPark
             }
 
             bits[index] = value;
+        }
+
+
+        public string DisplayBits()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = bits.Length - 1; i >= 0; i-- ) {
+                sb.AppendFormat("{0} ", bits[i]);
+            }
+            return sb.ToString();
         }
 
     }

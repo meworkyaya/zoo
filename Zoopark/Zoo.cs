@@ -356,7 +356,7 @@ namespace DbBest.ZooPark
             int current, next;
 
             long count = 0;
-            long displaySteps = 10;
+            long displaySteps = 100 * 1000;
 
             DisplayMessage( "Begin ceil placing search ... =========================\r\n");
 
@@ -393,6 +393,8 @@ namespace DbBest.ZooPark
                         goto NextCombination;
                     }
                 }
+
+                // DisplayMessage( nb.DisplayBits());
 
                 NextCombination: ;
 
