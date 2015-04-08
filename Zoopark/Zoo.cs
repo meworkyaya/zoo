@@ -9,15 +9,15 @@ namespace DbBest.ZooPark
     public class Zoo
     {
         // common Model Part
-        public uint AnimalTypesAmount { get; set; }     // amount of types of animal
-        public uint AnimalsAmount { get; set; }         // mount of animals
+        public int AnimalTypesAmount { get; set; }     // amount of types of animal
+        public int AnimalsAmount { get; set; }         // mount of animals
 
         public List<Animal> Animals;                    // list with animals that live at Zoo: index - id of animal;
-        public Dictionary<uint,ZooAnimalsRules> AnimalsRules;      // dict of rules for each type of Animal: <type of animal, animalRule>
+        public Dictionary<int, ZooAnimalsRules> AnimalsRules;      // dict of rules for each type of Animal: <type of animal, animalRule>
 
 
         // ceil Model
-        public uint CeilsAmount { get; set; }
+        public int CeilsAmount { get; set; }
         public List<Ceil> Ceils;                        // list with ceils that are at Zoo: index - id of ceil; value: id of animal
 
 
@@ -25,7 +25,7 @@ namespace DbBest.ZooPark
         public int FoodPackagesAmount { get; set; }
         public int FoodTypesAmount { get; set; }       // amount of types of food
 
-        public Dictionary<int,int> FoodStorage;       // list with amount of food packages of each type that are at Zoo: <type of food : amount of food>
+        public Dictionary<int, int> FoodStorage;       // list with amount of food packages of each type that are at Zoo: <type of food : amount of food>
 
 
         // results
@@ -37,7 +37,7 @@ namespace DbBest.ZooPark
 
         #region init
 
-        public Zoo(uint animals = 10, uint animalsTypes = 3, uint ceils = 15, int foodPackage = 40, int foodTypes = 3)
+        public Zoo(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackage = 40, int foodTypes = 3)
         {
             Animals = new List<Animal>();
             Ceils = new List<Ceil>();
@@ -50,7 +50,7 @@ namespace DbBest.ZooPark
         }
 
 
-        public void GenerateZooModel(uint animals = 10, uint animalsTypes = 3,  uint ceils = 15, int foodPackages = 40, int foodTypes = 3)
+        public void GenerateZooModel(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackages = 40, int foodTypes = 3)
         {
             // ceils model
             AnimalsAmount = animals;
@@ -75,10 +75,11 @@ namespace DbBest.ZooPark
         }
 
 
-        public void CreateFreshFoodTaskModel( uint animals = 10, int foodPackage = 40, int foodTypes = 3 ){
+        public void CreateFreshFoodTaskModel(int animals = 10, int foodPackage = 40, int foodTypes = 3)
+        {
             GenerateZooModel(animals, 0, 0, foodPackage, foodTypes);
         }
-        public void CreatePlacementTaskModel(uint animals = 10, uint animalsTypes = 3, uint ceils = 15 )
+        public void CreatePlacementTaskModel(int animals = 10, int animalsTypes = 3, int ceils = 15)
         {
             GenerateZooModel(animals, animalsTypes, ceils, 0, 0);
         }
@@ -87,7 +88,8 @@ namespace DbBest.ZooPark
         /// init animals
         /// </summary>
         /// <param name="count"></param>
-        public void InitAnimals( uint count){
+        public void InitAnimals(int count)
+        {
             for (int i = 0; i < count; i++)
             {
                 Animals.Add(new Animal());
@@ -98,7 +100,7 @@ namespace DbBest.ZooPark
         /// init ceils
         /// </summary>
         /// <param name="count"></param>
-        public void InitCeils( uint count)
+        public void InitCeils(int count)
         {
             for (int i = 0; i < count; i++)
             {
@@ -130,13 +132,15 @@ namespace DbBest.ZooPark
 
 
 
-        public void DisplayMessage( string message){
-            Console.WriteLine( message);
+        public void DisplayMessage(string message)
+        {
+            Console.WriteLine(message);
         }
 
-        public int Run(){
+        public int Run()
+        {
 
-            DisplayMessage( "done");            
+            DisplayMessage("done");
             return 0;
         }
     }
