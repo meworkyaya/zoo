@@ -45,7 +45,10 @@ namespace DbBest.ZooPark
             }
         }
 
-        public Animal()
+        public Animal() : this( -1, ItemWithType.MaxTypeNotUsed )
+        {
+        }
+        public Animal( int type, int maxType) : base( type, maxType )
         {
             _food_1 = -1;
             _food_2 = -1;

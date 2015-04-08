@@ -14,7 +14,7 @@ namespace DbBest.ZooPark
         private int _type;
         private int _maxType;
 
-        public static int _maxTypeNotUsed = -1;
+        public static int MaxTypeNotUsed = -1;
 
         public int Type
         {
@@ -52,7 +52,7 @@ namespace DbBest.ZooPark
 
         protected bool CheckTypeRange(int ItemType, int ItemMaxType)
         {
-            if (ItemMaxType != ItemWithType._maxTypeNotUsed)
+            if (ItemMaxType != ItemWithType.MaxTypeNotUsed)
             {
                 return (ItemType <= MaxType);
             }
@@ -63,7 +63,7 @@ namespace DbBest.ZooPark
         public ItemWithType()
         {
             _type = 0;
-            _maxType = ItemWithType._maxTypeNotUsed;
+            _maxType = ItemWithType.MaxTypeNotUsed;
         }
 
         public ItemWithType(int ItemType, int ItemMaxType = -1)

@@ -69,7 +69,8 @@ namespace DbBest.ZooPark
             FoodResults.Clear();
 
             // generate new lists
-            InitAnimals(AnimalsAmount);
+            InitAnimals(AnimalsAmount, AnimalTypesAmount);
+            InitAnimalRules(AnimalTypesAmount, FoodTypesAmount);
             InitCeils(CeilsAmount);
             InitFood(FoodPackagesAmount, FoodTypesAmount);
         }
@@ -88,19 +89,22 @@ namespace DbBest.ZooPark
         /// init animals
         /// </summary>
         /// <param name="count"></param>
-        public void InitAnimals(int count)
+        protected void InitAnimals(int count, int typeAmount)
         {
+            Random rnd = new Random();
+            int type = 0;
             for (int i = 0; i < count; i++)
             {
-                Animals.Add(new Animal());
+                type = rnd.Next(1, typeAmount);
+                Animals.Add(new Animal(type, AnimalTypesAmount));
             }
         }
 
         /// <summary>
-        /// init ceils
+        /// init ceils - just add empty ceils
         /// </summary>
         /// <param name="count"></param>
-        public void InitCeils(int count)
+        protected void InitCeils(int count)
         {
             for (int i = 0; i < count; i++)
             {
@@ -109,16 +113,18 @@ namespace DbBest.ZooPark
         }
 
         /// <summary>
-        /// init food:
+        /// init food: 
+        /// each item contains amount of food of this food type; 
         /// at each step we generate random amount of each type food; and find amount of food that left
         /// </summary>
         /// <param name="count"></param>
-        public void InitFood(int count, int typesAmount)
+        protected void InitFood(int count, int typesAmount)
         {
             int FoodTypeAmount = 0;
             int Left = count;
             Random rnd = new Random();
 
+            // !! attention: at cycle we dont step to last step; last setp we set after end of cycle becasue we cant set random value at last step
             for (int i = 1; i < typesAmount; i++)
             {
                 FoodTypeAmount = rnd.Next(1, Left);
@@ -126,6 +132,26 @@ namespace DbBest.ZooPark
                 Left -= FoodTypeAmount;
             }
             FoodStorage[typesAmount] = Left;    // add last item
+
+            // debug check integrity: must have at total count packages
+            int assertTotal = 0;
+            for (int i = 1; i <= typesAmount; i++)
+            {
+                assertTotal += FoodStorage[i]; 
+            }
+            if (assertTotal != count)
+            {
+                throw new Exception("logic error: total food is not equal ");
+            }
+
+        }
+
+
+        protected void InitAnimalRules(int animalTypesAmount, int foodTypesAmount)
+        {
+
+
+
         }
 
         #endregion
@@ -137,11 +163,15 @@ namespace DbBest.ZooPark
             Console.WriteLine(message);
         }
 
+
         public int Run()
         {
 
             DisplayMessage("done");
             return 0;
         }
+
+
+
     }
 }
