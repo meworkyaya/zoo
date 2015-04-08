@@ -54,7 +54,7 @@ namespace DbBest.ZooPark
         {
             if (ItemMaxType != ItemWithType.MaxTypeNotUsed)
             {
-                return (ItemType <= MaxType);
+                return (ItemType <= ItemMaxType);
             }
             return true;
         }

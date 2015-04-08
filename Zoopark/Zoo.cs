@@ -49,6 +49,7 @@ namespace DbBest.ZooPark
             Animals = new List<Animal>();
             Ceils = new List<Ceil>();
             FoodStorage = new Dictionary<int, int>();
+            AnimalsRules = new Dictionary<int, ZooAnimalsRules>();
 
             CeilsResults = new List<List<uint>>();
             FoodResults = new List<List<Animal>>();
@@ -72,6 +73,7 @@ namespace DbBest.ZooPark
             Animals.Clear();
             Ceils.Clear();
             FoodStorage.Clear();
+            AnimalsRules.Clear();
             CeilsResults.Clear();
             FoodResults.Clear();
 
@@ -101,7 +103,7 @@ namespace DbBest.ZooPark
             int type = 0;
             for (int i = 0; i < count; i++)
             {
-                type = _rnd.Next(1, typeAmount);
+                type = _rnd.Next(1, typeAmount + 1);
                 Animals.Add(new Animal(type, AnimalTypesAmount));
             }
         }
@@ -132,7 +134,7 @@ namespace DbBest.ZooPark
             // !! attention: at cycle we dont step to last step; last setp we set after end of cycle becasue we cant set random value at last step
             for (int i = 1; i < typesAmount; i++)
             {
-                FoodTypeAmount = _rnd.Next(1, Left);
+                FoodTypeAmount = _rnd.Next(1, Left + 1);
                 FoodStorage[i] = FoodTypeAmount;
                 Left -= FoodTypeAmount;
             }
@@ -172,21 +174,21 @@ namespace DbBest.ZooPark
             for (int i = 1; i <= animalTypesAmount; i++)
             {
                 // generate rule with what animla type cant live
-                applyLiveRule   = _rnd.Next(2) > 1 ? true : false;  // randomly find - apply rule for animal type or not
-                applyFood_2Rule = _rnd.Next(2) > 1 ? true : false;
+                applyLiveRule   = _rnd.Next(1, 3) > 1 ? true : false;  // randomly find - apply rule for animal type or not
+                applyFood_2Rule = _rnd.Next(1, 3) > 1 ? true : false;
 
                 if (applyLiveRule)
                 {
-                    cantLiveWithType = _rnd.Next(1, animalTypesAmount);
-                    applyLiveRule = (cantLiveWithType != i);  // if selected type of animal with wich we cnat live is the same as animal itself type - reset rule
+                    cantLiveWithType = _rnd.Next(1, animalTypesAmount + 1);
+                    cantLiveWithType = (cantLiveWithType != i) ? cantLiveWithType : 0;  // if selected type of animal with wich we cnat live is the same as animal itself type - reset rule
                 }
 
                 // generate rule what food can eat - 1st type and 2nd type
-                Food_1Eat = _rnd.Next(1, foodTypesAmount);
+                Food_1Eat = _rnd.Next(1, foodTypesAmount + 1);
                 if (applyFood_2Rule)
                 {
-                    Food_2Eat = _rnd.Next(1, foodTypesAmount);
-                    applyFood_2Rule = (Food_2Eat != Food_1Eat);  // if selected type of food 2 is the same as food 1  - just reset rule
+                    Food_2Eat = _rnd.Next(1, foodTypesAmount + 1);
+                    Food_2Eat = (Food_2Eat != Food_1Eat) ? Food_2Eat : 0;  // if selected type of food 2 is the same as food 1  - just reset rule
                 }
 
                 AnimalsRules[i] = new ZooAnimalsRules(i, cantLiveWithType, Food_1Eat, Food_2Eat );               
