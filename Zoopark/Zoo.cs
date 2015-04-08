@@ -22,10 +22,10 @@ namespace DbBest.ZooPark
 
 
         // food Model
-        public uint FoodPackagesAmount { get; set; }
-        public uint FoodTypesAmount { get; set; }       // amount of types of food
+        public int FoodPackagesAmount { get; set; }
+        public int FoodTypesAmount { get; set; }       // amount of types of food
 
-        public Dictionary<uint,uint> FoodStorage;       // list with amount of food packages of each type that are at Zoo: <type of food : amount of food>
+        public Dictionary<int,int> FoodStorage;       // list with amount of food packages of each type that are at Zoo: <type of food : amount of food>
 
 
         // results
@@ -37,17 +37,20 @@ namespace DbBest.ZooPark
 
         #region init
 
-        public Zoo(uint animals = 10, uint animalsTypes = 3, uint ceils = 15, uint foodPackage = 40, uint foodTypes = 3)
+        public Zoo(uint animals = 10, uint animalsTypes = 3, uint ceils = 15, int foodPackage = 40, int foodTypes = 3)
         {
             Animals = new List<Animal>();
             Ceils = new List<Ceil>();
-            FoodStorage = new Dictionary<uint, uint>();
+            FoodStorage = new Dictionary<int, int>();
+
+            CeilsResults = new List<List<uint>>();
+            FoodResults = new List<List<Animal>>();
 
             GenerateZooModel(animals, animalsTypes, ceils, foodPackage, foodTypes);
         }
 
 
-        public void GenerateZooModel(uint animals = 10, uint animalsTypes = 3,  uint ceils = 15, uint foodPackages = 40, uint foodTypes = 3)
+        public void GenerateZooModel(uint animals = 10, uint animalsTypes = 3,  uint ceils = 15, int foodPackages = 40, int foodTypes = 3)
         {
             // ceils model
             AnimalsAmount = animals;
@@ -58,17 +61,21 @@ namespace DbBest.ZooPark
             FoodPackagesAmount = foodPackages;
             FoodTypesAmount = foodTypes;
 
+            // clear lists
             Animals.Clear();
             Ceils.Clear();
             FoodStorage.Clear();
+            CeilsResults.Clear();
+            FoodResults.Clear();
 
+            // generate new lists
             InitAnimals(AnimalsAmount);
             InitCeils(CeilsAmount);
-            InitFood(FoodPackagesAmount);
+            InitFood(FoodPackagesAmount, FoodTypesAmount);
         }
 
 
-        public void CreateFreshFoodTaskModel( uint animals = 10, uint foodPackage = 40, uint foodTypes = 3 ){
+        public void CreateFreshFoodTaskModel( uint animals = 10, int foodPackage = 40, int foodTypes = 3 ){
             GenerateZooModel(animals, 0, 0, foodPackage, foodTypes);
         }
         public void CreatePlacementTaskModel(uint animals = 10, uint animalsTypes = 3, uint ceils = 15 )
@@ -100,18 +107,27 @@ namespace DbBest.ZooPark
         }
 
         /// <summary>
-        /// init food
+        /// init food:
+        /// at each step we generate random amount of each type food; and find amount of food that left
         /// </summary>
         /// <param name="count"></param>
-        public void InitFood(uint count)
+        public void InitFood(int count, int typesAmount)
         {
-            for (int i = 0; i < count; i++)
+            int FoodTypeAmount = 0;
+            int Left = count;
+            Random rnd = new Random();
+
+            for (int i = 1; i < typesAmount; i++)
             {
-                FoodStorage.Add(new FoodType());
+                FoodTypeAmount = rnd.Next(1, Left);
+                FoodStorage[i] = FoodTypeAmount;
+                Left -= FoodTypeAmount;
             }
+            FoodStorage[typesAmount] = Left;    // add last item
         }
 
         #endregion
+
 
 
         public void DisplayMessage( string message){
