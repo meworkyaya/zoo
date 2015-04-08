@@ -19,9 +19,9 @@ namespace DbBest.ZooPark
 
             //Zoo ZooInstance = new Zoo(animals: 5, ceils: 7, foodPackage: foodPackage, animalsTypes: 2, foodTypes: foodTypes);
 
-            ZooInstance.Run();
-
             ZooInstance.DisplayZooDebugInfo();
+
+            ZooInstance.Run();
 
             Console.ReadLine();     // wait to see output
         }

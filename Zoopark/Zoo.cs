@@ -19,6 +19,7 @@ namespace DbBest.ZooPark
         // ceil Model
         public int CeilsAmount { get; set; }
         public List<Ceil> Ceils;                        // list with ceils that are at Zoo: index - id of ceil; value: id of animal
+        public Dictionary<int,int> CantLiveTogether;
 
 
         // food Model
@@ -50,6 +51,7 @@ namespace DbBest.ZooPark
             Ceils = new List<Ceil>();
             FoodStorage = new Dictionary<int, int>();
             AnimalsRules = new Dictionary<int, ZooAnimalsRules>();
+            CantLiveTogether = new Dictionary<int, int>();
 
             CeilsResults = new List<List<uint>>();
             FoodResults = new List<List<Animal>>();
@@ -74,6 +76,8 @@ namespace DbBest.ZooPark
             Ceils.Clear();
             FoodStorage.Clear();
             AnimalsRules.Clear();
+            CantLiveTogether.Clear();
+
             CeilsResults.Clear();
             FoodResults.Clear();
 
@@ -184,11 +188,13 @@ namespace DbBest.ZooPark
                 applyLiveRule   = _rnd.Next(1, 3) > 1 ? true : false;  // randomly find - apply rule for animal type or not
                 applyFood_2Rule = _rnd.Next(1, 3) > 1 ? true : false;
 
+                // fill live together rule data
                 if (applyLiveRule)
                 {
                     cantLiveWithType = _rnd.Next(1, animalTypesAmount + 1);
                     cantLiveWithType = (cantLiveWithType != i) ? cantLiveWithType : 0;  // if selected type of animal with wich we cnat live is the same as animal itself type - reset rule
                 }
+                CantLiveTogether[i] = cantLiveWithType;
 
                 // generate rule what food can eat - 1st type and 2nd type
                 Food_1Eat = _rnd.Next(1, foodTypesAmount + 1);
@@ -307,6 +313,87 @@ namespace DbBest.ZooPark
         #endregion
 
 
+
+        #region ceil solution
+
+        public bool findCeilSolution( int successLimit ){
+            return false;
+        }
+
+
+        /// <summary>
+        /// алгоритм:
+        /// 
+        /// у нас есть животные некого числа типов
+        /// размещение их по клеткам означает что в клетке есть некий тип.
+        /// 
+        /// тогда например для 4 типов животных мы получааем для 5 клеток набор:
+        /// 1 3 0 2 1
+        /// 
+        /// т.е. эти наборы формируют разные числа по базису числа типов животных ( по базису 4 в данном примере)
+        /// перебор по числам от 0 0 0 0 0 до  4 4 4 4 4  даст нам все варианты расположения животных без дупликатов
+        /// 0 - отсутствие животного
+        /// 
+        /// в общем случае получаем: 
+        /// расположение по клеткам:
+        ///  A B C D E F G H ... 
+        ///  где A-H - тип животного
+        ///  
+        /// мы создаем новый вариант с помощью инкремента - и проверяем его на правила
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="successLimit"></param>
+        /// <returns></returns>
+        public bool findCeilSolutionByNumberBase(int successLimit)
+        {
+            NumberWithBase nb = new NumberWithBase(AnimalTypesAmount + 1, CeilsAmount + 1);
+
+            int HighBitIndex = CeilsAmount + 1;
+            int i = 0;
+            int current, next;
+
+            long count = 0;
+            long displaySteps = 10000;
+
+            DisplayMessage( "Begin ceil placing search ... =========================\r\n");
+
+            do
+            {
+                nb.inc();   // inc number - create next combination
+                count++;
+
+                // check rules
+
+                // we dont need check last animal we will check last animal rule at previous animal step
+                for (i = 1; i < CeilsAmount; i++)
+                {
+                    current = nb.getBit(i);
+                    next = nb.getBit(i + 1);
+
+                    if ( CantLiveTogether[current] == next) // these two cant live together - check new combination
+                    {
+                        goto NextCombination;
+                    }
+                }
+
+                NextCombination: ;
+
+                // display workign status
+                if (count % displaySteps == 0)
+                {
+                    Console.WriteLine("\rcount: {0}", count );
+                }
+                
+            } while ( nb.getBit(HighBitIndex) == 0 );
+
+            return false;
+        }
+
+        #endregion
+
+
+
         public void DisplayMessage(string message)
         {
             Console.WriteLine(message);
@@ -315,6 +402,7 @@ namespace DbBest.ZooPark
 
         public int Run()
         {
+            findCeilSolutionByNumberBase( 100 );
 
             DisplayMessage("done");
             return 0;
