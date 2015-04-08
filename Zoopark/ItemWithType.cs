@@ -26,7 +26,7 @@ namespace DbBest.ZooPark
             {
                 if (!CheckTypeRange(value, MaxType))
                 {
-                    throw new Exception("new Type is bigger than MaxType");
+                    throw new Exception("new Type is bigger than current MaxType and MaxType is used");
                 }
 
                 _type = value;
@@ -43,7 +43,7 @@ namespace DbBest.ZooPark
             {
                 if (!CheckTypeRange( _type, value))
                 {
-                    throw new Exception("new MaxTyoe is smaller than curretn Type");
+                    throw new Exception("new MaxTyoe is smaller than current Type and MaxType is used");
                 }
 
                 _maxType = value;

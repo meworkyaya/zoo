@@ -8,7 +8,6 @@ namespace DbBest.ZooPark
 {
     public class Animal : ItemWithType
     {
-        private bool _isFeeded;
         private int _food_1;
         private int _food_2;
 
@@ -16,11 +15,7 @@ namespace DbBest.ZooPark
         {
             get
             {
-                return _isFeeded;
-            }
-            set
-            {
-                _isFeeded = value;
+                return (_food_1 >= 0 && _food_2 > 0);
             }
         }
 
@@ -45,6 +40,12 @@ namespace DbBest.ZooPark
             {
                 _food_2 = value;
             }
+        }
+
+        public Animal()
+        {
+            _food_1 = -1;
+            _food_2 = -1;
         }
 
     }
