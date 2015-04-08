@@ -141,6 +141,14 @@ namespace DbBest.ZooPark
             FoodStorage[typesAmount] = Left;    // add last item
 
             // debug check integrity: must have at total count packages
+            DebugInitFoodAssert(count, typesAmount);
+        }
+
+        /// <summary>
+        /// debug check integrity: must have at total count packages
+        /// </summary>
+        public void DebugInitFoodAssert(int count, int typesAmount)
+        {
             int assertTotal = 0;
             for (int i = 1; i <= typesAmount; i++)
             {
@@ -150,7 +158,6 @@ namespace DbBest.ZooPark
             {
                 throw new Exception("logic error: total food is not equal ");
             }
-
         }
 
 
