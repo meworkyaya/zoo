@@ -44,7 +44,7 @@ namespace DbBest.ZooPark
 
         public List<Animal> Animals;            // list with animals that live at Zoo
         public List<Ceil> Ceils;                // list with ceils that are at Zoo
-        public List<Food> FoodPackages;         // list with food packages that are at Zoo
+        public List<FoodType> FoodPackages;         // list with food packages that are at Zoo
 
         #region init
 
@@ -52,7 +52,7 @@ namespace DbBest.ZooPark
         {
             Animals = new List<Animal>();
             Ceils = new List<Ceil>();
-            FoodPackages = new List<Food>();
+            FoodPackages = new List<FoodType>();
 
             SetupZooModel(animals, animalsTypes, ceils, foodPackage, foodTypes);
         }
@@ -78,7 +78,7 @@ namespace DbBest.ZooPark
         public void CreateFreshFoodTaskModel( uint animals = 10, uint foodPackage = 40, uint foodTypes = 3 ){
             SetupZooModel(animals, 0, 0, foodPackage, foodTypes);
         }
-        public void CreatePlacementTaskModel(uint animals = 10, uint animalsTypes = 3, uint ceils = 15, )
+        public void CreatePlacementTaskModel(uint animals = 10, uint animalsTypes = 3, uint ceils = 15 )
         {
             SetupZooModel(animals, animalsTypes, ceils, 0, 0);
         }
@@ -114,7 +114,7 @@ namespace DbBest.ZooPark
         {
             for (int i = 0; i < count; i++)
             {
-                FoodPackages.Add(new Food());
+                FoodPackages.Add(new FoodType());
             }
         }
 

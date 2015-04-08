@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DbBest.ZooPark
 {
-    public class Ceil
+    public class Ceil : ItemWithType
     {
     }
 }

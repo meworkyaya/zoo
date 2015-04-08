@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DbBest.ZooPark
 {
-    public class Food
+    public class FoodType : ItemWithType
     {
     }
 }
