@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animal.cs" />
+    <Compile Include="NumberWithBase.cs" />
     <Compile Include="ZooAnimalsRules.cs" />
     <Compile Include="Ceil.cs" />
     <Compile Include="Food.cs" />

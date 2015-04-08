@@ -29,7 +29,7 @@ namespace DbBest.ZooPark
             }
 
             _base = baseOfNumber;
-            bits = new int[baseOfNumber];
+            bits = new int[length];
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace DbBest.ZooPark
                 }
                 else
                 {
-                    bits[i] = _base;
+                    bits[i] = _base - 1;
                 }
             }
 

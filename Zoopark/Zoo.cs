@@ -182,6 +182,8 @@ namespace DbBest.ZooPark
             int Food_1Eat = 0;
             int Food_2Eat = 0;
 
+            CantLiveTogether[0] = 0;  // null animal type can live with any animal type 
+
             for (int i = 1; i <= animalTypesAmount; i++)
             {
                 // generate rule with what animla type cant live
@@ -349,14 +351,17 @@ namespace DbBest.ZooPark
         {
             NumberWithBase nb = new NumberWithBase(AnimalTypesAmount + 1, CeilsAmount + 1);
 
-            int HighBitIndex = CeilsAmount + 1;
+            int HighBitIndex = CeilsAmount;
             int i = 0;
             int current, next;
 
             long count = 0;
-            long displaySteps = 10000;
+            long displaySteps = 10;
 
             DisplayMessage( "Begin ceil placing search ... =========================\r\n");
+
+            int currentCantLiveType = 0, nextCantLiveType = 0;
+
 
             do
             {
@@ -366,13 +371,25 @@ namespace DbBest.ZooPark
                 // check rules
 
                 // we dont need check last animal we will check last animal rule at previous animal step
-                for (i = 1; i < CeilsAmount; i++)
+                for (i = 0; i < CeilsAmount - 1; i++)
                 {
                     current = nb.getBit(i);
                     next = nb.getBit(i + 1);
 
-                    if ( CantLiveTogether[current] == next) // these two cant live together - check new combination
+                    currentCantLiveType = CantLiveTogether[current];    // curretn cant live with this
+                    nextCantLiveType = CantLiveTogether[next];          // next cant live with this - they can differ )
+
+                    // check type for living for 'current' point of view
+                    if (currentCantLiveType != 0 && currentCantLiveType == next) // these two cant live together - check new combination
                     {
+                        // failed combination
+                        goto NextCombination;
+                    }
+
+                    // check type for living for 'next' point of view
+                    if (nextCantLiveType != 0 && nextCantLiveType == current) // these two cant live together - check new combination
+                    {
+                        // failed combination
                         goto NextCombination;
                     }
                 }
