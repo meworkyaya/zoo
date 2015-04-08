@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace DbBest.ZooPark
 {
+    /// <summary>
+    /// animal: type contains animal type
+    /// </summary>
     public class Animal : ItemWithType
     {
         private int _food_1;

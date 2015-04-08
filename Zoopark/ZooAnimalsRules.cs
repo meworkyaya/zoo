@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DbBest.ZooPark
 {
-    public class AnimalsRules
+    public class ZooAnimalsRules
     {
         public int canEatFood_1 { get; set; }
         public int canEatFood_2 { get; set; }

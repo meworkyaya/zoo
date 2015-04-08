@@ -6,27 +6,16 @@ using System.Threading.Tasks;
 
 namespace DbBest.ZooPark
 {
-    /// <summary>
-    /// types of animals
-    /// </summary>
-    public enum AnimalTypes { Alpha, Beta, Cann  }
-
-    /// <summary>
-    /// food types
-    /// </summary>
-    public enum FoodTypes { FoodOne, FoodTwo, FoodThree, FoodForth }
-
-    public enum CeilTypes { CeilOne, CeilTwo } 
-
-
     public class Zoo
     {
+
         public uint AnimalsAmount { get; set; }
 
-
         #region ceilModel
+
         // for model of animal palcement to ceils
         public uint AnimalTypesAmount { get; set; }     // amount of types of animal
+
         public uint CeilsAmount { get; set; }
 
         #endregion
@@ -42,9 +31,11 @@ namespace DbBest.ZooPark
         #endregion
 
 
-        public List<Animal> Animals;            // list with animals that live at Zoo
-        public List<Ceil> Ceils;                // list with ceils that are at Zoo
-        public List<FoodType> FoodPackages;         // list with food packages that are at Zoo
+        public List<Animal>         Animals;            // list with animals that live at Zoo: index - id of animal;
+        public List<Ceil>           Ceils;              // list with ceils that are at Zoo: index - id of ceil
+        public List<FoodType>       FoodStorage;        // list with amount of food packages of each type that are at Zoo: index - type of food
+        public List<ZooAnimalsRules>   AnimalsRules;    // list of rules for each type of Animal
+
 
         #region init
 
@@ -52,7 +43,7 @@ namespace DbBest.ZooPark
         {
             Animals = new List<Animal>();
             Ceils = new List<Ceil>();
-            FoodPackages = new List<FoodType>();
+            FoodStorage = new List<FoodType>();
 
             SetupZooModel(animals, animalsTypes, ceils, foodPackage, foodTypes);
         }
@@ -114,7 +105,7 @@ namespace DbBest.ZooPark
         {
             for (int i = 0; i < count; i++)
             {
-                FoodPackages.Add(new FoodType());
+                FoodStorage.Add(new FoodType());
             }
         }
 
