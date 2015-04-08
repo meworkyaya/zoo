@@ -6,11 +6,21 @@ using System.Threading.Tasks;
 
 namespace DbBest.ZooPark
 {
-    public class ZooAnimalsRules
+    /// <summary>
+    /// type: type of animal
+    /// </summary>
+    public class ZooAnimalsRules : ItemWithType
     {
-        public int canEatFood_1 { get; set; }
-        public int canEatFood_2 { get; set; }
-        public int cantLiveWith { get; set; }
+        public int CantLiveWith { get; set; }
+        public int CanEatFood_1 { get; set; }
+        public int CanEatFood_2 { get; set; }
+
+        public ZooAnimalsRules(int type, int cantLiveWith, int canEatFood_1, int canEatFood_2) : base( type )
+        {
+            CantLiveWith = cantLiveWith;
+            CanEatFood_1 = canEatFood_1;
+            CanEatFood_2 = canEatFood_2;
+        }
 
     }
 }
