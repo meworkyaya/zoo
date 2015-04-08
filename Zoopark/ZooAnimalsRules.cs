@@ -22,5 +22,13 @@ namespace DbBest.ZooPark
             CanEatFood_2 = canEatFood_2;
         }
 
+
+        public string DisplayRule()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("type: {0} | CantLiveWith: \t{1} | Food 1: \t{2} | Food 2: \t{3}", Type, CantLiveWith, CanEatFood_1, CanEatFood_2);
+            return sb.ToString();
+        }
+
     }
 }

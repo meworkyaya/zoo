@@ -247,7 +247,7 @@ namespace DbBest.ZooPark
             StringBuilder sb = new StringBuilder();
             int count = 0;
 
-            sb.AppendFormat("Food Types: {0} types; Food Storage: {1} items ==================================== \r\n", FoodTypesAmount, FoodPackagesAmount);
+            sb.AppendFormat("Food Types: {0} types; Food Storage: {1} items ================= \r\n", FoodTypesAmount, FoodPackagesAmount);
             foreach (var pair in FoodStorage)
             {
                 count++;
@@ -259,15 +259,34 @@ namespace DbBest.ZooPark
         }
 
 
+        public string GetAnimasRulesDisplay()
+        {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+
+            sb.AppendFormat("AnimalsRules: {0} rules;  ===================================== \r\n", AnimalsRules.Count );
+            foreach (var pair in AnimalsRules)
+            {
+                count++;
+
+                sb.AppendFormat("{0}: {1} \r\n", count, pair.Value.DisplayRule());
+            }
+
+            return sb.ToString();
+        }
+
+
 
         public string GetDisplayZooDebugInfo()
         {
             string spacer = "\r\n";
-            string sa = GetAnimalsDisplay();
+
+            string sr = GetAnimasRulesDisplay();
             string sf = GetFoodDisplay();
+            string sa = GetAnimalsDisplay();            
             string sc = GetCeilsDisplay();
 
-            string result = sa + spacer + sf + spacer + sc;
+            string result = sr + spacer + sf + spacer + sa + spacer + sc;
 
             return result;           
         }
