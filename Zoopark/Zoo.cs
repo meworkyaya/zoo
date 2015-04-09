@@ -98,6 +98,7 @@ namespace DbBest.ZooPark
                 try
                 {
                     LogFile = new System.IO.StreamWriter(fileName);
+                    LogFile.AutoFlush = true;
                     result = ( LogFile != null );
                 }
                 catch (System.IO.IOException ex)

@@ -10,8 +10,9 @@ namespace DbBest.ZooPark
     {
         static void Main(string[] args)
         {
-            RunTests();
-            // RunZoo();
+            RunZoo();
+
+            // RunTests(); // used for testing some parts of code
 
             Console.ReadLine();     // wait to see output
         }
@@ -20,14 +21,13 @@ namespace DbBest.ZooPark
         static void RunTests()
         {
             Zoo ZooInstance = new Zoo(animals: 3, ceils: 1, foodPackage: 3, animalsTypes: 2, foodTypes: 1, logFile: "test.txt" );
-
-            // ZooInstance.TestNumberWithBase( baseOfNumber: 2, numberOfDigits: 4);
+            ZooInstance.TestNumberWithBase( baseOfNumber: 2, numberOfDigits: 4);
             ZooInstance.ShutDownWork();
         }
 
         static void RunZoo()
         {
-            Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4);
+            Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4, logFile: "test.txt");
             ZooInstance.DisplayZooDebugInfo();
             ZooInstance.Run();
             ZooInstance.ShutDownWork();
