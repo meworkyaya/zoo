@@ -10,10 +10,31 @@ namespace DbBest.ZooPark
     {
         static void Main(string[] args)
         {
-            RunTests();
+            // RunTests();
+            RunZoo();
 
-            // Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4);
+            Console.ReadLine();     // wait to see output
+        }
 
+
+        static void RunTests()
+        {
+            Zoo ZooInstance = new Zoo(animals: 3, ceils: 1, foodPackage: 3, animalsTypes: 2, foodTypes: 1, logFile: "test.txt" );
+
+            ZooInstance.TestNumberWithBase();
+            ZooInstance.ShutDownWork();
+        }
+
+        static void RunZoo()
+        {
+            Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4);
+            ZooInstance.DisplayZooDebugInfo();
+            ZooInstance.Run();
+        }
+
+
+        static void RunRandomZoo()
+        {
             // ====== generate random zoo 
             //Random rnd = new Random();
             //int foodPackage = rnd.Next(1, 10);
@@ -24,18 +45,9 @@ namespace DbBest.ZooPark
             // ZooInstance.DisplayZooDebugInfo();
 
             // ZooInstance.Run();
-
-            Console.ReadLine();     // wait to see output
         }
 
 
-        static void RunTests()
-        {
-            Zoo ZooInstance = new Zoo(animals: 3, ceils: 1, foodPackage: 3, animalsTypes: 2, foodTypes: 1);
-            ZooInstance.LogFileName = "test.txt";
 
-            ZooInstance.TestNumberWithBase();
-            ZooInstance.ShutDownWork();
-        }
     }
 }

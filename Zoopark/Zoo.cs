@@ -56,8 +56,10 @@ namespace DbBest.ZooPark
         #region init
         // init data methods
 
-        public Zoo(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackage = 40, int foodTypes = 3)
+        public Zoo(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackage = 40, int foodTypes = 3, string logFile = "" )
         {
+            CreateLogFile(logFile);
+
             _rnd = new Random();
 
             Animals = new List<Animal>();
@@ -477,10 +479,15 @@ namespace DbBest.ZooPark
 
         #region test
 
+        public void Tests()
+        {
+            // TestNumberWithBase();
+        }
+
         public void TestNumberWithBase()
         {
             string bits;
-            NumberWithBase nb = new NumberWithBase(10, 4);
+            NumberWithBase nb = new NumberWithBase(4, 4);
             try
             {
                 do
