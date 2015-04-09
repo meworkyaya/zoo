@@ -577,6 +577,37 @@ namespace DbBest.ZooPark
             int currentCantLiveType = 0, nextCantLiveType = 0;
 
 
+            // =======================  some dirty algoritm
+
+            List<int> AllAnimalsThatLeft = GetAllAnimalsAsListInt();
+            List<int> UniqueTypes = GetUniqueTypes( AllAnimalsThatLeft );
+            
+            int CurrentStep = 1;
+
+            foreach( var Type in UniqueTypes ){
+                int NewCurrentStep = CurrentStep - 1;
+
+                if (NewCurrentStep > 0)
+                {
+                    NewAnimalsThatLeft = AllAnimalsThatLeft.Remove(Type);
+                    DoAllPermutations(NewCurrentStep, NewAnimalsThatLeft);
+                }
+                else
+                {
+                    // check variation
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
             do
             {
                 nb.inc();   // inc number - create next combination
@@ -621,6 +652,22 @@ namespace DbBest.ZooPark
             } while (nb.getBit(HighBitIndex) == 0);
 
             return false;
+        }
+
+
+
+        /// <summary>
+        /// return all animals list as List<int> from List<Animal>
+        /// </summary>
+        /// <returns></returns>
+        public List<int> GetAllAnimalsAsListInt()
+        {
+            List<int> result = new List<int>();
+            foreach (var item in Animals)
+            {
+                result.Add(item.Type);
+            }
+            return result;
         }
 
 
