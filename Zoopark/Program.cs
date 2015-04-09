@@ -21,7 +21,7 @@ namespace DbBest.ZooPark
         {
             Zoo ZooInstance = new Zoo(animals: 3, ceils: 1, foodPackage: 3, animalsTypes: 2, foodTypes: 1, logFile: "test.txt" );
 
-            ZooInstance.TestNumberWithBase( baseOfNumber: 2, numberOfDigits: 4);
+            // ZooInstance.TestNumberWithBase( baseOfNumber: 2, numberOfDigits: 4);
             ZooInstance.ShutDownWork();
         }
 
@@ -30,6 +30,7 @@ namespace DbBest.ZooPark
             Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4);
             ZooInstance.DisplayZooDebugInfo();
             ZooInstance.Run();
+            ZooInstance.ShutDownWork();
         }
 
 
@@ -45,6 +46,7 @@ namespace DbBest.ZooPark
             // ZooInstance.DisplayZooDebugInfo();
 
             // ZooInstance.Run();
+            // ZooInstance.ShutDownWork();
         }
 
 
