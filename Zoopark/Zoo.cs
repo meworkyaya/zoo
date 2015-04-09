@@ -21,7 +21,6 @@ namespace DbBest.ZooPark
         // ceil Model
         protected int CeilsAmount { get; set; }
         protected List<Ceil> Ceils;                        // list with ceils that are at Zoo: index - id of ceil; value: id of animal
-        protected Dictionary<int, int> CantLiveTogether;
 
 
         // food Model
@@ -76,7 +75,6 @@ namespace DbBest.ZooPark
             Ceils = new List<Ceil>();
             FoodStorage = new Dictionary<int, int>();
             AnimalsRules = new Dictionary<int, ZooAnimalsRules>();
-            CantLiveTogether = new Dictionary<int, int>();
 
             CeilsResults = new List<List<uint>>();
             FoodResults = new List<List<Animal>>();
@@ -111,7 +109,6 @@ namespace DbBest.ZooPark
             Ceils.Clear();
             FoodStorage.Clear();
             AnimalsRules.Clear();
-            CantLiveTogether.Clear();
 
             CeilsResults.Clear();
             FoodResults.Clear();
@@ -120,7 +117,7 @@ namespace DbBest.ZooPark
             InitAnimals(AnimalsAmount, AnimalTypesAmount);
             InitAnimalRules(AnimalTypesAmount, FoodTypesAmount);
             InitCeils(CeilsAmount);
-            InitFood(FoodPackagesAmount, FoodTypesAmount);
+            InitFoodStorage(FoodPackagesAmount, FoodTypesAmount);
         }
 
 
@@ -165,7 +162,7 @@ namespace DbBest.ZooPark
         /// at each step we generate random amount of each type food; and find amount of food that left
         /// </summary>
         /// <param name="count"></param>
-        protected void InitFood(int count, int typesAmount)
+        protected void InitFoodStorage(int count, int typesAmount)
         {
             int FoodTypeAmount = 0;
             int Left = count;
@@ -518,8 +515,8 @@ namespace DbBest.ZooPark
                     current = nb.getBit(i);
                     next = nb.getBit(i + 1);
 
-                    currentCantLiveType = CantLiveTogether[current];    // curretn cant live with this
-                    nextCantLiveType = CantLiveTogether[next];          // next cant live with this - they can differ )
+                    // currentCantLiveType = CantLiveTogether[current];    // curretn cant live with this
+                    // nextCantLiveType = CantLiveTogether[next];          // next cant live with this - they can differ )
 
                     // check type for living for 'current' point of view
                     if (currentCantLiveType != 0 && currentCantLiveType == next) // these two cant live together - check new combination
@@ -593,8 +590,8 @@ namespace DbBest.ZooPark
                     current = nb.getBit(i);
                     next = nb.getBit(i + 1);
 
-                    currentCantLiveType = CantLiveTogether[current];    // curretn cant live with this
-                    nextCantLiveType = CantLiveTogether[next];          // next cant live with this - they can differ )
+                    // currentCantLiveType = CantLiveTogether[current];    // curretn cant live with this
+                    // nextCantLiveType = CantLiveTogether[next];          // next cant live with this - they can differ )
 
                     // check type for living for 'current' point of view
                     if (currentCantLiveType != 0 && currentCantLiveType == next) // these two cant live together - check new combination
