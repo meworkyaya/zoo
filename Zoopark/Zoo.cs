@@ -655,6 +655,40 @@ namespace DbBest.ZooPark
         }
 
 
+        public bool MakePermutation(int CurrentStep, List<int> FreeItems)
+        {
+            bool result = false;
+
+            List<int> UniqueTypes = GetUniqueTypes(FreeItems);
+
+            int NewCurrentStep = CurrentStep - 1;
+
+            foreach (var Type in UniqueTypes)
+            {
+                if (NewCurrentStep > 0)
+                {
+                    NewItemsThatLeft = AllAnimalsThatLeft.Remove(Type);
+                    DoAllPermutations(NewCurrentStep, NewAnimalsThatLeft);
+                }
+                else
+                {
+                    // check variation
+                }
+            }
+
+
+            if (step > 0)
+            {
+                // make next step for permutation
+            }
+            else
+            {
+                // have ready 
+            }
+            return result;
+        }
+
+
 
         /// <summary>
         /// return all animals list as List<int> from List<Animal>
