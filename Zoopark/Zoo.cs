@@ -15,6 +15,8 @@ namespace DbBest.ZooPark
         protected List<Animal> Animals;                    // list with animals that live at Zoo: index - id of animal;
         protected Dictionary<int, ZooAnimalsRules> AnimalsRules;      // dict of rules for each type of Animal: <type of animal, animalRule>
 
+        protected int[,] AnimalsLivingWithRules;            // rules for animals - with what they can live; 0 - can live together; 1 - cant live together
+
 
         // ceil Model
         protected int CeilsAmount { get; set; }
@@ -38,11 +40,14 @@ namespace DbBest.ZooPark
 
         // logging features
         protected string _logFilename;
-        public string LogFileName {
-            get{
+        public string LogFileName
+        {
+            get
+            {
                 return _logFilename;
             }
-            set {
+            set
+            {
                 CreateLogFile(value);
             }
         }                      // path to log where store log data
@@ -61,7 +66,7 @@ namespace DbBest.ZooPark
         #region init
         // init data methods
 
-        public Zoo(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackage = 40, int foodTypes = 3, string logFile = "" )
+        public Zoo(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackage = 40, int foodTypes = 3, string logFile = "")
         {
             CreateLogFile(logFile);
 
@@ -83,7 +88,8 @@ namespace DbBest.ZooPark
         /// <summary>
         /// shutdown work of class; now just close log
         /// </summary>
-        public void ShutDownWork(){
+        public void ShutDownWork()
+        {
             CloseLogFile();
         }
 
@@ -197,49 +203,91 @@ namespace DbBest.ZooPark
         /// <summary>
         /// generate rules for animal types:
         /// - with what animal type cant live
-        /// - what types of food can eat - 1 type or 2 types
+        /// - what types of food can eat - 1 type or 2 typess
         /// </summary>
         /// <param name="animalTypesAmount"></param>
         /// <param name="foodTypesAmount"></param>
         protected void InitAnimalRules(int animalTypesAmount, int foodTypesAmount)
         {
-            bool applyLiveRule = false;
-            bool applyFood_2Rule = false;
+            InitAnimalLiveRules(animalTypesAmount);
+            InitAnimalFoodRules(animalTypesAmount, foodTypesAmount);
+        }
 
+        /// <summary>
+        /// generate rules for animal types:
+        /// - with what animal type cant live
+        /// </summary>
+        /// <param name="animalTypesAmount"></param>
+        protected void InitAnimalLiveRules(int animalTypesAmount)
+        {
+            AnimalsLivingWithRules = new int[animalTypesAmount + 1, animalTypesAmount + 1]; // we need add rules for types pairs like :  { Animal Type, No Animal }
+
+            int randomGenerateChanceBorder = 2;   // how often generate rule: 2 -> 1/2; 3 -> 2/3; ... 4 -> 3/4; ..
+
+            bool applyLiveRule = false;
             int cantLiveWithType = 0;
 
-            int Food_1Eat = 0;
-            int Food_2Eat = 0;
+            // по умолчанию новый массив забивается нулями, так что эта инициализация не нужна
+            // но оставим ее на всякий случай ))
+            for (int i = 0; i <= animalTypesAmount; i++)
+            {
+                AnimalsLivingWithRules[i, 0] = 0;   // по умолчанию с пустой клеткой все могут жить.. 
+                AnimalsLivingWithRules[0, i] = 0;   // и пустая клетка может жить со всеми
+            }
 
-            CantLiveTogether[0] = 0;  // null animal type can live with any animal type 
-
+            // for all types
             for (int i = 1; i <= animalTypesAmount; i++)
             {
+                cantLiveWithType = 0;
+
                 // generate rule with what animla type cant live
-                applyLiveRule = _rnd.Next(1, 3) > 1 ? true : false;  // randomly find - apply rule for animal type or not
-                applyFood_2Rule = _rnd.Next(1, 3) > 1 ? true : false;
+                applyLiveRule = _rnd.Next(1, randomGenerateChanceBorder + 1) > 1 ? true : false;  // randomly find - apply rule for animal type or not                
 
                 // fill live together rule data
                 if (applyLiveRule)
                 {
                     cantLiveWithType = _rnd.Next(1, animalTypesAmount + 1);
-                    cantLiveWithType = (cantLiveWithType != i) ? cantLiveWithType : 0;  // if selected type of animal with wich we cnat live is the same as animal itself type - reset rule
-                }
-                CantLiveTogether[i] = cantLiveWithType;
 
+                    // иногда животное не может жить со своим типом - например два быка ); поэтому фильтр ниже убираем
+                    // cantLiveWithType = (cantLiveWithType != i) ? cantLiveWithType : 0;  // if selected type of animal with wich we cnat live is the same as animal itself type - reset rule
+
+                    AnimalsLivingWithRules[i, cantLiveWithType] = 1;
+                    AnimalsLivingWithRules[cantLiveWithType, i] = 1;    // если заяц не живет со львом, то лев не живет с зайцем тоже )
+                }
+
+            }
+        }
+
+
+
+        /// <summary>
+        /// generate rules for animal types:
+        /// - what types of food can eat - 1 type or 2 typess
+        /// </summary>
+        protected void InitAnimalFoodRules(int animalTypesAmount, int foodTypesAmount)
+        {
+            int randomGenerateChanceBorder = 2;   // how often generate rule
+
+            bool applyFood_2Rule = false;
+            int Food_1Eat = 0;
+            int Food_2Eat = 0;
+
+            for (int i = 1; i <= animalTypesAmount; i++)
+            {
                 // generate rule what food can eat - 1st type and 2nd type
                 Food_1Eat = _rnd.Next(1, foodTypesAmount + 1);
+                applyFood_2Rule = _rnd.Next(1, randomGenerateChanceBorder + 1) > 1 ? true : false;
                 if (applyFood_2Rule)
                 {
                     Food_2Eat = _rnd.Next(1, foodTypesAmount + 1);
                     Food_2Eat = (Food_2Eat != Food_1Eat) ? Food_2Eat : 0;  // if selected type of food 2 is the same as food 1  - just reset rule
                 }
-
-                AnimalsRules[i] = new ZooAnimalsRules(i, cantLiveWithType, Food_1Eat, Food_2Eat);
+                AnimalsRules[i] = new ZooAnimalsRules(i, Food_1Eat, Food_2Eat);
             }
-
-
         }
+
+
+
 
         #endregion
 
@@ -284,6 +332,14 @@ namespace DbBest.ZooPark
                 LogFile.Close();
                 LogFile = null;
                 _logFilename = null;
+            }
+        }
+
+        public void LogMessage(string message)
+        {
+            if (LogFile != null)
+            {
+                LogFile.WriteLine(message);
             }
         }
 
@@ -425,10 +481,20 @@ namespace DbBest.ZooPark
         /// <returns></returns>
         public bool findCeilSolutionByNumberBase(int successLimit)
         {
-            NumberWithBase nb = new NumberWithBase(AnimalTypesAmount + 1, CeilsAmount + 1);
+            int TotalAnimalTypesAmount = AnimalTypesAmount + 1;     // у нас общее число типов животных: Animal Types Amount + Нет Животного
+            int CheckedCeilsAmount = CeilsAmount + 1;               // используем дополнительную клетку (разряд числа) для проверки что перебор прошел все варианты
+            NumberWithBase nb = new NumberWithBase(TotalAnimalTypesAmount, CheckedCeilsAmount);     // число с нашим набором вариантов
+
+            int i;
+
+            // выставляем начальный вариант с которого будем перебирать, меньшие варианты нам не нужны
+            // допустим у нас 5 животных 3 типов; для этого всем битам от 0 до ( 5 - 1 - 1) ставим значение 3 (старший тип животного).
+            for (i = 0; i < AnimalsAmount - 2; i++)
+            {
+                nb.setBit(i, AnimalTypesAmount);
+            }
 
             int HighBitIndex = CeilsAmount;
-            int i = 0;
             int current, next;
 
             long count = 0;
@@ -485,6 +551,101 @@ namespace DbBest.ZooPark
             return false;
         }
 
+
+
+
+        public bool findCeilSolutionByUniquePermutation(int successLimit)
+        {
+            int TotalAnimalTypesAmount = AnimalTypesAmount + 1;     // у нас общее число типов животных: Animal Types Amount + Нет Животного
+            int CheckedCeilsAmount = CeilsAmount + 1;               // используем дополнительную клетку (разряд числа) для проверки что перебор прошел все варианты
+            NumberWithBase nb = new NumberWithBase(TotalAnimalTypesAmount, CheckedCeilsAmount);     // число с нашим набором вариантов
+
+            int i;
+
+            // выставляем начальный вариант с которого будем перебирать, меньшие варианты нам не нужны
+            // допустим у нас 5 животных 3 типов; для этого всем битам от 0 до ( 5 - 1 - 1) ставим значение 3 (старший тип животного).
+            for (i = 0; i < AnimalsAmount - 2; i++)
+            {
+                nb.setBit(i, AnimalTypesAmount);
+            }
+
+            int HighBitIndex = CeilsAmount;
+            int current, next;
+
+            long count = 0;
+            long displaySteps = 100 * 1000;
+
+            DisplayMessage("Begin ceil placing search ... =========================\r\n");
+
+            int currentCantLiveType = 0, nextCantLiveType = 0;
+
+
+            do
+            {
+                nb.inc();   // inc number - create next combination
+                count++;
+
+                // check rules
+
+                // we dont need check last animal we will check last animal rule at previous animal step
+                for (i = 0; i < CeilsAmount - 1; i++)
+                {
+                    current = nb.getBit(i);
+                    next = nb.getBit(i + 1);
+
+                    currentCantLiveType = CantLiveTogether[current];    // curretn cant live with this
+                    nextCantLiveType = CantLiveTogether[next];          // next cant live with this - they can differ )
+
+                    // check type for living for 'current' point of view
+                    if (currentCantLiveType != 0 && currentCantLiveType == next) // these two cant live together - check new combination
+                    {
+                        // failed combination
+                        goto NextCombination;
+                    }
+
+                    // check type for living for 'next' point of view
+                    if (nextCantLiveType != 0 && nextCantLiveType == current) // these two cant live together - check new combination
+                    {
+                        // failed combination
+                        goto NextCombination;
+                    }
+                }
+
+                // DisplayMessage( nb.DisplayBits());
+
+                NextCombination: ;
+
+                // display workign status
+                if (count % displaySteps == 0)
+                {
+                    Console.WriteLine("\rcount: {0}", count);
+                }
+
+            } while (nb.getBit(HighBitIndex) == 0);
+
+            return false;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         #endregion
 
 
@@ -505,7 +666,7 @@ namespace DbBest.ZooPark
                 do
                 {
                     bits = nb.GetBitsString();
-                    DisplayMessage(bits);                    
+                    DisplayMessage(bits);
                     nb.inc();
                 } while (true);
             }
@@ -520,7 +681,7 @@ namespace DbBest.ZooPark
 
 
 
-        public void DisplayMessage(string message, bool dontLogMessageEvenWhenHaveLogging = false )
+        public void DisplayMessage(string message, bool dontLogMessageEvenWhenHaveLogging = false)
         {
             Console.WriteLine(message);
             if (!dontLogMessageEvenWhenHaveLogging)
@@ -529,14 +690,6 @@ namespace DbBest.ZooPark
             }
         }
 
-
-        public void LogMessage(string message)
-        {
-            if (LogFile != null )
-            {
-                LogFile.WriteLine(message);
-            }
-        }
 
 
         public int Run()

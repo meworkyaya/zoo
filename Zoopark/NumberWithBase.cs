@@ -8,6 +8,7 @@ namespace DbBest.ZooPark
 {
     /// <summary>
     /// class allows use of number with any base; 
+    /// Zero 0 based class
     /// </summary>
     public class NumberWithBase
     {
