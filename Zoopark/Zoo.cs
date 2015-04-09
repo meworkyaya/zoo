@@ -19,7 +19,7 @@ namespace DbBest.ZooPark
         // ceil Model
         public int CeilsAmount { get; set; }
         public List<Ceil> Ceils;                        // list with ceils that are at Zoo: index - id of ceil; value: id of animal
-        public Dictionary<int,int> CantLiveTogether;
+        public Dictionary<int, int> CantLiveTogether;
 
 
         // food Model
@@ -32,6 +32,19 @@ namespace DbBest.ZooPark
         // results
         public List<List<uint>> CeilsResults;           // results for ceils: array of array of <id of ceil => animal id>
         public List<List<Animal>> FoodResults;          // results for foods: array of array of <id of animal : animal with food settings>
+        
+        // logging features
+        protected string _logFilename;
+        public string LogFileName {
+            get{
+                return _logFilename;
+            }
+            set {
+                CreateLogFile(value);
+            }
+        }                      // path to log where store log data
+
+        protected System.IO.StreamWriter LogFile;          // log file handler
 
 
         // tools
@@ -58,6 +71,54 @@ namespace DbBest.ZooPark
 
             GenerateZooModel(animals, animalsTypes, ceils, foodPackage, foodTypes);
         }
+
+
+        /// <summary>
+        /// shutdown work of class; now just close log
+        /// </summary>
+        public void ShutDownWork(){
+            CloseLogFile();
+        }
+
+
+        /// <summary>
+        /// create log file
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        protected void CreateLogFile(string fileName)
+        {
+            CloseLogFile();
+
+            bool result = false;
+            if (!String.IsNullOrWhiteSpace(fileName))
+            {
+                try
+                {
+                    LogFile = new System.IO.StreamWriter(fileName);
+                    result = ( LogFile != null );
+                }
+                catch (System.IO.IOException ex)
+                {
+                    result = false;                    
+                    DisplayMessage("error: cant create log file: " + ex.Message);
+                    LogFile = null;
+                }                
+            }
+            _logFilename = (result) ? fileName : null;
+        }
+
+        /// <summary>
+        /// close log file
+        /// </summary>
+        protected void CloseLogFile(){
+            if ( LogFile != null ){
+                LogFile.Close();
+                LogFile = null;
+                _logFilename = null;
+            }
+        }
+
 
 
         public void GenerateZooModel(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackages = 40, int foodTypes = 3)
@@ -156,7 +217,7 @@ namespace DbBest.ZooPark
             int assertTotal = 0;
             for (int i = 1; i <= typesAmount; i++)
             {
-                assertTotal += FoodStorage[i]; 
+                assertTotal += FoodStorage[i];
             }
             if (assertTotal != count)
             {
@@ -187,7 +248,7 @@ namespace DbBest.ZooPark
             for (int i = 1; i <= animalTypesAmount; i++)
             {
                 // generate rule with what animla type cant live
-                applyLiveRule   = _rnd.Next(1, 3) > 1 ? true : false;  // randomly find - apply rule for animal type or not
+                applyLiveRule = _rnd.Next(1, 3) > 1 ? true : false;  // randomly find - apply rule for animal type or not
                 applyFood_2Rule = _rnd.Next(1, 3) > 1 ? true : false;
 
                 // fill live together rule data
@@ -206,7 +267,7 @@ namespace DbBest.ZooPark
                     Food_2Eat = (Food_2Eat != Food_1Eat) ? Food_2Eat : 0;  // if selected type of food 2 is the same as food 1  - just reset rule
                 }
 
-                AnimalsRules[i] = new ZooAnimalsRules(i, cantLiveWithType, Food_1Eat, Food_2Eat );               
+                AnimalsRules[i] = new ZooAnimalsRules(i, cantLiveWithType, Food_1Eat, Food_2Eat);
             }
 
 
@@ -227,11 +288,11 @@ namespace DbBest.ZooPark
             foreach (Animal a in Animals)
             {
                 count++;
-                
+
                 sb.AppendFormat("{0}: \t{1}", count, a.DisplayAnimal(1));
                 sb.Append("\r\n");
             }
-            
+
 
             return sb.ToString();
         }
@@ -242,7 +303,7 @@ namespace DbBest.ZooPark
             StringBuilder sb = new StringBuilder();
             int count = 0;
 
-            sb.AppendFormat("Ceils; {0} items; types of animals: ==================================== \r\n", Ceils.Count );
+            sb.AppendFormat("Ceils; {0} items; types of animals: ==================================== \r\n", Ceils.Count);
             foreach (var pair in Ceils)
             {
                 count++;
@@ -267,7 +328,7 @@ namespace DbBest.ZooPark
             {
                 count++;
 
-                sb.AppendFormat("{0}: type: {1} | Amount: \t{2} \r\n", count, pair.Key, pair.Value );
+                sb.AppendFormat("{0}: type: {1} | Amount: \t{2} \r\n", count, pair.Key, pair.Value);
             }
 
             return sb.ToString();
@@ -279,7 +340,7 @@ namespace DbBest.ZooPark
             StringBuilder sb = new StringBuilder();
             int count = 0;
 
-            sb.AppendFormat("AnimalsRules: {0} rules;  ===================================== \r\n", AnimalsRules.Count );
+            sb.AppendFormat("AnimalsRules: {0} rules;  ===================================== \r\n", AnimalsRules.Count);
             foreach (var pair in AnimalsRules)
             {
                 count++;
@@ -298,12 +359,12 @@ namespace DbBest.ZooPark
 
             string sr = GetAnimasRulesDisplay();
             string sf = GetFoodDisplay();
-            string sa = GetAnimalsDisplay();            
+            string sa = GetAnimalsDisplay();
             string sc = GetCeilsDisplay();
 
             string result = sr + spacer + sf + spacer + sa + spacer + sc;
 
-            return result;           
+            return result;
         }
 
 
@@ -311,14 +372,15 @@ namespace DbBest.ZooPark
         {
             DisplayMessage(GetDisplayZooDebugInfo());
         }
-        
+
         #endregion
 
 
 
         #region ceil solution
 
-        public bool findCeilSolution( int successLimit ){
+        public bool findCeilSolution(int successLimit)
+        {
             return false;
         }
 
@@ -358,7 +420,7 @@ namespace DbBest.ZooPark
             long count = 0;
             long displaySteps = 100 * 1000;
 
-            DisplayMessage( "Begin ceil placing search ... =========================\r\n");
+            DisplayMessage("Begin ceil placing search ... =========================\r\n");
 
             int currentCantLiveType = 0, nextCantLiveType = 0;
 
@@ -401,10 +463,10 @@ namespace DbBest.ZooPark
                 // display workign status
                 if (count % displaySteps == 0)
                 {
-                    Console.WriteLine("\rcount: {0}", count );
+                    Console.WriteLine("\rcount: {0}", count);
                 }
-                
-            } while ( nb.getBit(HighBitIndex) == 0 );
+
+            } while (nb.getBit(HighBitIndex) == 0);
 
             return false;
         }
@@ -413,15 +475,53 @@ namespace DbBest.ZooPark
 
 
 
-        public void DisplayMessage(string message)
+        #region test
+
+        public void TestNumberWithBase()
+        {
+            string bits;
+            NumberWithBase nb = new NumberWithBase(10, 4);
+            try
+            {
+                do
+                {
+                    bits = nb.GetBitsString();
+                    DisplayMessage(bits, true);                    
+                    nb.inc();
+                } while (true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("catched: " + ex.Message);
+            }
+        }
+
+        #endregion
+
+
+
+
+        public void DisplayMessage(string message, bool logMessage = false )
         {
             Console.WriteLine(message);
+            if ( logMessage ){
+                LogMessage(message);
+            }
+        }
+
+
+        public void LogMessage(string message)
+        {
+            if (LogFile != null )
+            {
+                LogFile.WriteLine(message);
+            }
         }
 
 
         public int Run()
         {
-            findCeilSolutionByNumberBase( 100 );
+            findCeilSolutionByNumberBase(100);
 
             DisplayMessage("done");
             return 0;

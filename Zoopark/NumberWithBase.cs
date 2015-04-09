@@ -16,21 +16,26 @@ namespace DbBest.ZooPark
 
         protected int[] bits;
 
-        protected int min = 2;
-        protected int max = 100;
+        public static readonly int MinBaseOfNumber = 2;
+        public static readonly int MaxBaseOfNumber = 1000;
 
 
-        public NumberWithBase(int baseOfNumber, int length)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="baseOfNumber"></param>
+        /// <param name="numberOfDigits"></param>
+        public NumberWithBase(int baseOfNumber, int numberOfDigits)
         {
-
-            if ( (baseOfNumber < min) || (baseOfNumber >  max))
+            if ( (baseOfNumber < MinBaseOfNumber) || (baseOfNumber >  MaxBaseOfNumber))
             {
-                throw new Exception("baseOfNumber must be in range " + min +  " and " + max );
+                throw new Exception("baseOfNumber must be in range " + MinBaseOfNumber +  " and " + MaxBaseOfNumber );
             }
 
             _base = baseOfNumber;
-            bits = new int[length];
+            bits = new int[numberOfDigits];
         }
+
 
         /// <summary>
         /// increment current number
@@ -66,7 +71,7 @@ namespace DbBest.ZooPark
         {
             if (value >= _base)
             {
-                throw new Exception("value must be in range " + min + " and " + (_base - 1));
+                throw new Exception("value must be in range " + MinBaseOfNumber + " and " + (_base - 1));
             }
 
             if (index >= bits.Length)
@@ -78,7 +83,7 @@ namespace DbBest.ZooPark
         }
 
 
-        public string DisplayBits()
+        public string GetBitsString()
         {
             StringBuilder sb = new StringBuilder();
             for (int i = bits.Length - 1; i >= 0; i-- ) {
