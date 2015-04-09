@@ -484,16 +484,16 @@ namespace DbBest.ZooPark
             // TestNumberWithBase();
         }
 
-        public void TestNumberWithBase()
+        public void TestNumberWithBase(int baseOfNumber, int numberOfDigits)
         {
             string bits;
-            NumberWithBase nb = new NumberWithBase(4, 4);
+            NumberWithBase nb = new NumberWithBase(baseOfNumber, numberOfDigits);
             try
             {
                 do
                 {
                     bits = nb.GetBitsString();
-                    DisplayMessage(bits, true);                    
+                    DisplayMessage(bits);                    
                     nb.inc();
                 } while (true);
             }
@@ -508,10 +508,10 @@ namespace DbBest.ZooPark
 
 
 
-        public void DisplayMessage(string message, bool shouldLogMessage = false )
+        public void DisplayMessage(string message, bool dontLogMessageEvenWhenHaveLogging = false )
         {
             Console.WriteLine(message);
-            if (shouldLogMessage )
+            if (!dontLogMessageEvenWhenHaveLogging)
             {
                 LogMessage(message);
             }
