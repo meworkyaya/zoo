@@ -12,27 +12,30 @@ namespace DbBest.ZooPark
         public int AnimalTypesAmount { get; set; }     // amount of types of animal
         public int AnimalsAmount { get; set; }         // mount of animals
 
-        public List<Animal> Animals;                    // list with animals that live at Zoo: index - id of animal;
-        public Dictionary<int, ZooAnimalsRules> AnimalsRules;      // dict of rules for each type of Animal: <type of animal, animalRule>
+        protected List<Animal> Animals;                    // list with animals that live at Zoo: index - id of animal;
+        protected Dictionary<int, ZooAnimalsRules> AnimalsRules;      // dict of rules for each type of Animal: <type of animal, animalRule>
 
 
         // ceil Model
-        public int CeilsAmount { get; set; }
-        public List<Ceil> Ceils;                        // list with ceils that are at Zoo: index - id of ceil; value: id of animal
-        public Dictionary<int, int> CantLiveTogether;
+        protected int CeilsAmount { get; set; }
+        protected List<Ceil> Ceils;                        // list with ceils that are at Zoo: index - id of ceil; value: id of animal
+        protected Dictionary<int, int> CantLiveTogether;
 
 
         // food Model
-        public int FoodPackagesAmount { get; set; }
-        public int FoodTypesAmount { get; set; }       // amount of types of food
+        protected int FoodPackagesAmount { get; set; }
+        protected int FoodTypesAmount { get; set; }       // amount of types of food
 
-        public Dictionary<int, int> FoodStorage;       // list with amount of food packages of each type that are at Zoo: <type of food : amount of food>
+        protected Dictionary<int, int> FoodStorage;       // list with amount of food packages of each type that are at Zoo: <type of food : amount of food>
 
 
         // results
         public List<List<uint>> CeilsResults;           // results for ceils: array of array of <id of ceil => animal id>
         public List<List<Animal>> FoodResults;          // results for foods: array of array of <id of animal : animal with food settings>
-        
+
+
+        #region logging
+
         // logging features
         protected string _logFilename;
         public string LogFileName {
@@ -45,6 +48,8 @@ namespace DbBest.ZooPark
         }                      // path to log where store log data
 
         protected System.IO.StreamWriter LogFile;          // log file handler
+
+        #endregion
 
 
         // tools
@@ -80,46 +85,6 @@ namespace DbBest.ZooPark
         /// </summary>
         public void ShutDownWork(){
             CloseLogFile();
-        }
-
-
-        /// <summary>
-        /// create log file
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        protected void CreateLogFile(string fileName)
-        {
-            CloseLogFile();
-
-            bool result = false;
-            if (!String.IsNullOrWhiteSpace(fileName))
-            {
-                try
-                {
-                    LogFile = new System.IO.StreamWriter(fileName);
-                    LogFile.AutoFlush = true;
-                    result = ( LogFile != null );
-                }
-                catch (System.IO.IOException ex)
-                {
-                    result = false;                    
-                    DisplayMessage("error: cant create log file: " + ex.Message);
-                    LogFile = null;
-                }                
-            }
-            _logFilename = (result) ? fileName : null;
-        }
-
-        /// <summary>
-        /// close log file
-        /// </summary>
-        protected void CloseLogFile(){
-            if ( LogFile != null ){
-                LogFile.Close();
-                LogFile = null;
-                _logFilename = null;
-            }
         }
 
 
@@ -274,6 +239,52 @@ namespace DbBest.ZooPark
             }
 
 
+        }
+
+        #endregion
+
+
+        #region logging implementation
+
+        /// <summary>
+        /// create log file
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        protected void CreateLogFile(string fileName)
+        {
+            CloseLogFile();
+
+            bool result = false;
+            if (!String.IsNullOrWhiteSpace(fileName))
+            {
+                try
+                {
+                    LogFile = new System.IO.StreamWriter(fileName);
+                    LogFile.AutoFlush = true;
+                    result = (LogFile != null);
+                }
+                catch (System.IO.IOException ex)
+                {
+                    result = false;
+                    DisplayMessage("error: cant create log file: " + ex.Message);
+                    LogFile = null;
+                }
+            }
+            _logFilename = (result) ? fileName : null;
+        }
+
+        /// <summary>
+        /// close log file
+        /// </summary>
+        protected void CloseLogFile()
+        {
+            if (LogFile != null)
+            {
+                LogFile.Close();
+                LogFile = null;
+                _logFilename = null;
+            }
         }
 
         #endregion
