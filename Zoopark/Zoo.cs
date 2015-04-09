@@ -508,10 +508,11 @@ namespace DbBest.ZooPark
 
 
 
-        public void DisplayMessage(string message, bool logMessage = false )
+        public void DisplayMessage(string message, bool shouldLogMessage = false )
         {
             Console.WriteLine(message);
-            if ( logMessage ){
+            if (shouldLogMessage )
+            {
                 LogMessage(message);
             }
         }
