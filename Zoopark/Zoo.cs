@@ -554,17 +554,8 @@ namespace DbBest.ZooPark
         public bool findCeilSolutionByUniquePermutation(int successLimit)
         {
             int TotalAnimalTypesAmount = AnimalTypesAmount + 1;     // у нас общее число типов животных: Animal Types Amount + Нет Животного
-            int CheckedCeilsAmount = CeilsAmount + 1;               // используем дополнительную клетку (разряд числа) для проверки что перебор прошел все варианты
-            NumberWithBase nb = new NumberWithBase(TotalAnimalTypesAmount, CheckedCeilsAmount);     // число с нашим набором вариантов
 
             int i;
-
-            // выставляем начальный вариант с которого будем перебирать, меньшие варианты нам не нужны
-            // допустим у нас 5 животных 3 типов; для этого всем битам от 0 до ( 5 - 1 - 1) ставим значение 3 (старший тип животного).
-            for (i = 0; i < AnimalsAmount - 2; i++)
-            {
-                nb.setBit(i, AnimalTypesAmount);
-            }
 
             int HighBitIndex = CeilsAmount;
             int current, next;
@@ -572,35 +563,18 @@ namespace DbBest.ZooPark
             long count = 0;
             long displaySteps = 100 * 1000;
 
-            DisplayMessage("Begin ceil placing search ... =========================\r\n");
-
-            int currentCantLiveType = 0, nextCantLiveType = 0;
+            DisplayMessage("Begin ceil placing search ... =========================");
 
 
             // =======================  some dirty algoritm
 
-            List<int> AllAnimalsThatLeft = GetAllAnimalsAsListInt();
-            List<int> UniqueTypes = GetUniqueTypes( AllAnimalsThatLeft );
-            
-            int CurrentStep = 1;
+            // we are using array becase theoreticelly they give litle better performance, must create some benchmarks for this
+            List<int> CurrentItems = new List<int>();       // partial result with already placed items/animals
+            List<int> AnimalsThatLeft = GetAllAnimalsAsArrayInt();
 
-            foreach( var Type in UniqueTypes ){
-                int NewCurrentStep = CurrentStep - 1;
+            int CurrentStep = 0;
 
-                if (NewCurrentStep > 0)
-                {
-                    NewAnimalsThatLeft = AllAnimalsThatLeft.Remove(Type);
-                    DoAllPermutations(NewCurrentStep, NewAnimalsThatLeft);
-                }
-                else
-                {
-                    // check variation
-                }
-            }
-
-
-
-
+            bool result = MakePermutation(CurrentStep, CurrentItems, AnimalsThatLeft);
 
 
 
@@ -655,8 +629,60 @@ namespace DbBest.ZooPark
         }
 
 
-        public bool MakePermutation(int CurrentStep, List<int> FreeItems)
+        public bool MakePermutation(int CurrentStep, List<int> CurrentItems, List<int> AnimalsThatLeft)
         {
+            if (CurrentStep == 0)
+            {
+                return true; // stop recursion
+            }
+
+            if (AnimalsThatLeft.Count == 0)
+            {
+                // this is no more items - so all items placed // stop recursion
+                return true;
+            }
+
+            // get only unique types from current list of items
+            List<int> UniqueTypes = AnimalsThatLeft.Distinct().ToList(); // it must have at least one item - because source list already has at least one item
+
+            int NewCurrentStep = CurrentStep - 1;
+
+            CurrentItems.Add(0);    // add new item as placeholder
+            int CurrentNewItemIndex = CurrentItems.Count  - 1;
+
+            foreach (var Item in UniqueTypes)
+            {
+                // clone new list 
+                List<int> NewAnimalsThatLeft = new List<int>(); // wil have new list of items - copy of AnimalsThatLeft without items of current type
+
+                // create new list without all items of currently selected stype from source list
+                for ( int i = AnimalsThatLeft.Count - 1; i >= 0; i-- ){
+                    if ( AnimalsThatLeft[i] != Item ) {
+                        NewAnimalsThatLeft.Add( AnimalsThatLeft[i] );
+                    }
+                }
+
+                CurrentItems[CurrentNewItemIndex] = Item;
+
+                MakePermutation(CurrentStep: NewCurrentStep, CurrentItems: CurrentItems, AnimalsThatLeft: NewAnimalsThatLeft);
+
+
+                if (NewCurrentStep > 0)
+                {
+                    NewAnimalsThatLeft = AllAnimalsThatLeft.Remove(Item);
+                    DoAllPermutations(NewCurrentStep, NewAnimalsThatLeft);
+                }
+                else
+                {
+                    // check variation
+                }
+            }
+
+
+
+
+
+
             bool result = false;
 
             List<int> UniqueTypes = GetUniqueTypes(FreeItems);
@@ -685,6 +711,13 @@ namespace DbBest.ZooPark
             {
                 // have ready 
             }
+            return result;
+        }
+
+
+        public List<int> GetUniqueTypes(List<int> SourceTypes)
+        {
+            List<int> result = SourceTypes.Distinct().ToList();
             return result;
         }
 
