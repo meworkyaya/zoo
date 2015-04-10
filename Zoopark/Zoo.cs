@@ -535,7 +535,7 @@ namespace DbBest.ZooPark
 
             if (AttemptCount % DisplaySteps == 0)
             {
-                Console.Write("\r{0}: Success: {1}; Fails: {2}", AttemptCount, SuccessCount, FailCount);
+                Console.Write("\rFunc calls: {0}: Finded: {1}; Failed: {2}", AttemptCount, SuccessCount, FailCount);
             }
 
 
