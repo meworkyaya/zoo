@@ -613,10 +613,10 @@ namespace DbBest.ZooPark
             foreach (var Item in UniqueTypes)
             {
                 // ========= try apply placement rule for animal
-                if (CurrentItems.Count > 0) // if have previous item
+                if (CurrentItems.Count >= 2) // if have previous item; previous item will be 2nd from edn - because we placed placeholder for new item
                 {
-                    //if (!CheckLivingRuleForPair(CurrentItems[CurrentItems.Count - 1], Item))    // check rule for previous item and current item
-                    if (AnimalsLivingWithRules[CurrentItems[CurrentItems.Count - 1], Item] != 1)  // for optimization remove function call
+                    //if (!CheckLivingRuleForPair(CurrentItems[CurrentItems.Count - 2], Item))    // check rule for previous item and current item
+                    if (AnimalsLivingWithRules[CurrentItems[CurrentItems.Count - 2], Item] != 1)  // for optimization remove function call
                     {
                         continue; // rule does not passed - skip to next item
                     }
@@ -633,6 +633,8 @@ namespace DbBest.ZooPark
 
                 MakePermutation(CurrentStep: NewCurrentStep, CurrentItems: ref CurrentItems, AnimalsThatLeft: ref NewAnimalsThatLeft);
             }
+
+            CurrentItems.RemoveAt(CurrentNewItemIndex); // remove item that we added for this level of permutationss
 
             return;
         }
