@@ -8,6 +8,9 @@ namespace DbBest.ZooPark
 {
     public class Zoo
     {
+        // model config important parameters:
+        public int LivingRulePossibility = 6;           // how often generate living rule: 2 -> 1/2; 3 -> 2/3; ... 4 -> 3/4; ..
+
         // common Model Part
         public int AnimalTypesAmount { get; set; }     // amount of types of animal
         public int AnimalsAmount { get; set; }         // mount of animals
@@ -210,8 +213,6 @@ namespace DbBest.ZooPark
         {
             AnimalsLivingWithRules = new int[animalTypesAmount + 1, animalTypesAmount + 1]; // we need add rules for types pairs like :  { Animal Type, No Animal }
 
-            int randomGenerateChanceBorder = 3;   // how often generate rule: 2 -> 1/2; 3 -> 2/3; ... 4 -> 3/4; ..
-
             bool applyLiveRule = false;
             int cantLiveWithType = 0;
 
@@ -223,13 +224,17 @@ namespace DbBest.ZooPark
                 AnimalsLivingWithRules[0, i] = 0;   // и пустая клетка может жить со всеми
             }
 
+            int rndNext = 0;
+
             // for all types
             for (int i = 1; i <= animalTypesAmount; i++)
             {
                 cantLiveWithType = 0;
 
                 // generate rule with what animla type cant live
-                applyLiveRule = _rnd.Next(1, randomGenerateChanceBorder + 1) > 1 ? true : false;  // randomly find - apply rule for animal type or not                
+                rndNext = _rnd.Next(1, LivingRulePossibility + 1);  // randomly find - apply rule for animal type or not                
+                // LogMessage(rndNext.ToString(), "random: ");
+                applyLiveRule = ( rndNext > 1 ) ? true : false;
 
                 // fill live together rule data
                 if (applyLiveRule)
@@ -492,10 +497,7 @@ namespace DbBest.ZooPark
         public void findCeilSolutionByUniquePermutation(int successLimit)
         {
             int TotalAnimalTypesAmount = AnimalTypesAmount + 1;     // у нас общее число типов животных: Animal Types Amount + Нет Животного
-
             int HighBitIndex = CeilsAmount;
-
-            long displaySteps = 100 * 1000;
 
             DisplayMessage("Begin ceil placing search ... =========================");
 
