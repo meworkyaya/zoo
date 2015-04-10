@@ -459,6 +459,8 @@ namespace DbBest.ZooPark
         }
 
 
+
+
         /// <summary>
         /// алгоритм:
         /// 
@@ -479,85 +481,8 @@ namespace DbBest.ZooPark
         ///  
         /// мы создаем новый вариант с помощью инкремента - и проверяем его на правила
         /// 
-        /// 
         /// </summary>
         /// <param name="successLimit"></param>
-        /// <returns></returns>
-        public bool findCeilSolutionByNumberBase(int successLimit)
-        {
-            int TotalAnimalTypesAmount = AnimalTypesAmount + 1;     // у нас общее число типов животных: Animal Types Amount + Нет Животного
-            int CheckedCeilsAmount = CeilsAmount + 1;               // используем дополнительную клетку (разряд числа) для проверки что перебор прошел все варианты
-            NumberWithBase nb = new NumberWithBase(TotalAnimalTypesAmount, CheckedCeilsAmount);     // число с нашим набором вариантов
-
-            int i;
-
-            // выставляем начальный вариант с которого будем перебирать, меньшие варианты нам не нужны
-            // допустим у нас 5 животных 3 типов; для этого всем битам от 0 до ( 5 - 1 - 1) ставим значение 3 (старший тип животного).
-            for (i = 0; i < AnimalsAmount - 2; i++)
-            {
-                nb.setBit(i, AnimalTypesAmount);
-            }
-
-            int HighBitIndex = CeilsAmount;
-            int current, next;
-
-            long count = 0;
-            long displaySteps = 100 * 1000;
-
-            DisplayMessage("Begin ceil placing search ... =========================\r\n");
-
-            int currentCantLiveType = 0, nextCantLiveType = 0;
-
-
-            do
-            {
-                nb.inc();   // inc number - create next combination
-                count++;
-
-                // check rules
-
-                // we dont need check last animal we will check last animal rule at previous animal step
-                for (i = 0; i < CeilsAmount - 1; i++)
-                {
-                    current = nb.getBit(i);
-                    next = nb.getBit(i + 1);
-
-                    // currentCantLiveType = CantLiveTogether[current];    // curretn cant live with this
-                    // nextCantLiveType = CantLiveTogether[next];          // next cant live with this - they can differ )
-
-                    // check type for living for 'current' point of view
-                    if (currentCantLiveType != 0 && currentCantLiveType == next) // these two cant live together - check new combination
-                    {
-                        // failed combination
-                        goto NextCombination;
-                    }
-
-                    // check type for living for 'next' point of view
-                    if (nextCantLiveType != 0 && nextCantLiveType == current) // these two cant live together - check new combination
-                    {
-                        // failed combination
-                        goto NextCombination;
-                    }
-                }
-
-                // DisplayMessage( nb.DisplayBits());
-
-                NextCombination: ;
-
-                // display workign status
-                if (count % displaySteps == 0)
-                {
-                    Console.WriteLine("\rcount: {0}", count);
-                }
-
-            } while (nb.getBit(HighBitIndex) == 0);
-
-            return false;
-        }
-
-
-
-
         public void findCeilSolutionByUniquePermutation(int successLimit)
         {
             int TotalAnimalTypesAmount = AnimalTypesAmount + 1;     // у нас общее число типов животных: Animal Types Amount + Нет Животного
