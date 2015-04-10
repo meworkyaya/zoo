@@ -682,7 +682,7 @@ namespace DbBest.ZooPark
         public static string DisplayListInt( ref List<int> Items ){
             StringBuilder sb = new StringBuilder();
             foreach( var Item in Items){
-                sb.Append(Item + " ");
+                sb.AppendFormat("{0} ", Items);
             }
             return sb.ToString();
         }
