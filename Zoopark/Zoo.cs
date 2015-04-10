@@ -22,6 +22,12 @@ namespace DbBest.ZooPark
         // ceil Model
         protected int CeilsAmount { get; set; }
 
+        protected long FailCount = 0;
+        protected long SuccessCount = 0;
+        protected long AttemptCount = 0;
+        protected long DisplaySteps = 1000 * 10;
+
+
 
         // food Model
         protected int FoodPackagesAmount { get; set; }
@@ -204,7 +210,7 @@ namespace DbBest.ZooPark
         {
             AnimalsLivingWithRules = new int[animalTypesAmount + 1, animalTypesAmount + 1]; // we need add rules for types pairs like :  { Animal Type, No Animal }
 
-            int randomGenerateChanceBorder = 2;   // how often generate rule: 2 -> 1/2; 3 -> 2/3; ... 4 -> 3/4; ..
+            int randomGenerateChanceBorder = 3;   // how often generate rule: 2 -> 1/2; 3 -> 2/3; ... 4 -> 3/4; ..
 
             bool applyLiveRule = false;
             int cantLiveWithType = 0;
@@ -317,11 +323,11 @@ namespace DbBest.ZooPark
             }
         }
 
-        public void LogMessage(string message)
+        public void LogMessage(string message, string Preffix = null )
         {
             if (LogFile != null)
             {
-                LogFile.WriteLine(message);
+                LogFile.WriteLine( Preffix + message);
             }
         }
 
@@ -487,15 +493,15 @@ namespace DbBest.ZooPark
         {
             int TotalAnimalTypesAmount = AnimalTypesAmount + 1;     // у нас общее число типов животных: Animal Types Amount + Нет Животного
 
-            int i;
-
             int HighBitIndex = CeilsAmount;
-            int current, next;
 
-            long count = 0;
             long displaySteps = 100 * 1000;
 
             DisplayMessage("Begin ceil placing search ... =========================");
+
+            AttemptCount = 0;
+            SuccessCount = 0;
+            FailCount = 0;
 
 
             // =======================  some dirty algoritm
@@ -507,6 +513,9 @@ namespace DbBest.ZooPark
             int CurrentStep = CeilsAmount;
 
             MakePermutation(CurrentStep, ref CurrentItems, ref AnimalsThatLeft);
+
+            DisplayMessage("\r\nDone =========================");
+            DisplayMessage("Result: Success: " + SuccessCount + ";     Failed: " + FailCount );
         }
 
 
@@ -522,9 +531,19 @@ namespace DbBest.ZooPark
         /// <param name="AnimalsThatLeft"></param>
         public void MakePermutation(int CurrentStep, ref List<int> CurrentItems, ref List<int> AnimalsThatLeft)
         {
+            AttemptCount++;
+
+            if (AttemptCount % DisplaySteps == 0)
+            {
+                Console.Write("\r{0}: Success: {1}; Fails: {2}", AttemptCount, SuccessCount, FailCount);
+            }
+
+
             if (CurrentStep == 0)
             {
+                SuccessCount++;
                 // DisplayMessage( Zoo.DisplayListInt( ref CurrentItems));
+                LogMessage(Zoo.DisplayListInt(ref CurrentItems));
                 return; // stop recursion
             }
 
@@ -552,6 +571,10 @@ namespace DbBest.ZooPark
                     //if (!CheckLivingRuleForPair(CurrentItems[CurrentItems.Count - 2], Item))    // check rule for previous item and current item
                     if (AnimalsLivingWithRules[CurrentItems[CurrentItems.Count - 2], Item] == Zoo.CantLiveWithFlag)  // for optimization remove function call
                     {
+                        FailCount++;
+
+                        LogMessage(Zoo.DisplayListWithoutLastInt(ref CurrentItems), "Fail:\r\nTried Add last: " + Item + " => " );
+
                         continue; // rule does not passed - skip to next item
                     }
                 }
@@ -662,6 +685,16 @@ namespace DbBest.ZooPark
             return sb.ToString();
         }
 
+        public static string DisplayListWithoutLastInt(ref List<int> Items)
+        {
+            StringBuilder sb = new StringBuilder();
+            int Length = Items.Count;
+            for(int i=0; i < Length - 1; i++)
+            {
+                sb.Append(Items[i] + " ");
+            }
+            return sb.ToString();
+        }
 
 
         public int Run()
