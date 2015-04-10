@@ -579,7 +579,11 @@ namespace DbBest.ZooPark
 
 
         /// <summary>
-        /// recurse procedure 
+        /// recurse procedure that make permutations;
+        /// stack size for 64 bit systems is about 1Mb but this can be changed at app settings
+        /// from stack size and size of stack vars depends amount of steps that are allowed
+        /// http://stackoverflow.com/questions/823724/stack-capacity-in-c-sharp
+        /// https://msdn.microsoft.com/en-us/library/windows/desktop/ms686774(v=vs.85).aspx
         /// </summary>
         /// <param name="CurrentStep"></param>
         /// <param name="CurrentItems"></param>
