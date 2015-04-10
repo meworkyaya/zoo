@@ -16,6 +16,7 @@ namespace DbBest.ZooPark
         protected Dictionary<int, ZooAnimalsRules> AnimalsRules;      // dict of rules for each type of Animal: <type of animal, animalRule>
 
         protected int[,] AnimalsLivingWithRules;            // rules for animals - with what they can live; 0 - can live together; 1 - cant live together
+        protected static int CantLiveWithFlag = 1;          // flag when cant live with
 
 
         // ceil Model
@@ -248,8 +249,8 @@ namespace DbBest.ZooPark
                     // иногда животное не может жить со своим типом - например два быка ); поэтому фильтр ниже убираем
                     // cantLiveWithType = (cantLiveWithType != i) ? cantLiveWithType : 0;  // if selected type of animal with wich we cnat live is the same as animal itself type - reset rule
 
-                    AnimalsLivingWithRules[i, cantLiveWithType] = 1;
-                    AnimalsLivingWithRules[cantLiveWithType, i] = 1;    // если заяц не живет со львом, то лев не живет с зайцем тоже )
+                    AnimalsLivingWithRules[i, cantLiveWithType] = Zoo.CantLiveWithFlag;
+                    AnimalsLivingWithRules[cantLiveWithType, i] = Zoo.CantLiveWithFlag;    // если заяц не живет со львом, то лев не живет с зайцем тоже )
                 }
 
             }
@@ -419,19 +420,61 @@ namespace DbBest.ZooPark
         }
 
 
+        public string GetAnimasLivingRulesDisplay()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("Animals Living Rules: {0} rules;  ===================================== \r\n", AnimalsLivingWithRules.Length );
+
+            int PadLeft = 3;
+
+            // ====== head row 
+            // first column
+            sb.Append("    ");
+            for (int i = 0; i <= AnimalTypesAmount; i++)
+            {
+                sb.AppendFormat("{0}", i.ToString().PadLeft(PadLeft));                
+            }
+            sb.AppendFormat("\r\n");
+
+            sb.Append("    ");
+            for (int i = 0; i <= AnimalTypesAmount; i++)
+            {
+                sb.AppendFormat("{0}", "----".ToString().PadLeft(PadLeft));
+            }
+            sb.AppendFormat("\r\n");
+
+            // inner part with first row
+            for (int i = 0; i <= AnimalTypesAmount; i++)
+            {
+                // first column
+                sb.AppendFormat("{0}|", i.ToString().PadLeft(PadLeft));
+
+                for (int j = 0; j <= AnimalTypesAmount; j++)
+                {                    
+                    // data
+                    sb.AppendFormat("{0}", AnimalsLivingWithRules[i, j].ToString().PadLeft(PadLeft));
+                }
+                sb.AppendFormat("\r\n");
+            }
+            return sb.ToString();
+        }
+
+
+
 
         public string GetDisplayZooDebugInfo()
         {
-            string spacer = "\r\n";
+            StringBuilder sb = new StringBuilder();
 
-            string sr = GetAnimasRulesDisplay();
-            string sf = GetFoodDisplay();
-            string sa = GetAnimalsDisplay();
-            string sc = GetCeilsDisplay();
+            sb.AppendLine( GetAnimalsDisplay() );
+            sb.AppendLine( GetAnimasLivingRulesDisplay() );
 
-            string result = sr + spacer + sf + spacer + sa + spacer + sc;
+            // sb.AppendLine( GetAnimasRulesDisplay() );
+            // sb.AppendLine( GetFoodDisplay() );
 
-            return result;
+            // sb.AppendLine( GetCeilsDisplay() );
+            return sb.ToString();
         }
 
 
@@ -592,11 +635,13 @@ namespace DbBest.ZooPark
         {
             if (CurrentStep == 0)
             {
+                // DisplayMessage( Zoo.DisplayListInt( ref CurrentItems));
                 return; // stop recursion
             }
 
             if (AnimalsThatLeft.Count == 0)
             {
+                DisplayMessage( "Error: wrong place");
                 // this is no more items - so all items placed // stop recursion
                 return;
             }
@@ -616,7 +661,7 @@ namespace DbBest.ZooPark
                 if (CurrentItems.Count >= 2) // if have previous item; previous item will be 2nd from edn - because we placed placeholder for new item
                 {
                     //if (!CheckLivingRuleForPair(CurrentItems[CurrentItems.Count - 2], Item))    // check rule for previous item and current item
-                    if (AnimalsLivingWithRules[CurrentItems[CurrentItems.Count - 2], Item] != 1)  // for optimization remove function call
+                    if (AnimalsLivingWithRules[CurrentItems[CurrentItems.Count - 2], Item] == Zoo.CantLiveWithFlag)  // for optimization remove function call
                     {
                         continue; // rule does not passed - skip to next item
                     }
@@ -648,7 +693,7 @@ namespace DbBest.ZooPark
         /// <returns></returns>
         public bool CheckLivingRuleForPair(int first, int second)
         {
-            return (AnimalsLivingWithRules[first, second] != 1); 
+            return (AnimalsLivingWithRules[first, second] != Zoo.CantLiveWithFlag); 
         }
 
 
@@ -718,6 +763,14 @@ namespace DbBest.ZooPark
             {
                 LogMessage(message);
             }
+        }
+
+        public static string DisplayListInt( ref List<int> Items ){
+            StringBuilder sb = new StringBuilder();
+            foreach( var Item in Items){
+                sb.Append(Item + " ");
+            }
+            return sb.ToString();
         }
 
 
