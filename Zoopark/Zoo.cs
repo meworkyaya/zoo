@@ -629,17 +629,17 @@ namespace DbBest.ZooPark
         }
 
 
-        public bool MakePermutation(int CurrentStep, List<int> CurrentItems, List<int> AnimalsThatLeft)
+        public void MakePermutation(int CurrentStep, List<int> CurrentItems, List<int> AnimalsThatLeft)
         {
             if (CurrentStep == 0)
             {
-                return true; // stop recursion
+                return; // stop recursion
             }
 
             if (AnimalsThatLeft.Count == 0)
             {
                 // this is no more items - so all items placed // stop recursion
-                return true;
+                return;
             }
 
             // get only unique types from current list of items
@@ -665,54 +665,11 @@ namespace DbBest.ZooPark
                 CurrentItems[CurrentNewItemIndex] = Item;
 
                 MakePermutation(CurrentStep: NewCurrentStep, CurrentItems: CurrentItems, AnimalsThatLeft: NewAnimalsThatLeft);
-
-
-                if (NewCurrentStep > 0)
-                {
-                    NewAnimalsThatLeft = AllAnimalsThatLeft.Remove(Item);
-                    DoAllPermutations(NewCurrentStep, NewAnimalsThatLeft);
-                }
-                else
-                {
-                    // check variation
-                }
             }
 
-
-
-
-
-
-            bool result = false;
-
-            List<int> UniqueTypes = GetUniqueTypes(FreeItems);
-
-            int NewCurrentStep = CurrentStep - 1;
-
-            foreach (var Type in UniqueTypes)
-            {
-                if (NewCurrentStep > 0)
-                {
-                    NewItemsThatLeft = AllAnimalsThatLeft.Remove(Type);
-                    DoAllPermutations(NewCurrentStep, NewAnimalsThatLeft);
-                }
-                else
-                {
-                    // check variation
-                }
-            }
-
-
-            if (step > 0)
-            {
-                // make next step for permutation
-            }
-            else
-            {
-                // have ready 
-            }
-            return result;
+            return;
         }
+
 
 
         public List<int> GetUniqueTypes(List<int> SourceTypes)
