@@ -693,7 +693,7 @@ namespace DbBest.ZooPark
             int Length = Items.Count;
             for(int i=0; i < Length - 1; i++)
             {
-                sb.Append(Items[i] + " ");
+                sb.AppendFormat("{0} ", Items[i]);
             }
             return sb.ToString();
         }
