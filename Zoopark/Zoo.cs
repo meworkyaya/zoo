@@ -609,9 +609,19 @@ namespace DbBest.ZooPark
             CurrentItems.Add(0);    // add new item as placeholder
             int CurrentNewItemIndex = CurrentItems.Count  - 1;
             int ItemIndex = 0;
-            
+
             foreach (var Item in UniqueTypes)
             {
+                // ========= try apply placement rule for animal
+                if (CurrentItems.Count > 0) // if have previous item
+                {
+                    //if (!CheckLivingRuleForPair(CurrentItems[CurrentItems.Count - 1], Item))    // check rule for previous item and current item
+                    if (AnimalsLivingWithRules[CurrentItems[CurrentItems.Count - 1], Item] != 1)  // for optimization remove function call
+                    {
+                        continue; // rule does not passed - skip to next item
+                    }
+                }
+
                 // clone new list 
                 List<int> NewAnimalsThatLeft = new List<int>(AnimalsThatLeft); // wil have new list of items - copy of AnimalsThatLeft without items of current type
 
@@ -625,6 +635,18 @@ namespace DbBest.ZooPark
             }
 
             return;
+        }
+
+
+        /// <summary>
+        /// checking rule for living for 2 items; 
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        public bool CheckLivingRuleForPair(int first, int second)
+        {
+            return (AnimalsLivingWithRules[first, second] != 1); 
         }
 
 
@@ -651,26 +673,6 @@ namespace DbBest.ZooPark
             }
             return result;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         #endregion
 
