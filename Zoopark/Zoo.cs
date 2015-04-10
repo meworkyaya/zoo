@@ -551,7 +551,7 @@ namespace DbBest.ZooPark
 
 
 
-        public bool findCeilSolutionByUniquePermutation(int successLimit)
+        public void findCeilSolutionByUniquePermutation(int successLimit)
         {
             int TotalAnimalTypesAmount = AnimalTypesAmount + 1;     // у нас общее число типов животных: Animal Types Amount + Нет Животного
 
@@ -570,66 +570,21 @@ namespace DbBest.ZooPark
 
             // we are using array becase theoreticelly they give litle better performance, must create some benchmarks for this
             List<int> CurrentItems = new List<int>();       // partial result with already placed items/animals
-            List<int> AnimalsThatLeft = GetAllAnimalsAsArrayInt();
+            List<int> AnimalsThatLeft = GetAllAnimalsAndEmptyCeilsAsListInt();
 
-            int CurrentStep = 0;
+            int CurrentStep = CeilsAmount;
 
-            bool result = MakePermutation(CurrentStep, CurrentItems, AnimalsThatLeft);
-
-
-
-
-
-
-
-            do
-            {
-                nb.inc();   // inc number - create next combination
-                count++;
-
-                // check rules
-
-                // we dont need check last animal we will check last animal rule at previous animal step
-                for (i = 0; i < CeilsAmount - 1; i++)
-                {
-                    current = nb.getBit(i);
-                    next = nb.getBit(i + 1);
-
-                    // currentCantLiveType = CantLiveTogether[current];    // curretn cant live with this
-                    // nextCantLiveType = CantLiveTogether[next];          // next cant live with this - they can differ )
-
-                    // check type for living for 'current' point of view
-                    if (currentCantLiveType != 0 && currentCantLiveType == next) // these two cant live together - check new combination
-                    {
-                        // failed combination
-                        goto NextCombination;
-                    }
-
-                    // check type for living for 'next' point of view
-                    if (nextCantLiveType != 0 && nextCantLiveType == current) // these two cant live together - check new combination
-                    {
-                        // failed combination
-                        goto NextCombination;
-                    }
-                }
-
-                // DisplayMessage( nb.DisplayBits());
-
-                NextCombination: ;
-
-                // display workign status
-                if (count % displaySteps == 0)
-                {
-                    Console.WriteLine("\rcount: {0}", count);
-                }
-
-            } while (nb.getBit(HighBitIndex) == 0);
-
-            return false;
+            MakePermutation(CurrentStep, ref CurrentItems, ref AnimalsThatLeft);
         }
 
 
-        public void MakePermutation(int CurrentStep, List<int> CurrentItems, List<int> AnimalsThatLeft)
+        /// <summary>
+        /// recurse procedure 
+        /// </summary>
+        /// <param name="CurrentStep"></param>
+        /// <param name="CurrentItems"></param>
+        /// <param name="AnimalsThatLeft"></param>
+        public void MakePermutation(int CurrentStep, ref List<int> CurrentItems, ref List<int> AnimalsThatLeft)
         {
             if (CurrentStep == 0)
             {
@@ -649,22 +604,20 @@ namespace DbBest.ZooPark
 
             CurrentItems.Add(0);    // add new item as placeholder
             int CurrentNewItemIndex = CurrentItems.Count  - 1;
-
+            int ItemIndex = 0;
+            
             foreach (var Item in UniqueTypes)
             {
                 // clone new list 
-                List<int> NewAnimalsThatLeft = new List<int>(); // wil have new list of items - copy of AnimalsThatLeft without items of current type
+                List<int> NewAnimalsThatLeft = new List<int>(AnimalsThatLeft); // wil have new list of items - copy of AnimalsThatLeft without items of current type
 
-                // create new list without all items of currently selected stype from source list
-                for ( int i = AnimalsThatLeft.Count - 1; i >= 0; i-- ){
-                    if ( AnimalsThatLeft[i] != Item ) {
-                        NewAnimalsThatLeft.Add( AnimalsThatLeft[i] );
-                    }
-                }
+                // create new list without current item
+                ItemIndex = NewAnimalsThatLeft.FindLastIndex(x => x == Item);
+                NewAnimalsThatLeft.RemoveAt(ItemIndex);
 
                 CurrentItems[CurrentNewItemIndex] = Item;
 
-                MakePermutation(CurrentStep: NewCurrentStep, CurrentItems: CurrentItems, AnimalsThatLeft: NewAnimalsThatLeft);
+                MakePermutation(CurrentStep: NewCurrentStep, CurrentItems: ref CurrentItems, AnimalsThatLeft: ref NewAnimalsThatLeft);
             }
 
             return;
@@ -672,24 +625,25 @@ namespace DbBest.ZooPark
 
 
 
-        public List<int> GetUniqueTypes(List<int> SourceTypes)
-        {
-            List<int> result = SourceTypes.Distinct().ToList();
-            return result;
-        }
-
-
 
         /// <summary>
         /// return all animals list as List<int> from List<Animal>
         /// </summary>
         /// <returns></returns>
-        public List<int> GetAllAnimalsAsListInt()
+        public List<int> GetAllAnimalsAndEmptyCeilsAsListInt()
         {
+            int EmptyAnimalType = 0;
+
             List<int> result = new List<int>();
             foreach (var item in Animals)
             {
                 result.Add(item.Type);
+            }
+
+            // add emppty ceils as animal type 0
+            for (int i = 1; i <= CeilsAmount - AnimalsAmount; i++)
+            {
+                result.Add(EmptyAnimalType);
             }
             return result;
         }
@@ -762,7 +716,7 @@ namespace DbBest.ZooPark
 
         public int Run()
         {
-            findCeilSolutionByNumberBase(100);
+            findCeilSolutionByUniquePermutation(100);
 
             DisplayMessage("done");
             return 0;
