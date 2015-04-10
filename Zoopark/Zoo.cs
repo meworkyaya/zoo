@@ -496,28 +496,20 @@ namespace DbBest.ZooPark
         /// <param name="successLimit"></param>
         public void findCeilSolutionByUniquePermutation(int successLimit)
         {
-            int TotalAnimalTypesAmount = AnimalTypesAmount + 1;     // у нас общее число типов животных: Animal Types Amount + Нет Животного
-            int HighBitIndex = CeilsAmount;
-
             DisplayMessage("Begin ceil placing search ... =========================");
 
             AttemptCount = 0;
             SuccessCount = 0;
             FailCount = 0;
 
-
-            // =======================  some dirty algoritm
-
-            // we are using array becase theoreticelly they give litle better performance, must create some benchmarks for this
             List<int> CurrentItems = new List<int>();       // partial result with already placed items/animals
-            List<int> AnimalsThatLeft = GetAllAnimalsAndEmptyCeilsAsListInt();
+            List<int> AnimalsThatLeft = GetAllAnimalsAndEmptyCeilsAsListInt();  // all not placed yet animals
 
-            int CurrentStep = CeilsAmount;
-
-            MakePermutation(CurrentStep, ref CurrentItems, ref AnimalsThatLeft);
+            MakePermutation(CurrentStep: CeilsAmount, CurrentItems: ref CurrentItems, AnimalsThatLeft: ref AnimalsThatLeft);
 
             DisplayMessage("\r\nDone =========================");
             DisplayMessage("Result: Success: " + SuccessCount + ";     Failed: " + FailCount );
+            DisplayMessage("If logging enabled - success results placed at log file ");
         }
 
 
@@ -682,7 +674,7 @@ namespace DbBest.ZooPark
         public static string DisplayListInt( ref List<int> Items ){
             StringBuilder sb = new StringBuilder();
             foreach( var Item in Items){
-                sb.AppendFormat("{0} ", Items);
+                sb.AppendFormat("{0} ", Item );
             }
             return sb.ToString();
         }
