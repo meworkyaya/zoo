@@ -21,7 +21,6 @@ namespace DbBest.ZooPark
 
         // ceil Model
         protected int CeilsAmount { get; set; }
-        protected List<Ceil> Ceils;                        // list with ceils that are at Zoo: index - id of ceil; value: id of animal
 
 
         // food Model
@@ -73,7 +72,6 @@ namespace DbBest.ZooPark
             _rnd = new Random();
 
             Animals = new List<Animal>();
-            Ceils = new List<Ceil>();
             FoodStorage = new Dictionary<int, int>();
             AnimalsRules = new Dictionary<int, ZooAnimalsRules>();
 
@@ -107,7 +105,6 @@ namespace DbBest.ZooPark
 
             // clear lists
             Animals.Clear();
-            Ceils.Clear();
             FoodStorage.Clear();
             AnimalsRules.Clear();
 
@@ -117,7 +114,6 @@ namespace DbBest.ZooPark
             // generate new lists
             InitAnimals(AnimalsAmount, AnimalTypesAmount);
             InitAnimalRules(AnimalTypesAmount, FoodTypesAmount);
-            InitCeils(CeilsAmount);
             InitFoodStorage(FoodPackagesAmount, FoodTypesAmount);
         }
 
@@ -142,18 +138,6 @@ namespace DbBest.ZooPark
             {
                 type = _rnd.Next(1, typeAmount + 1);
                 Animals.Add(new Animal(type, AnimalTypesAmount));
-            }
-        }
-
-        /// <summary>
-        /// init ceils - just add empty ceils
-        /// </summary>
-        /// <param name="count"></param>
-        protected void InitCeils(int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                Ceils.Add(new Ceil());
             }
         }
 
@@ -366,25 +350,6 @@ namespace DbBest.ZooPark
         }
 
 
-        public string GetCeilsDisplay()
-        {
-            StringBuilder sb = new StringBuilder();
-            int count = 0;
-
-            sb.AppendFormat("Ceils; {0} items; types of animals: ==================================== \r\n", Ceils.Count);
-            foreach (var pair in Ceils)
-            {
-                count++;
-
-                // sb.AppendFormat("{0}: animal : {1} | Amount: \t{2} \r\n", count, pair.Type);
-                sb.AppendFormat("{0} ", pair.Type);
-            }
-            sb.Append("\r\n");
-
-            return sb.ToString();
-        }
-
-
 
         public string GetFoodDisplay()
         {
@@ -473,7 +438,6 @@ namespace DbBest.ZooPark
             // sb.AppendLine( GetAnimasRulesDisplay() );
             // sb.AppendLine( GetFoodDisplay() );
 
-            // sb.AppendLine( GetCeilsDisplay() );
             return sb.ToString();
         }
 
