@@ -104,13 +104,13 @@ namespace DbBest.ZooPark
         public void GenerateZooModel(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackages = 40, int foodTypes = 3)
         {
             // ceils model
-            AnimalsAmount = animals;
-            AnimalTypesAmount = animalsTypes;
-            CeilsAmount = ceils;
+            AnimalsAmount       = animals;
+            AnimalTypesAmount   = animalsTypes;
+            CeilsAmount         = ceils;
 
             // food model
-            FoodPackagesAmount = foodPackages;
-            FoodTypesAmount = foodTypes;
+            FoodPackagesAmount  = foodPackages;
+            FoodTypesAmount     = foodTypes;
 
             // clear lists
             Animals.Clear();
@@ -121,7 +121,7 @@ namespace DbBest.ZooPark
             FoodResults.Clear();
 
             // generate new lists
-            InitAnimals(AnimalsAmount, AnimalTypesAmount);
+            InitAnimals(    AnimalsAmount, AnimalTypesAmount);
             InitAnimalRules(AnimalTypesAmount, FoodTypesAmount);
             InitFoodStorage(FoodPackagesAmount, FoodTypesAmount);
         }
@@ -352,7 +352,7 @@ namespace DbBest.ZooPark
             StringBuilder sb = new StringBuilder();
             int count = 0;
 
-            sb.AppendFormat("Animals; {0} items ==================================== \r\n", Animals.Count);
+            sb.AppendFormat("Animals: {0}; Animal Types: {1}, Ceils: {2}  ===================== \r\n", Animals.Count, AnimalTypesAmount, CeilsAmount);
             foreach (Animal a in Animals)
             {
                 count++;
@@ -738,7 +738,7 @@ namespace DbBest.ZooPark
         }
 
 
-        public int Run()
+        public int FindCeilSolution()
         {
             findCeilSolutionByUniquePermutation(100);
 

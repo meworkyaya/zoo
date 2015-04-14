@@ -10,8 +10,8 @@ namespace DbBest.ZooPark
     {
         static void Main(string[] args)
         {
-            // RunZoo();
-            RunRandomZoo();
+            RunZoo();
+            // RunRandomZoo();
 
             // RunTests(); // used for testing some parts of code
 
@@ -34,14 +34,14 @@ namespace DbBest.ZooPark
             count = 3;
             Zoo ZooInstance_2 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test.txt");
             ZooInstance_2.TestNxNxNCreate(count);
-            ZooInstance_2.Run();
+            ZooInstance_2.FindCeilSolution();
             ZooInstance_2.ShutDownWork();
 
             Console.WriteLine("\r\nTEST create Zoo 4 animals 4 types 4 ceils 0 neighbour rule ====================");
             count = 4;
             Zoo ZooInstance_3 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test.txt");
             ZooInstance_3.TestNxNxNCreate(count);
-            ZooInstance_3.Run();
+            ZooInstance_3.FindCeilSolution();
             ZooInstance_3.ShutDownWork();
         }
 
@@ -53,7 +53,7 @@ namespace DbBest.ZooPark
         {
             Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4, logFile: "test.txt");
             ZooInstance.DisplayZooDebugInfo();
-            ZooInstance.Run();
+            ZooInstance.FindCeilSolution();
             ZooInstance.ShutDownWork();
         }
 
@@ -65,7 +65,7 @@ namespace DbBest.ZooPark
             Random rnd = new Random();
             int animals = rnd.Next(1, animalLimit);
             int ceils = animals + rnd.Next(1, 6); // more than animal
-            int animalsTypes = animals - rnd.Next(1, animals); // 1 <  animalsTypes <  animals
+            int animalsTypes = animals - rnd.Next(1, animals - 1); // 1 <  animalsTypes <  animals
 
             int foodPackage = rnd.Next(1, 10);
             int foodTypes = rnd.Next(1, 10);
@@ -74,7 +74,7 @@ namespace DbBest.ZooPark
 
             ZooInstance.DisplayZooDebugInfo();
 
-            ZooInstance.Run();
+            ZooInstance.FindCeilSolution();
             ZooInstance.ShutDownWork();
         }
 
