@@ -546,41 +546,41 @@ namespace DbBest.ZooPark
         /// <param name="AnimalsThatLeft"></param>
         public void MakePermutation(int CurrentStep, ref List<int> CurrentItems, ref List<int> AnimalsThatLeft)
         {
-            AttemptCount++;
+            AttemptCount++; // calculate number of calls of functoin
 
-            if (AttemptCount % DisplaySteps == 0)
+            if (AttemptCount % DisplaySteps == 0)  // sometimes display status
             {
                 Console.Write("\rFunc calls: {0}: Finded: {1}; Failed: {2}", AttemptCount, SuccessCount, FailCount);
             }
 
 
-            if (CurrentStep == 0)
+            if (CurrentStep == 0)   // we added items to all positions - so have success result, return back from stack of calls
             {
                 SuccessCount++;
-                // DisplayMessage( Zoo.DisplayListInt( ref CurrentItems));
-                LogMessage(Zoo.DisplayListInt(ref CurrentItems));
+                // DisplayMessage( Zoo.DisplayListInt( ref CurrentItems));  // display success result to console
+                LogMessage(Zoo.DisplayListInt(ref CurrentItems));           // log success result
                 return; // stop recursion
             }
 
-            if (AnimalsThatLeft.Count == 0)
+            if (AnimalsThatLeft.Count == 0)     // if dont have more animals - return; must be only if some logical error trapped at code
             {
                 DisplayMessage( "Error: wrong place");
                 // this is no more items - so all items placed // stop recursion
                 return;
             }
 
-            // get only unique types from current list of items
+            // get only unique types from current list of items // for small optimization moved out of method
             List<int> UniqueTypes = AnimalsThatLeft.Distinct().ToList(); // it must have at least one item - because source list already has at least one item
 
-            int NewCurrentStep = CurrentStep - 1;
+            int NewCurrentStep = CurrentStep - 1;   // next level will have one item less at list
 
-            CurrentItems.Add(0);    // add new item as placeholder
+            CurrentItems.Add(0);    // add new item as placeholder - will change it later with item values
             int CurrentNewItemIndex = CurrentItems.Count  - 1;
             int ItemIndex = 0;
 
             foreach (var Item in UniqueTypes)
             {
-                // ========= try apply placement rule for animal
+                // ========= try apply different rules for current variant: apply placement rule for animal
                 if (CurrentItems.Count >= 2) // if have previous item; previous item will be 2nd from end - because we placed placeholder for new item
                 {
                     //if (!CheckLivingRuleForPair(CurrentItems[CurrentItems.Count - 2], Item))    // check rule for previous item and current item
@@ -601,9 +601,9 @@ namespace DbBest.ZooPark
                 ItemIndex = NewAnimalsThatLeft.FindLastIndex(x => x == Item);
                 NewAnimalsThatLeft.RemoveAt(ItemIndex);
 
-                CurrentItems[CurrentNewItemIndex] = Item;
+                CurrentItems[CurrentNewItemIndex] = Item;   // add current item to list of selected items
 
-                MakePermutation(CurrentStep: NewCurrentStep, CurrentItems: ref CurrentItems, AnimalsThatLeft: ref NewAnimalsThatLeft);
+                MakePermutation(CurrentStep: NewCurrentStep, CurrentItems: ref CurrentItems, AnimalsThatLeft: ref NewAnimalsThatLeft);  // make permutations for items that left
             }
 
             CurrentItems.RemoveAt(CurrentNewItemIndex); // remove item that we added for this level of permutationss
