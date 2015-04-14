@@ -80,12 +80,12 @@ namespace DbBest.ZooPark
 
             _rnd = new Random();
 
-            Animals = new List<Animal>();
-            FoodStorage = new Dictionary<int, int>();
-            AnimalsRules = new Dictionary<int, ZooAnimalsRules>();
+            Animals         = new List<Animal>();
+            FoodStorage     = new Dictionary<int, int>();
+            AnimalsRules    = new Dictionary<int, ZooAnimalsRules>();
 
-            CeilsResults = new List<List<uint>>();
-            FoodResults = new List<List<Animal>>();
+            CeilsResults    = new List<List<uint>>();
+            FoodResults     = new List<List<Animal>>();
 
             GenerateZooModel(animals, animalsTypes, ceils, foodPackage, foodTypes);
         }
