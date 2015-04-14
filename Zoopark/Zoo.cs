@@ -274,11 +274,16 @@ namespace DbBest.ZooPark
             {
                 // generate rule what food can eat - 1st type and 2nd type
                 Food_1Eat = _rnd.Next(1, foodTypesAmount + 1);
+
                 applyFood_2Rule = _rnd.Next(1, randomGenerateChanceBorder + 1) > 1 ? true : false;
                 if (applyFood_2Rule)
                 {
                     Food_2Eat = _rnd.Next(1, foodTypesAmount + 1);
                     Food_2Eat = (Food_2Eat != Food_1Eat) ? Food_2Eat : 0;  // if selected type of food 2 is the same as food 1  - just reset rule
+                }
+                else
+                {
+                    Food_2Eat = 0;
                 }
                 AnimalsRules[i] = new ZooAnimalsRules(i, Food_1Eat, Food_2Eat);
             }
@@ -486,17 +491,17 @@ namespace DbBest.ZooPark
         /// введение
         /// берем первое животное - N вариантов
         /// но в этих N вариантах есть повторяющиеся типы, перебор по которым создает дубликаты вариантов.
-        /// поэтому для пеербора нам надао выбрать тольк животных уникальных типов
+        /// поэтому для перебора нам надо выбрать только животных уникальных типов
         /// 
         /// Итого:
         /// - выбираем из N животных  А животных уникальных типов
         /// - и каждого из этих животных садим в 1ю клетку
-        /// - смотрим - если у животного соседи слева? если есть - смотрим ограничние - может мы эти животные посадить вместе?
+        /// - смотрим - есть у животного соседи слева? если есть - смотрим ограничение - может мы эти животные посадить вместе?
         /// - если можем - садим, и делаем перебор для оставшихся животных (рекурсия)
         /// - если не можем - обрасываем этот вариант
         /// - пустая клетка работает как дополнительный тип животного
         /// 
-        /// оценка числа вариантов: перебор из N элеменвто из которых M уникальных - порядка N! / (N-M)!
+        /// оценка числа вариантов: перебор из N элементов из которых M уникальных - число вариантов порядка N! / (N-M)!
         /// и еще отсеиваются вараинты для которых срабатывает ограничение на соседей
         /// 
         /// 
@@ -747,10 +752,89 @@ namespace DbBest.ZooPark
         }
 
 
-        public int FindFoodSolution()
-        {
 
-            return 0;
+
+
+
+        public bool FindFoodSolution()
+        {
+            Dictionary<int, int> WorkFoodStorage = new Dictionary<int,int>( FoodStorage );      // work copy of foodstorage
+            Dictionary<int, int> AnimalsOfTypes = new Dictionary<int, int>();   // amount of animals of each type
+
+            int FoodType = 0;
+            foreach (var item in Animals)
+            {
+                AnimalsOfTypes[item.Type] += 1; // create list: amount of animals of each type
+                if (AnimalsRules[item.Type].CanEatFood_2 == 0)  // and at first check animals that eat only one type of food: deduct all food for animals that eat only one type of food
+                {
+                    FoodType = AnimalsRules[item.Type].CanEatFood_1;
+                    WorkFoodStorage[ FoodType ] -= 2;   
+                }
+            }
+            if (!FoodCheckThatEatOnly_1_Food(WorkFoodStorage))
+            {
+                return false;
+            }
+
+            // now we have WorkFoodStorage with only food for animals that eat 2 types of food - try feed them all
+
+            // add item to animals 
+            foreach (var item in Animals)
+            {
+                if (WorkFoodStorage[item.Food_1] > 0)
+                {
+                    WorkFoodStorage[item.Food_1] -= 1;
+                }
+                else if (WorkFoodStorage[item.Food_2] > 0)
+                {
+                    WorkFoodStorage[item.Food_2] -= 1;
+                }
+                else
+                {
+                    WorkFoodStorage[item.Food_1] -= 1;
+                }
+            }
+
+            // check - do we have some food item less than 0
+            foreach (var item in WorkFoodStorage)
+            {
+                if (item.Value < 0)
+                {
+                    // begin barter
+                }
+            }
+
+
+
+            return true;
+        }
+
+
+        protected bool FoodCheckThatEatOnly_1_Food(Dictionary<int, int> WorkFoodStorage)
+        {
+            // check - if we dont have some food for animals that eat one type of food
+            Dictionary<int, int> DontHaveFood = new Dictionary<int, int>();
+            foreach (var item in WorkFoodStorage)
+            {
+                if (item.Value < 0)
+                {
+                    DontHaveFood[item.Key] += item.Value;
+                }
+            }
+
+            if (DontHaveFood.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (var item in DontHaveFood)
+                {
+                    sb.AppendFormat("\r\nNeed {0} item of type {1}", item.Value, item.Key);
+
+                }
+                DisplayMessage("Food: we cant feed even animals with one food type: " + sb.ToString() + "\r\n");
+                return false;
+            }
+
+            return true;
         }
 
 
