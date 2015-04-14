@@ -514,7 +514,7 @@ namespace DbBest.ZooPark
         /// 
         /// 
         /// </summary>
-        /// <param name="successLimit"></param>
+        /// <param name="successLimit">not used now, can use if want limit number of success variants</param>
         public void findCeilSolutionByUniquePermutation(int successLimit)
         {
             DisplayMessage("Begin ceil placing search ... =========================");
@@ -743,6 +743,13 @@ namespace DbBest.ZooPark
             findCeilSolutionByUniquePermutation(100);
 
             DisplayMessage("done");
+            return 0;
+        }
+
+
+        public int FindFoodSolution()
+        {
+
             return 0;
         }
 

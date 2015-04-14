@@ -10,7 +10,8 @@ namespace DbBest.ZooPark
     {
         static void Main(string[] args)
         {
-            RunZoo();
+            RunFoodZoo();
+            // RunCeilZoo();
             // RunRandomZoo();
 
             // RunTests(); // used for testing some parts of code
@@ -49,7 +50,16 @@ namespace DbBest.ZooPark
 
 
 
-        static void RunZoo()
+        static void RunCeilZoo()
+        {
+            Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 0, animalsTypes: 3, foodTypes: 0, logFile: "test.txt");
+            ZooInstance.DisplayZooDebugInfo();
+            ZooInstance.FindCeilSolution();
+            ZooInstance.ShutDownWork();
+        }
+
+
+        static void RunFoodZoo()
         {
             Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4, logFile: "test.txt");
             ZooInstance.DisplayZooDebugInfo();
