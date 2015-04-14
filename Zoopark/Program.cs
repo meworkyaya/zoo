@@ -11,8 +11,9 @@ namespace DbBest.ZooPark
         static void Main(string[] args)
         {
             // RunZoo();
+            RunRandomZoo();
 
-            RunTests(); // used for testing some parts of code
+            // RunTests(); // used for testing some parts of code
 
             Console.ReadLine();     // wait to see output
         }
@@ -20,11 +21,33 @@ namespace DbBest.ZooPark
 
         static void RunTests()
         {
-            Zoo ZooInstanceZero = new Zoo(animals: 0, ceils: 0, foodPackage: 0, animalsTypes: 0, foodTypes: 0, logFile: "test.txt");
-            Zoo ZooInstance = new Zoo(animals: 3, ceils: 1, foodPackage: 3, animalsTypes: 2, foodTypes: 1, logFile: "test.txt" );
-            ZooInstance.TestNumberWithBase( baseOfNumber: 2, numberOfDigits: 4);
+            int count = 0;
+            Console.WriteLine("\r\nTEST create empty Zoo ====================");
+            Zoo ZooInstance = new Zoo(animals: 0, ceils: 0, foodPackage: 0, animalsTypes: 0, foodTypes: 0, logFile: "test.txt");
             ZooInstance.ShutDownWork();
+
+            //Console.WriteLine("\r\nTEST inc numbers ====================");
+            //ZooInstance.TestNumberWithBase(baseOfNumber: 2, numberOfDigits: 4);
+            //ZooInstance.ShutDownWork();
+
+            Console.WriteLine("\r\nTEST create Zoo 3 animals 3 types 3 ceils 0 neighbour rule ====================");
+            count = 3;
+            Zoo ZooInstance_2 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test.txt");
+            ZooInstance_2.TestNxNxNCreate(count);
+            ZooInstance_2.Run();
+            ZooInstance_2.ShutDownWork();
+
+            Console.WriteLine("\r\nTEST create Zoo 4 animals 4 types 4 ceils 0 neighbour rule ====================");
+            count = 4;
+            Zoo ZooInstance_3 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test.txt");
+            ZooInstance_3.TestNxNxNCreate(count);
+            ZooInstance_3.Run();
+            ZooInstance_3.ShutDownWork();
         }
+
+
+
+
 
         static void RunZoo()
         {
@@ -37,17 +60,22 @@ namespace DbBest.ZooPark
 
         static void RunRandomZoo()
         {
+            int animalLimit = 11;
             // ====== generate random zoo 
-            //Random rnd = new Random();
-            //int foodPackage = rnd.Next(1, 10);
-            //int foodTypes = rnd.Next(1, 10);
+            Random rnd = new Random();
+            int animals = rnd.Next(1, animalLimit);
+            int ceils = animals + rnd.Next(1, 6); // more than animal
+            int animalsTypes = animals - rnd.Next(1, animals); // 1 <  animalsTypes <  animals
 
-            //Zoo ZooInstance = new Zoo(animals: 5, ceils: 7, foodPackage: foodPackage, animalsTypes: 2, foodTypes: foodTypes);
+            int foodPackage = rnd.Next(1, 10);
+            int foodTypes = rnd.Next(1, 10);
 
-            // ZooInstance.DisplayZooDebugInfo();
+            Zoo ZooInstance = new Zoo(animals: animals, ceils: ceils, foodPackage: foodPackage, animalsTypes: animalsTypes, foodTypes: foodTypes, logFile: "test.txt");
 
-            // ZooInstance.Run();
-            // ZooInstance.ShutDownWork();
+            ZooInstance.DisplayZooDebugInfo();
+
+            ZooInstance.Run();
+            ZooInstance.ShutDownWork();
         }
 
 

@@ -480,22 +480,34 @@ namespace DbBest.ZooPark
         /// <summary>
         /// алгоритм:
         /// 
-        /// у нас есть животные некого числа типов
-        /// размещение их по клеткам означает что в клетке есть некий тип.
+        /// варианты:
+        /// 1) лучший: у нас есть животные N штук, M типов, X клеток
         /// 
-        /// тогда например для 4 типов животных мы получааем для 5 клеток набор:
-        /// 1 3 0 2 1
+        /// введение
+        /// берем первое животное - N вариантов
+        /// но в этих N вариантах есть повторяющиеся типы, перебор по которым создает дубликаты вариантов.
+        /// поэтому для пеербора нам надао выбрать тольк животных уникальных типов
         /// 
-        /// т.е. эти наборы формируют разные числа по базису числа типов животных ( по базису 4 в данном примере)
-        /// перебор по числам от 0 0 0 0 0 до  4 4 4 4 4  даст нам все варианты расположения животных без дупликатов
-        /// 0 - отсутствие животного
+        /// Итого:
+        /// - выбираем из N животных  А животных уникальных типов
+        /// - и каждого из этих животных садим в 1ю клетку
+        /// - смотрим - если у животного соседи слева? если есть - смотрим ограничние - может мы эти животные посадить вместе?
+        /// - если можем - садим, и делаем перебор для оставшихся животных (рекурсия)
+        /// - если не можем - обрасываем этот вариант
+        /// - пустая клетка работает как дополнительный тип животного
         /// 
-        /// в общем случае получаем: 
-        /// расположение по клеткам:
-        ///  A B C D E F G H ... 
-        ///  где A-H - тип животного
-        ///  
-        /// мы создаем новый вариант с помощью инкремента - и проверяем его на правила
+        /// оценка числа вариантов: перебор из N элеменвто из которых M уникальных - порядка N! / (N-M)!
+        /// и еще отсеиваются вараинты для которых срабатывает ограничение на соседей
+        /// 
+        /// 
+        /// 2) более худший алгоритм:
+        /// - каждая клетка - разряд числа
+        /// - тип животного - бит числа в этом разряде.. 3 типа животных - число по базе 4 ( пустая клетка + 4 значения одного разряда числа)
+        /// перебор всех битов от минимального числа до максимального даст нам все варианты
+        /// 
+        /// для этого алгоритма число просматриваемых вариантов намного больше чем дял 1го, но не требуется рекурсия и намного легче делать алгоритм.
+        /// алгоритм не реализовывал.. 
+        /// 
         /// 
         /// </summary>
         /// <param name="successLimit"></param>
@@ -565,21 +577,21 @@ namespace DbBest.ZooPark
             foreach (var Item in UniqueTypes)
             {
                 // ========= try apply placement rule for animal
-                if (CurrentItems.Count >= 2) // if have previous item; previous item will be 2nd from edn - because we placed placeholder for new item
+                if (CurrentItems.Count >= 2) // if have previous item; previous item will be 2nd from end - because we placed placeholder for new item
                 {
                     //if (!CheckLivingRuleForPair(CurrentItems[CurrentItems.Count - 2], Item))    // check rule for previous item and current item
                     if (AnimalsLivingWithRules[CurrentItems[CurrentItems.Count - 2], Item] == Zoo.CantLiveWithFlag)  // for optimization remove function call
                     {
                         FailCount++;
 
-                        LogMessage(Zoo.DisplayListWithoutLastInt(ref CurrentItems), "Fail:\r\nTried Add last: " + Item + " => " );
+                        LogMessage(Zoo.DisplayListWithoutLastInt(ref CurrentItems), "\t\t\t\t\t\t\t\t\t\t\t\tFail: Tried Add as last item: " + Item + " at list => " );
 
                         continue; // rule does not passed - skip to next item
                     }
                 }
 
                 // clone new list 
-                List<int> NewAnimalsThatLeft = new List<int>(AnimalsThatLeft); // wil have new list of items - copy of AnimalsThatLeft without items of current type
+                List<int> NewAnimalsThatLeft = new List<int>(AnimalsThatLeft); // will have new list of items - copy of AnimalsThatLeft without items of current type
 
                 // create new list without current item
                 ItemIndex = NewAnimalsThatLeft.FindLastIndex(x => x == Item);
@@ -661,6 +673,32 @@ namespace DbBest.ZooPark
                 Console.WriteLine("catched: " + ex.Message);
             }
         }
+
+
+        public void TestNxNxNCreate( int count )
+        {
+            Animals.Clear();
+            int type = 0;
+            for (int i = 0; i < count; i++)
+            {
+                type = i;
+                Animals.Add(new Animal(type, AnimalTypesAmount));
+            }
+            TestInitAnimalLiveRules(count);
+
+        }
+
+        protected void TestInitAnimalLiveRules(int animalTypesAmount)
+        {
+            AnimalsLivingWithRules = new int[animalTypesAmount + 1, animalTypesAmount + 1]; // we need add rules for types pairs like :  { Animal Type, No Animal }
+
+            for (int i = 0; i <= animalTypesAmount; i++)
+            {
+                AnimalsLivingWithRules[i, 0] = 0;   // по умолчанию с пустой клеткой все могут жить.. 
+                AnimalsLivingWithRules[0, i] = 0;   // и пустая клетка может жить со всеми
+            }
+        }
+
 
         #endregion
 
