@@ -158,6 +158,11 @@ namespace DbBest.ZooPark
         /// <param name="count"></param>
         protected void InitFoodStorage(int count, int typesAmount)
         {
+            if (typesAmount == 0)   // fix for 0 food model
+            {
+                return;
+            }
+
             int FoodTypeAmount = 0;
             int Left = count;
 
