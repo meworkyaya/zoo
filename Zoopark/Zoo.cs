@@ -588,7 +588,7 @@ namespace DbBest.ZooPark
                     {
                         FailCount++;
 
-                        LogMessage(Zoo.DisplayListWithoutLastInt(ref CurrentItems), "\t\t\t\t\t\t\t\t\t\t\t\tFail: Tried Add as last item: " + Item + " at list => " );
+                        LogMessage(Zoo.DisplayListWithoutLastInt(ref CurrentItems), "\t\t\t\t\t\t\t\t\t\tFail: Tried Add as last item: " + Item + " at list => " );
 
                         continue; // rule does not passed - skip to next item
                     }
