@@ -894,6 +894,7 @@ namespace DbBest.ZooPark
         protected void FoodPushToEmptyBuckets() {
             int FoodType_1 = 0;
             int FoodType_2 = 0;
+            // int NeedFood = 0;
 
             Dictionary<int, int> Types;
             FoodBucket item;
@@ -909,18 +910,18 @@ namespace DbBest.ZooPark
                 }
 
                 item = FoodBuckets[i];
-
-                // 1) пытаемся излишками заполнить пустые места еды, если излишки есть - заполняем
                 FoodType_1 = item.TypeFood_1;
                 FoodType_2 = item.TypeFood_2;
 
+
+                // 1) пытаемся излишками заполнить пустые места еды, если излишки есть - заполняем
                 // if need food - try push it from food 2
                 if (FoodWorkStorage[FoodType_1] > 0)
                 {
                     FoodWorkStorage[FoodType_1] = item.PushFood_1(FoodWorkStorage[FoodType_1]);
                 }
 
-                // if again need food - push it from food 1
+                // if again need food - try push it from food 1
                 if (item.NeedFood() > 0)
                 {
                     if (FoodWorkStorage[FoodType_2] > 0)
@@ -933,7 +934,7 @@ namespace DbBest.ZooPark
 
                 // 2) ищем ситуации блокировок - когда излишек на складе есть - но он не того типа что нужен.
                 // а нужный тип занят.
-                // но мы можем занятый нужный тип высвободить поменяв на излишек со склада
+                // но мы можем занятый нужный тип высвободить поменяв на свободный излишек со склада
                 if (item.NeedFood() > 0)
                 {
                     // ищем пары для используемых типов продуктов, и излишки этих пар есть на складе
