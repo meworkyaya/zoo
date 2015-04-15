@@ -787,32 +787,33 @@ namespace DbBest.ZooPark
 
 
             // add item to animals 
-            foreach (var item in Animals)
-            {
-                if (FoodWorkStorage[item.Food_1] > 0)
-                {
-                    FoodWorkStorage[item.Food_1] -= 1;
-                }
-                else if (FoodWorkStorage[item.Food_2] > 0)
-                {
-                    FoodWorkStorage[item.Food_2] -= 1;
-                }
-                else
-                {
-                    FoodWorkStorage[item.Food_1] -= 1;
-                }
-            }
+            //foreach (var item in Animals)
+            //{
+            //    if (FoodWorkStorage[item.Food_1] > 0)
+            //    {
+            //        FoodWorkStorage[item.Food_1] -= 1;
+            //    }
+            //    else if (FoodWorkStorage[item.Food_2] > 0)
+            //    {
+            //        FoodWorkStorage[item.Food_2] -= 1;
+            //    }
+            //    else
+            //    {
+            //        FoodWorkStorage[item.Food_1] -= 1;
+            //    }
+            //}
 
-            // check - do we have some food item less than 0
-            foreach (var item in FoodWorkStorage)
-            {
-                if (item.Value < 0)
-                {
-                    // begin barter
-                }
-            }
+            //// check - do we have some food item less than 0
+            //foreach (var item in FoodWorkStorage)
+            //{
+            //    if (item.Value < 0)
+            //    {
+            //        // begin barter
+            //    }
+            //}
 
 
+            DisplayMessage("Search Food Solution Done");
 
             return true;
         }
@@ -823,8 +824,9 @@ namespace DbBest.ZooPark
             int FoodType = 0;
             foreach (var item in Animals)
             {
-                // 1) create list: amount of animals of each type
-                AnimalsOfTypes[item.Type] += 1;
+                // 1) create list: amount of animals of each type  
+                Zoo.DicAddOrUpdate(dic: AnimalsOfTypes, key: item.Type, addOrNewValue: 1);     // AnimalsOfTypes[item.Type] += 1;
+                
 
                 // 2) and at first check animals that eat only one type of food: deduct all food for animals that eat only one type of food
                 if (AnimalsRules[item.Type].CanEatFood_2 == 0)
@@ -836,13 +838,34 @@ namespace DbBest.ZooPark
                 else
                 {
                     FoodType = AnimalsRules[item.Type].CanEatFood_1;
-                    FoodRequirements[FoodType] += 1;
+                    Zoo.DicAddOrUpdate(dic: FoodRequirements, key: FoodType, addOrNewValue: 1);    // FoodRequirements[FoodType] += 1;
 
                     FoodType = AnimalsRules[item.Type].CanEatFood_2;
-                    FoodRequirements[FoodType] += 1;
+                    Zoo.DicAddOrUpdate(dic: FoodRequirements, key: FoodType, addOrNewValue: 1);    // FoodRequirements[FoodType] += 1;
                 }
             }
             return;
+        }
+
+        /// <summary>
+        /// add or update value at dictionnary<int,int>
+        /// </summary>
+        /// <param name="dic"></param>
+        /// <param name="key"></param>
+        /// <param name="addOrNewValue"></param>
+        public static void DicAddOrUpdate(Dictionary<int, int> dic, int key, int addOrNewValue)
+        {
+            int val;
+            if (dic.TryGetValue(key, out val))
+            {
+                // yay, value exists!
+                dic[key] = val + addOrNewValue;
+            }
+            else
+            {
+                // darn, lets add the value
+                dic.Add(key, addOrNewValue);
+            }
         }
 
 
@@ -854,7 +877,7 @@ namespace DbBest.ZooPark
             {
                 if (item.Value < 0)
                 {
-                    DontHaveFood[item.Key] += item.Value;
+                    Zoo.DicAddOrUpdate(dic: DontHaveFood, key: item.Key, addOrNewValue: item.Value);    // DontHaveFood[item.Key] += item.Value;                    
                 }
             }
 
@@ -863,9 +886,9 @@ namespace DbBest.ZooPark
                 StringBuilder sb = new StringBuilder();
                 foreach (var item in DontHaveFood)
                 {
-                    sb.AppendFormat("\r\nNeed {0} item of type {1}", item.Value, item.Key);
+                    sb.AppendFormat("\r\nHave delta {0} item(s) of type {1}", item.Value, item.Key);
                 }
-                DisplayMessage("Food: we cant feed even animals that eat only one food type: " + sb.ToString() + "\r\n");
+                DisplayMessage("Food Check 1: we cant feed  animals that eat only 1 food type: " + sb.ToString() + "\r\n");
                 return false;
             }
 
@@ -876,26 +899,28 @@ namespace DbBest.ZooPark
 
         protected bool FoodCheckMinimalRequirements(Dictionary<int, int> FoodRequirements, Dictionary<int, int> WorkFoodStorage)
         {
-            // check - if we dont have some food for animals that eat one type of food
+            // check - if we dont have some food for animals that eat two type of food
             Dictionary<int, int> DontHaveFood = new Dictionary<int, int>();
             int HaveFoodAmount = 0;
+            int RequiredFoodAmount = 0;
+
             foreach (var item in FoodRequirements)
             {
-                HaveFoodAmount = WorkFoodStorage[item.Key];
-                if (item.Value > HaveFoodAmount)
-                {
-                    DontHaveFood[item.Key] += item.Value - HaveFoodAmount;
-                }
+                HaveFoodAmount += WorkFoodStorage[item.Key];
+                RequiredFoodAmount += item.Value;
+                // use for status display
+                Zoo.DicAddOrUpdate(dic: DontHaveFood, key: item.Key, addOrNewValue: item.Value - HaveFoodAmount);    // DontHaveFood[item.Key] += item.Value;
             }
 
-            if (DontHaveFood.Count > 0)
+            if (HaveFoodAmount < RequiredFoodAmount)
             {
                 StringBuilder sb = new StringBuilder();
                 foreach (var item in DontHaveFood)
                 {
-                    sb.AppendFormat("\r\nNeed {0} item of type {1}", item.Value, item.Key);
+                    sb.AppendFormat("\r\nHave {0} item of type {1}", item.Value, item.Key);
                 }
-                DisplayMessage("Food: we cant feed animals that eat two food type - average requirements: " + sb.ToString() + "\r\n");
+                DisplayMessage("Food Check 2: we cant feed animals that eat 2 food type. Have total: " + HaveFoodAmount.ToString() + "; Need Total: " + RequiredFoodAmount.ToString() );
+                DisplayMessage("Details for food types: " + sb.ToString());
                 return false;
             }
 
