@@ -1011,9 +1011,15 @@ namespace DbBest.ZooPark
 
             int RequiredFoodAmount = TargetItem.NeedFood();
 
+            int CanChange = 0;
+
             if (FoodWorkStorage[TakedLinkedType] > RequiredFoodAmount)
             {
-                FoodWorkStorage[TakedLinkedType] -= RequiredFoodAmount;
+                CanChange = TakedItem.ExchangeFood(RequiredFoodAmount, TakedLinkedType); // ????
+
+                FoodWorkStorage[TakedLinkedType] -= CanChange;
+
+
 
                 // free TakedNeededType from TakedBucketIndex item by fill by TakedLinkedType
                 // ..

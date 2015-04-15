@@ -128,23 +128,34 @@ namespace DbBest.ZooPark
 
         protected int ExchangeInner(int amount, ref int from, ref int too)
         {
-            return 0;
+            int changed = 0;
+            if (amount <= from)
+            {
+                changed = amount;
+            } else {
+                changed = from;
+            }
+
+            from -= changed;
+            too += changed;
+            return changed;
         }
 
-        public int ExchangeFood(int amount, int type)
+
+        public int ExchangeFood(int amount, int typeToGet)
         {
             if (amount <= 0)
             {
                 throw new Exception("amount must be > 0");
             }
 
-            if (type == TypeFood_1)
-            {
-                return ExchangeInner(amount, ref _amountFood_1, ref _amountFood_2);
-            }
-            else if (type == TypeFood_2)
+            if (typeToGet == TypeFood_1)
             {
                 return ExchangeInner(amount, ref _amountFood_2, ref _amountFood_1);
+            }
+            else if (typeToGet == TypeFood_2)
+            {
+                return ExchangeInner(amount, ref _amountFood_1, ref _amountFood_2);
             }
             else
             {
