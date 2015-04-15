@@ -11,6 +11,8 @@ namespace DbBest.ZooPark
     /// </summary>
     public class FoodBucket
     {
+        public static int FoodPerBucket = 2;
+
         public int BucketsAmount { get; set; }  // amount of items of such bucket
 
         public int TotalAmountFood
@@ -45,11 +47,11 @@ namespace DbBest.ZooPark
 
             if (TypeFood_1 == type)
             {
-                return fillFoodType_1(amount);
+                return FillFoodType_1(amount);
             }
             else if (TypeFood_2 == type)
             {
-                return fillFoodType_2(amount);
+                return FillFoodType_2(amount);
             }
             else
             {
@@ -63,7 +65,7 @@ namespace DbBest.ZooPark
         /// </summary>
         /// <param name="amount"></param>
         /// <returns>amount of food that left from input after filling</returns>
-        public int fillFoodType_1(int amount)
+        public int FillFoodType_1(int amount)
         {
             if (amount <= 0)
             {
@@ -88,7 +90,7 @@ namespace DbBest.ZooPark
         /// </summary>
         /// <param name="amount"></param>
         /// <returns>amount of food that left from input after filling</returns>
-        public int fillFoodType_2(int amount)
+        public int FillFoodType_2(int amount)
         {
             if (amount <= 0)
             {
@@ -107,5 +109,24 @@ namespace DbBest.ZooPark
                 return (amount - CanUse);
             }
         }
+
+
+        public int NeedFoodType_1()
+        {
+            int CanHave = FoodBucket.FoodPerBucket * BucketsAmount - AmountFood_2;
+            return ( CanHave - AmountFood_1 );
+        }
+        public int NeedFoodType_2()
+        {
+            int CanHave = FoodBucket.FoodPerBucket * BucketsAmount - AmountFood_1;
+            return (CanHave - AmountFood_2);
+        }
+
+
+        public int PushFood_1(int amount)
+        {
+            return 0;
+        }
+        
     }
 }

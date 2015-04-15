@@ -860,7 +860,7 @@ namespace DbBest.ZooPark
                 
                 if (FoodAmount > 0)
                 {
-                    FoodWorkStorage[FoodType] = item.fillFoodType_1(FoodAmount);
+                    FoodWorkStorage[FoodType] = item.FillFoodType_1(FoodAmount);
                 }
 
                 // try fill 2nd food
@@ -869,14 +869,40 @@ namespace DbBest.ZooPark
 
                 if (FoodAmount > 0)
                 {
-                    FoodWorkStorage[FoodType] = item.fillFoodType_2(FoodAmount);
+                    FoodWorkStorage[FoodType] = item.FillFoodType_2(FoodAmount);
                 }
             }
             return;
         }
 
 
-        protected void FoodPushToEmptyBuckets() { }
+        protected void FoodPushToEmptyBuckets() {
+            int FoodNeed = 0;
+
+            int FoodType_1 = 0;
+            int FoodType_2 = 0;
+            
+            foreach (var item in FoodBuckets)
+            {                
+                FoodType_1 = item.TypeFood_1;
+                FoodType_2 = item.TypeFood_2;
+
+                // if food 1 empty - push it from food 2
+                FoodNeed = item.NeedFoodType_1();
+                if (FoodNeed > 0)
+                {
+                    if (FoodWorkStorage[FoodType_2] > 0)
+                    {
+                        FoodWorkStorage[FoodType_2] = item.PushFood_1(FoodWorkStorage[FoodType_2]);
+                    }
+                }
+
+
+
+
+            }
+            return;
+        }
         protected void FoodTrySolveEmptyBuckets() { }
 
         protected bool FoodCheckBuckets() { return false; }
