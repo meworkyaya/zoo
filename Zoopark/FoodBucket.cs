@@ -17,12 +17,15 @@ namespace DbBest.ZooPark
         {
             get
             {
-                return AmountFood_1 + AmountFood_2;
+                return _amountFood_1 + _amountFood_2;
             }
-            protected set;
+            protected set{}
         }
-        public int AmountFood_1 { get; protected set; }
-        public int AmountFood_2 { get; protected set; }
+
+        private int _amountFood_1;
+        private int _amountFood_2;
+        public int AmountFood_1 { get { return _amountFood_1; } protected set { _amountFood_1 = value; } }
+        public int AmountFood_2 { get { return _amountFood_2; } protected set { _amountFood_2 = value; } }
 
         public int TypeFood_1 { get; set; }
         public int TypeFood_2 { get; set; }

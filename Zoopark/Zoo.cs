@@ -843,10 +843,6 @@ namespace DbBest.ZooPark
 
 
 
-
-
-
-
             DisplayMessage("Search Food Solution Done");
 
             return true;
@@ -854,15 +850,32 @@ namespace DbBest.ZooPark
 
 
         protected void FoodFillBucketsByHalf() {
+            int FoodType = 0;
+            int FoodAmount = 0;
             foreach (var item in FoodBuckets)
             {
-                if (FoodWorkStorage[item.TypeFood_1] > 0)
+                // try fill 1st food
+                FoodType = item.TypeFood_1;
+                FoodAmount = FoodWorkStorage[FoodType];
+                
+                if (FoodAmount > 0)
                 {
-                    FoodWorkStorage[item.TypeFood_1] = item.fillFoodType_1(FoodWorkStorage[item.TypeFood_1]);
+                    FoodWorkStorage[FoodType] = item.fillFoodType_1(FoodAmount);
+                }
+
+                // try fill 2nd food
+                FoodType = item.TypeFood_2;
+                FoodAmount = FoodWorkStorage[FoodType];
+
+                if (FoodAmount > 0)
+                {
+                    FoodWorkStorage[FoodType] = item.fillFoodType_2(FoodAmount);
                 }
             }
-
+            return;
         }
+
+
         protected void FoodPushToEmptyBuckets() { }
         protected void FoodTrySolveEmptyBuckets() { }
 
