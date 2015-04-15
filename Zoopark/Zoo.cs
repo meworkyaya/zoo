@@ -37,6 +37,12 @@ namespace DbBest.ZooPark
         protected int FoodTypesAmount { get; set; }       // amount of types of food
 
         protected Dictionary<int, int> FoodStorage;       // list with amount of food packages of each type that are at Zoo: <type of food : amount of food>
+        protected int FoodAmountForOneAnimal = 2;         // amount of food needed for each animal
+
+        Dictionary<int, int> FoodWorkStorage;      // work copy of foodstorage
+        Dictionary<int, int> FoodRequirements;      // work copy of foodstorage
+        Dictionary<int, int> AnimalsOfTypes;   // amount of animals of each type
+
 
 
         // results
@@ -758,45 +764,46 @@ namespace DbBest.ZooPark
 
         public bool FindFoodSolution()
         {
-            Dictionary<int, int> WorkFoodStorage = new Dictionary<int,int>( FoodStorage );      // work copy of foodstorage
-            Dictionary<int, int> AnimalsOfTypes = new Dictionary<int, int>();   // amount of animals of each type
+            FoodWorkStorage = new Dictionary<int, int>(FoodStorage);    // work copy of foodstorage
+            FoodRequirements = new Dictionary<int, int>();              // work copy of foodstorage
+            AnimalsOfTypes = new Dictionary<int, int>();                // amount of animals of each type
 
-            int FoodType = 0;
-            foreach (var item in Animals)
-            {
-                AnimalsOfTypes[item.Type] += 1; // create list: amount of animals of each type
-                if (AnimalsRules[item.Type].CanEatFood_2 == 0)  // and at first check animals that eat only one type of food: deduct all food for animals that eat only one type of food
-                {
-                    FoodType = AnimalsRules[item.Type].CanEatFood_1;
-                    WorkFoodStorage[ FoodType ] -= 2;   
-                }
-            }
-            if (!FoodCheckThatEatOnly_1_Food(WorkFoodStorage))
+            FoodCreateLists(ref AnimalsOfTypes, ref FoodWorkStorage, ref FoodRequirements);  // create required lists of data
+
+            if (!FoodCheckThatEatOnly_1_Food(FoodWorkStorage)) // check that we have food for animals that eat only one type of food 
             {
                 return false;
             }
 
-            // now we have WorkFoodStorage with only food for animals that eat 2 types of food - try feed them all
+            // now we have WorkFoodStorage with only food for animals that eat 2 types of food
+            // check minimal requirement list of food for animals that eat 2 types of food
+            if (!FoodCheckMinimalRequirements(FoodRequirements, FoodWorkStorage))
+            {
+                return false;
+            }
+
+
+
 
             // add item to animals 
             foreach (var item in Animals)
             {
-                if (WorkFoodStorage[item.Food_1] > 0)
+                if (FoodWorkStorage[item.Food_1] > 0)
                 {
-                    WorkFoodStorage[item.Food_1] -= 1;
+                    FoodWorkStorage[item.Food_1] -= 1;
                 }
-                else if (WorkFoodStorage[item.Food_2] > 0)
+                else if (FoodWorkStorage[item.Food_2] > 0)
                 {
-                    WorkFoodStorage[item.Food_2] -= 1;
+                    FoodWorkStorage[item.Food_2] -= 1;
                 }
                 else
                 {
-                    WorkFoodStorage[item.Food_1] -= 1;
+                    FoodWorkStorage[item.Food_1] -= 1;
                 }
             }
 
             // check - do we have some food item less than 0
-            foreach (var item in WorkFoodStorage)
+            foreach (var item in FoodWorkStorage)
             {
                 if (item.Value < 0)
                 {
@@ -807,6 +814,34 @@ namespace DbBest.ZooPark
 
 
             return true;
+        }
+
+
+        protected void FoodCreateLists(ref Dictionary<int, int> AnimalsOfTypes, ref Dictionary<int, int> WorkFoodStorage, ref Dictionary<int, int> FoodRequirements)
+        {
+            int FoodType = 0;
+            foreach (var item in Animals)
+            {
+                // 1) create list: amount of animals of each type
+                AnimalsOfTypes[item.Type] += 1;
+
+                // 2) and at first check animals that eat only one type of food: deduct all food for animals that eat only one type of food
+                if (AnimalsRules[item.Type].CanEatFood_2 == 0)
+                {
+                    FoodType = AnimalsRules[item.Type].CanEatFood_1;
+                    WorkFoodStorage[FoodType] -= FoodAmountForOneAnimal;
+                }
+                // 3) create food requirement list for animals that can eat 2 food types
+                else
+                {
+                    FoodType = AnimalsRules[item.Type].CanEatFood_1;
+                    FoodRequirements[FoodType] += 1;
+
+                    FoodType = AnimalsRules[item.Type].CanEatFood_2;
+                    FoodRequirements[FoodType] += 1;
+                }
+            }
+            return;
         }
 
 
@@ -828,9 +863,38 @@ namespace DbBest.ZooPark
                 foreach (var item in DontHaveFood)
                 {
                     sb.AppendFormat("\r\nNeed {0} item of type {1}", item.Value, item.Key);
-
                 }
-                DisplayMessage("Food: we cant feed even animals with one food type: " + sb.ToString() + "\r\n");
+                DisplayMessage("Food: we cant feed even animals that eat only one food type: " + sb.ToString() + "\r\n");
+                return false;
+            }
+
+            return true;
+        }
+
+
+
+        protected bool FoodCheckMinimalRequirements(Dictionary<int, int> FoodRequirements, Dictionary<int, int> WorkFoodStorage)
+        {
+            // check - if we dont have some food for animals that eat one type of food
+            Dictionary<int, int> DontHaveFood = new Dictionary<int, int>();
+            int HaveFoodAmount = 0;
+            foreach (var item in FoodRequirements)
+            {
+                HaveFoodAmount = WorkFoodStorage[item.Key];
+                if (item.Value > HaveFoodAmount)
+                {
+                    DontHaveFood[item.Key] += item.Value - HaveFoodAmount;
+                }
+            }
+
+            if (DontHaveFood.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (var item in DontHaveFood)
+                {
+                    sb.AppendFormat("\r\nNeed {0} item of type {1}", item.Value, item.Key);
+                }
+                DisplayMessage("Food: we cant feed animals that eat two food type - average requirements: " + sb.ToString() + "\r\n");
                 return false;
             }
 
