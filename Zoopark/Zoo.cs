@@ -42,6 +42,7 @@ namespace DbBest.ZooPark
         Dictionary<int, int> FoodWorkStorage;      // work copy of foodstorage
         Dictionary<int, int> FoodRequirements;      // work copy of foodstorage
         Dictionary<int, int> AnimalsOfTypes;   // amount of animals of each type
+        List<FoodBucket> FoodBuckets;
 
 
 
@@ -367,9 +368,7 @@ namespace DbBest.ZooPark
             foreach (Animal a in Animals)
             {
                 count++;
-
-                sb.AppendFormat("{0}: \t{1}", count, a.DisplayAnimal(1));
-                sb.Append("\r\n");
+                sb.AppendFormat("{0}: \t{1} \r\n", count, a.DisplayAnimal(1));
             }
 
 
@@ -387,12 +386,28 @@ namespace DbBest.ZooPark
             foreach (var pair in FoodStorage)
             {
                 count++;
-
                 sb.AppendFormat("{0}: type: {1} | Amount: \t{2} \r\n", count, pair.Key, pair.Value);
             }
 
             return sb.ToString();
         }
+
+
+
+        public string GetFoodWorkDisplay()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine();
+            sb.AppendFormat("Work Food storage: {0} items ================= \r\n", FoodTypesAmount, FoodPackagesAmount);
+            foreach (var pair in FoodWorkStorage)
+            {
+                sb.AppendFormat("type: {0} | Amount: \t{1} \r\n", pair.Key, pair.Value);
+            }
+
+            return sb.ToString();
+        }
+
+
 
 
         public string GetAnimasRulesDisplay()
@@ -462,8 +477,8 @@ namespace DbBest.ZooPark
             sb.AppendLine( GetAnimalsDisplay() );
             sb.AppendLine( GetAnimasLivingRulesDisplay() );
 
-            // sb.AppendLine( GetAnimasRulesDisplay() );
-            // sb.AppendLine( GetFoodDisplay() );
+            sb.AppendLine( GetAnimasRulesDisplay() );
+            sb.AppendLine( GetFoodDisplay() );
 
             return sb.ToString();
         }
@@ -762,13 +777,20 @@ namespace DbBest.ZooPark
 
 
 
+
+
+
+
         public bool FindFoodSolution()
         {
             FoodWorkStorage = new Dictionary<int, int>(FoodStorage);    // work copy of foodstorage
             FoodRequirements = new Dictionary<int, int>();              // work copy of foodstorage
             AnimalsOfTypes = new Dictionary<int, int>();                // amount of animals of each type
+            FoodBuckets = new List<FoodBucket>();
 
-            FoodCreateLists(ref AnimalsOfTypes, ref FoodWorkStorage, ref FoodRequirements);  // create required lists of data
+            FoodCreateLists(ref AnimalsOfTypes, ref FoodWorkStorage, ref FoodRequirements, ref FoodBuckets);  // create required lists of data
+
+            DisplayMessage(GetFoodWorkDisplay());
 
             // check that we have food for animals that eat only one type of food 
             if (!FoodCheckThatEatOnly_1_Food(FoodWorkStorage)) 
@@ -783,34 +805,16 @@ namespace DbBest.ZooPark
                 return false;
             }
 
+            // minimal cheks passed - try feed 2-mode animals
+            // алгоритм:
+            // 
+            //
+            //
+            //
 
 
 
-            // add item to animals 
-            //foreach (var item in Animals)
-            //{
-            //    if (FoodWorkStorage[item.Food_1] > 0)
-            //    {
-            //        FoodWorkStorage[item.Food_1] -= 1;
-            //    }
-            //    else if (FoodWorkStorage[item.Food_2] > 0)
-            //    {
-            //        FoodWorkStorage[item.Food_2] -= 1;
-            //    }
-            //    else
-            //    {
-            //        FoodWorkStorage[item.Food_1] -= 1;
-            //    }
-            //}
 
-            //// check - do we have some food item less than 0
-            //foreach (var item in FoodWorkStorage)
-            //{
-            //    if (item.Value < 0)
-            //    {
-            //        // begin barter
-            //    }
-            //}
 
 
             DisplayMessage("Search Food Solution Done");
@@ -819,9 +823,12 @@ namespace DbBest.ZooPark
         }
 
 
-        protected void FoodCreateLists(ref Dictionary<int, int> AnimalsOfTypes, ref Dictionary<int, int> WorkFoodStorage, ref Dictionary<int, int> FoodRequirements)
-        {
+        protected void FoodCreateLists(ref Dictionary<int, int> AnimalsOfTypes, ref Dictionary<int, int> WorkFoodStorage, ref Dictionary<int, int> FoodRequirements,
+            ref List<FoodBucket> foodBuckets )
+        {         
             int FoodType = 0;
+            int index = 0;
+
             foreach (var item in Animals)
             {
                 // 1) create list: amount of animals of each type  
@@ -834,18 +841,47 @@ namespace DbBest.ZooPark
                     FoodType = AnimalsRules[item.Type].CanEatFood_1;
                     WorkFoodStorage[FoodType] -= FoodAmountForOneAnimal;
                 }
-                // 3) create food requirement list for animals that can eat 2 food types
+                
                 else
                 {
+                    // 3) create food requirement list for animals that can eat 2 food types
                     FoodType = AnimalsRules[item.Type].CanEatFood_1;
                     Zoo.DicAddOrUpdate(dic: FoodRequirements, key: FoodType, addOrNewValue: 1);    // FoodRequirements[FoodType] += 1;
 
                     FoodType = AnimalsRules[item.Type].CanEatFood_2;
                     Zoo.DicAddOrUpdate(dic: FoodRequirements, key: FoodType, addOrNewValue: 1);    // FoodRequirements[FoodType] += 1;
+
+                    // 4) create food buckets
+                    index = FindFoodBucketIndex(AnimalsRules[item.Type].CanEatFood_1, AnimalsRules[item.Type].CanEatFood_2);
+                    if (index < 0)
+                    {
+                        FoodBuckets.Add(new FoodBucket(AnimalsRules[item.Type].CanEatFood_1, AnimalsRules[item.Type].CanEatFood_2));
+                    }
+                    else
+                    {
+                        FoodBuckets[index].BucketsAmount += 1;
+                    }
                 }
             }
             return;
         }
+
+
+        protected int FindFoodBucketIndex(int FoodType_1, int FoodType_2)
+        {
+            FoodBucket item;
+            for (int i=0; i < FoodBuckets.Count; i++)
+            {
+                item = FoodBuckets[i];
+                if (( item.TypeFood_1 == FoodType_1 && item.TypeFood_2 == FoodType_2) ||
+                    ( item.TypeFood_2 == FoodType_1 && item.TypeFood_1 == FoodType_2))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
 
         /// <summary>
         /// add or update value at dictionnary<int,int>
@@ -886,7 +922,7 @@ namespace DbBest.ZooPark
                 StringBuilder sb = new StringBuilder();
                 foreach (var item in DontHaveFood)
                 {
-                    sb.AppendFormat("\r\nHave delta {0} item(s) of type {1}", item.Value, item.Key);
+                    sb.AppendFormat("\r\nHave delta {0} item(s) of food type {1}", item.Value, item.Key);
                 }
                 DisplayMessage("Food Check 1: we cant feed  animals that eat only 1 food type: " + sb.ToString() + "\r\n");
                 return false;
@@ -917,7 +953,7 @@ namespace DbBest.ZooPark
                 StringBuilder sb = new StringBuilder();
                 foreach (var item in DontHaveFood)
                 {
-                    sb.AppendFormat("\r\nHave {0} item of type {1}", item.Value, item.Key);
+                    sb.AppendFormat("\r\nHave {0} item of food type {1}", item.Value, item.Key);
                 }
                 DisplayMessage("Food Check 2: we cant feed animals that eat 2 food type. Have total: " + HaveFoodAmount.ToString() + "; Need Total: " + RequiredFoodAmount.ToString() );
                 DisplayMessage("Details for food types: " + sb.ToString());
