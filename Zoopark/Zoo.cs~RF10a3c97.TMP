@@ -931,11 +931,8 @@ namespace DbBest.ZooPark
 
             Dictionary<int, int> Types;
             
-            FoodBucket item;
-            for(int i=0; i < FoodBuckets.Count; i++)
+            foreach (var item in FoodBuckets)
             {
-                item = FoodBuckets[i];
-
                 FoodType_1 = item.TypeFood_1;
                 FoodType_2 = item.TypeFood_2;
 
@@ -944,13 +941,13 @@ namespace DbBest.ZooPark
                 {
                     // ищем пары для используемых типов продуктов, и излишки этих пар есть на складе
                     Types = FoodGetLinkedFreeFoodTypes(FoodType_1);
-                    FoodTryExchange(i, item, Types);   // пытаемся поменять с другими которые заняты но которые можно поменять на излишки
+                    FoodTryExchange(item, Types);   // пытаемся поменять с другими которые заняты но которые можно поменять на излишки
 
                     // если не нашли для 1го типа - пытаемся для 2го типа
                     if (item.NeedFood() > 0)
                     {
                         Types = FoodGetLinkedFreeFoodTypes(FoodType_2);
-                        FoodTryExchange(i, item, Types);
+                        FoodTryExchange(item, Types);
                     }
                 }
             }
@@ -990,9 +987,9 @@ namespace DbBest.ZooPark
 
 
 
-        protected void FoodTryExchange(int index, FoodBucket item, Dictionary<int, int> Types)
+        protected void FoodTryExchange(ref FoodBucket item, Dictionary<int, int> Types)
         {
-         //   for
+
         }
 
 

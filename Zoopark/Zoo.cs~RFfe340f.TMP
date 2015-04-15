@@ -929,13 +929,8 @@ namespace DbBest.ZooPark
             int FoodType_1 = 0;
             int FoodType_2 = 0;
 
-            Dictionary<int, int> Types;
-            
-            FoodBucket item;
-            for(int i=0; i < FoodBuckets.Count; i++)
+            foreach (var item in FoodBuckets)
             {
-                item = FoodBuckets[i];
-
                 FoodType_1 = item.TypeFood_1;
                 FoodType_2 = item.TypeFood_2;
 
@@ -943,14 +938,20 @@ namespace DbBest.ZooPark
                 if (item.NeedFood() > 0)
                 {
                     // ищем пары для используемых типов продуктов, и излишки этих пар есть на складе
-                    Types = FoodGetLinkedFreeFoodTypes(FoodType_1);
-                    FoodTryExchange(i, item, Types);   // пытаемся поменять с другими которые заняты но которые можно поменять на излишки
+                    
 
-                    // если не нашли для 1го типа - пытаемся для 2го типа
-                    if (item.NeedFood() > 0)
+                    if (FoodWorkStorage[FoodType_1] > 0)
                     {
-                        Types = FoodGetLinkedFreeFoodTypes(FoodType_2);
-                        FoodTryExchange(i, item, Types);
+                        FoodWorkStorage[FoodType_1] = item.PushFood_1(FoodWorkStorage[FoodType_1]);
+                    }
+                }
+
+                // if again need food - push it from food 1
+                if (item.NeedFood() > 0)
+                {
+                    if (FoodWorkStorage[FoodType_2] > 0)
+                    {
+                        FoodWorkStorage[FoodType_2] = item.PushFood_2(FoodWorkStorage[FoodType_2]);
                     }
                 }
             }
@@ -958,43 +959,30 @@ namespace DbBest.ZooPark
         }
 
 
-        Dictionary<int, int> FoodGetLinkedFreeFoodTypes(int type)
+        List<int> FoodGetLinkedFreeFoodTypes(int type_1, int type_2)
         {
             Dictionary<int,int> Types = new Dictionary<int,int>();
-            int FoodAmount;
+
             foreach (var item in AnimalsRules)
             {
                 // 1) тип еды такой же;  2) другой тип еды существует; 3) на складе есть излишки
-                if (item.Value.CanEatFood_1 == type && item.Value.CanEatFood_2 > 0 )
+                if (item.Value.CanEatFood_1 == type_1 && item.Value.CanEatFood_2 > 0 )
                 {
-                    FoodAmount = FoodWorkStorage[item.Value.CanEatFood_2];
-                    if (FoodAmount > 0)
-                    {
-                        Zoo.DicAddOrUpdate(Types, item.Value.CanEatFood_2, FoodAmount);
+                    if ( FoodWorkStorage[item.Value.CanEatFood_2] > 0 ){
+                        Zoo.DicAddOrUpdate(Types, item.Value.CanEatFood_2, 1);
                     }
                 }
 
                 // для второго типа тоже самое
-                if (item.Value.CanEatFood_2 == type && item.Value.CanEatFood_1 > 0)
+                if (item.Value.CanEatFood_1 == type_1 && item.Value.CanEatFood_2 > 0)
                 {
-                    FoodAmount = FoodWorkStorage[item.Value.CanEatFood_1];
-                    if (FoodAmount > 0)
+                    if (FoodWorkStorage[item.Value.CanEatFood_2] > 0)
                     {
-                        Zoo.DicAddOrUpdate(Types, item.Value.CanEatFood_1, FoodAmount);
+                        Zoo.DicAddOrUpdate(Types, item.Value.CanEatFood_2, 1);
                     }
                 }
             }
-
-            return Types;
         }
-
-
-
-        protected void FoodTryExchange(int index, FoodBucket item, Dictionary<int, int> Types)
-        {
-         //   for
-        }
-
 
 
 
