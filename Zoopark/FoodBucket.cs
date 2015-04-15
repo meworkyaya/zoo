@@ -21,8 +21,8 @@ namespace DbBest.ZooPark
             }
             protected set;
         }
-        public int AmountFood_1 { get; set; }
-        public int AmountFood_2 { get; set; }
+        public int AmountFood_1 { get; protected set; }
+        public int AmountFood_2 { get; protected set; }
 
         public int TypeFood_1 { get; set; }
         public int TypeFood_2 { get; set; }
@@ -31,6 +31,78 @@ namespace DbBest.ZooPark
         {
             TypeFood_1 = type_1;
             TypeFood_2 = type_2;
+        }
+
+        public int fillFood(int type, int amount)
+        {
+            if (amount <= 0)
+            {
+                throw new Exception("amount must be > 0");
+            }
+
+            if (TypeFood_1 == type)
+            {
+                return fillFoodType_1(amount);
+            }
+            else if (TypeFood_2 == type)
+            {
+                return fillFoodType_2(amount);
+            }
+            else
+            {
+                throw new Exception("wrong type of food: dotn have such type in bucket");
+            }
+        }
+
+
+        /// <summary>
+        /// use food of type with amount
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns>amount of food that left from input after filling</returns>
+        public int fillFoodType_1(int amount)
+        {
+            if (amount <= 0)
+            {
+                throw new Exception("amount must be > 0");
+            }
+
+            int CanUse = BucketsAmount - AmountFood_1;
+            if (amount < CanUse)
+            {
+                AmountFood_1 += amount;
+                return 0;
+            }
+            else
+            {
+                AmountFood_1 += CanUse;
+                return (amount - CanUse);
+            }
+        }
+
+        /// <summary>
+        /// use food of type with amount
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns>amount of food that left from input after filling</returns>
+        public int fillFoodType_2(int amount)
+        {
+            if (amount <= 0)
+            {
+                throw new Exception("amount must be > 0");
+            }
+
+            int CanUse = BucketsAmount - AmountFood_2;
+            if (amount < CanUse)
+            {
+                AmountFood_2 += amount;
+                return 0;
+            }
+            else
+            {
+                AmountFood_2 += CanUse;
+                return (amount - CanUse);
+            }
         }
     }
 }

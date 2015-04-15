@@ -87,12 +87,12 @@ namespace DbBest.ZooPark
 
             _rnd = new Random();
 
-            Animals         = new List<Animal>();
-            FoodStorage     = new Dictionary<int, int>();
-            AnimalsRules    = new Dictionary<int, ZooAnimalsRules>();
+            Animals = new List<Animal>();
+            FoodStorage = new Dictionary<int, int>();
+            AnimalsRules = new Dictionary<int, ZooAnimalsRules>();
 
-            CeilsResults    = new List<List<uint>>();
-            FoodResults     = new List<List<Animal>>();
+            CeilsResults = new List<List<uint>>();
+            FoodResults = new List<List<Animal>>();
 
             GenerateZooModel(animals, animalsTypes, ceils, foodPackage, foodTypes);
         }
@@ -111,13 +111,13 @@ namespace DbBest.ZooPark
         public void GenerateZooModel(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackages = 40, int foodTypes = 3)
         {
             // ceils model
-            AnimalsAmount       = animals;
-            AnimalTypesAmount   = animalsTypes;
-            CeilsAmount         = ceils;
+            AnimalsAmount = animals;
+            AnimalTypesAmount = animalsTypes;
+            CeilsAmount = ceils;
 
             // food model
-            FoodPackagesAmount  = foodPackages;
-            FoodTypesAmount     = foodTypes;
+            FoodPackagesAmount = foodPackages;
+            FoodTypesAmount = foodTypes;
 
             // clear lists
             Animals.Clear();
@@ -128,7 +128,7 @@ namespace DbBest.ZooPark
             FoodResults.Clear();
 
             // generate new lists
-            InitAnimals(    AnimalsAmount, AnimalTypesAmount);
+            InitAnimals(AnimalsAmount, AnimalTypesAmount);
             InitAnimalRules(AnimalTypesAmount, FoodTypesAmount);
             InitFoodStorage(FoodPackagesAmount, FoodTypesAmount);
         }
@@ -246,7 +246,7 @@ namespace DbBest.ZooPark
                 // generate rule with what animla type cant live
                 rndNext = _rnd.Next(1, LivingRulePossibility + 1);  // randomly find - apply rule for animal type or not                
                 // LogMessage(rndNext.ToString(), "random: ");
-                applyLiveRule = ( rndNext > 1 ) ? true : false;
+                applyLiveRule = (rndNext > 1) ? true : false;
 
                 // fill live together rule data
                 if (applyLiveRule)
@@ -345,11 +345,11 @@ namespace DbBest.ZooPark
             }
         }
 
-        public void LogMessage(string message, string Preffix = null )
+        public void LogMessage(string message, string Preffix = null)
         {
             if (LogFile != null)
             {
-                LogFile.WriteLine( Preffix + message);
+                LogFile.WriteLine(Preffix + message);
             }
         }
 
@@ -431,7 +431,7 @@ namespace DbBest.ZooPark
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("Animals Living Rules: {0} rules;  ===================================== \r\n", AnimalsLivingWithRules.Length );
+            sb.AppendFormat("Animals Living Rules: {0} rules;  ===================================== \r\n", AnimalsLivingWithRules.Length);
 
             int PadLeft = 3;
 
@@ -440,7 +440,7 @@ namespace DbBest.ZooPark
             sb.Append("    ");
             for (int i = 0; i <= AnimalTypesAmount; i++)
             {
-                sb.AppendFormat("{0}", i.ToString().PadLeft(PadLeft));                
+                sb.AppendFormat("{0}", i.ToString().PadLeft(PadLeft));
             }
             sb.AppendFormat("\r\n");
 
@@ -458,7 +458,7 @@ namespace DbBest.ZooPark
                 sb.AppendFormat("{0}|", i.ToString().PadLeft(PadLeft));
 
                 for (int j = 0; j <= AnimalTypesAmount; j++)
-                {                    
+                {
                     // data
                     sb.AppendFormat("{0}", AnimalsLivingWithRules[i, j].ToString().PadLeft(PadLeft));
                 }
@@ -474,11 +474,11 @@ namespace DbBest.ZooPark
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine( GetAnimalsDisplay() );
-            sb.AppendLine( GetAnimasLivingRulesDisplay() );
+            sb.AppendLine(GetAnimalsDisplay());
+            sb.AppendLine(GetAnimasLivingRulesDisplay());
 
-            sb.AppendLine( GetAnimasRulesDisplay() );
-            sb.AppendLine( GetFoodDisplay() );
+            sb.AppendLine(GetAnimasRulesDisplay());
+            sb.AppendLine(GetFoodDisplay());
 
             return sb.ToString();
         }
@@ -555,7 +555,7 @@ namespace DbBest.ZooPark
             MakePermutation(CurrentStep: CeilsAmount, CurrentItems: ref CurrentItems, AnimalsThatLeft: ref AnimalsThatLeft);
 
             DisplayMessage("\r\nDone =========================");
-            DisplayMessage("Result: Success: " + SuccessCount + ";     Failed: " + FailCount );
+            DisplayMessage("Result: Success: " + SuccessCount + ";     Failed: " + FailCount);
             DisplayMessage("If logging enabled - success results placed at log file ");
         }
 
@@ -590,7 +590,7 @@ namespace DbBest.ZooPark
 
             if (AnimalsThatLeft.Count == 0)     // if dont have more animals - return; must be only if some logical error trapped at code
             {
-                DisplayMessage( "Error: wrong place");
+                DisplayMessage("Error: wrong place");
                 // this is no more items - so all items placed // stop recursion
                 return;
             }
@@ -601,7 +601,7 @@ namespace DbBest.ZooPark
             int NewCurrentStep = CurrentStep - 1;   // next level will have one item less at list
 
             CurrentItems.Add(0);    // add new item as placeholder - will change it later with item values
-            int CurrentNewItemIndex = CurrentItems.Count  - 1;
+            int CurrentNewItemIndex = CurrentItems.Count - 1;
             int ItemIndex = 0;
 
             foreach (var Item in UniqueTypes)
@@ -614,7 +614,7 @@ namespace DbBest.ZooPark
                     {
                         FailCount++;
 
-                        LogMessage(Zoo.DisplayListWithoutLastInt(ref CurrentItems), "\t\t\t\t\t\t\t\t\t\tFail: Tried Add as last item: " + Item + " at list => " );
+                        LogMessage(Zoo.DisplayListWithoutLastInt(ref CurrentItems), "\t\t\t\t\t\t\t\t\t\tFail: Tried Add as last item: " + Item + " at list => ");
 
                         continue; // rule does not passed - skip to next item
                     }
@@ -646,7 +646,7 @@ namespace DbBest.ZooPark
         /// <returns></returns>
         public bool CheckLivingRuleForPair(int first, int second)
         {
-            return (AnimalsLivingWithRules[first, second] != Zoo.CantLiveWithFlag); 
+            return (AnimalsLivingWithRules[first, second] != Zoo.CantLiveWithFlag);
         }
 
 
@@ -705,7 +705,7 @@ namespace DbBest.ZooPark
         }
 
 
-        public void TestNxNxNCreate( int count )
+        public void TestNxNxNCreate(int count)
         {
             Animals.Clear();
             int type = 0;
@@ -744,10 +744,12 @@ namespace DbBest.ZooPark
             }
         }
 
-        public static string DisplayListInt( ref List<int> Items ){
+        public static string DisplayListInt(ref List<int> Items)
+        {
             StringBuilder sb = new StringBuilder();
-            foreach( var Item in Items){
-                sb.AppendFormat("{0} ", Item );
+            foreach (var Item in Items)
+            {
+                sb.AppendFormat("{0} ", Item);
             }
             return sb.ToString();
         }
@@ -756,7 +758,7 @@ namespace DbBest.ZooPark
         {
             StringBuilder sb = new StringBuilder();
             int Length = Items.Count;
-            for(int i=0; i < Length - 1; i++)
+            for (int i = 0; i < Length - 1; i++)
             {
                 sb.AppendFormat("{0} ", Items[i]);
             }
@@ -779,7 +781,7 @@ namespace DbBest.ZooPark
 
 
 
-
+        #region food solution
 
         public bool FindFoodSolution()
         {
@@ -793,7 +795,7 @@ namespace DbBest.ZooPark
             DisplayMessage(GetFoodWorkDisplay());
 
             // check that we have food for animals that eat only one type of food 
-            if (!FoodCheckThatEatOnly_1_Food(FoodWorkStorage)) 
+            if (!FoodCheckThatEatOnly_1_Food(FoodWorkStorage))
             {
                 return false;
             }
@@ -835,6 +837,9 @@ namespace DbBest.ZooPark
             //
             // ситуацию с блокировкой решаем проходом по пустым бакетам и пытаемся найти излишек для связанного корма заменив его на излишек на складе
 
+            FoodFillBucketsByHalf();
+            FoodPushToEmptyBuckets();
+            FoodTrySolveEmptyBuckets();
 
 
 
@@ -848,9 +853,26 @@ namespace DbBest.ZooPark
         }
 
 
+        protected void FoodFillBucketsByHalf() {
+            foreach (var item in FoodBuckets)
+            {
+                if (FoodWorkStorage[item.TypeFood_1] > 0)
+                {
+                    FoodWorkStorage[item.TypeFood_1] = item.fillFoodType_1(FoodWorkStorage[item.TypeFood_1]);
+                }
+            }
+
+        }
+        protected void FoodPushToEmptyBuckets() { }
+        protected void FoodTrySolveEmptyBuckets() { }
+
+        protected bool FoodCheckBuckets() { return false; }
+
+
+
         protected void FoodCreateLists(ref Dictionary<int, int> AnimalsOfTypes, ref Dictionary<int, int> WorkFoodStorage, ref Dictionary<int, int> FoodRequirements,
-            ref List<FoodBucket> foodBuckets )
-        {         
+            ref List<FoodBucket> foodBuckets)
+        {
             int FoodType = 0;
             int index = 0;
 
@@ -858,7 +880,7 @@ namespace DbBest.ZooPark
             {
                 // 1) create list: amount of animals of each type  
                 Zoo.DicAddOrUpdate(dic: AnimalsOfTypes, key: item.Type, addOrNewValue: 1);     // AnimalsOfTypes[item.Type] += 1;
-                
+
 
                 // 2) and at first check animals that eat only one type of food: deduct all food for animals that eat only one type of food
                 if (AnimalsRules[item.Type].CanEatFood_2 == 0)
@@ -866,7 +888,7 @@ namespace DbBest.ZooPark
                     FoodType = AnimalsRules[item.Type].CanEatFood_1;
                     WorkFoodStorage[FoodType] -= FoodAmountForOneAnimal;
                 }
-                
+
                 else
                 {
                     // 3) create food requirement list for animals that can eat 2 food types
@@ -895,11 +917,11 @@ namespace DbBest.ZooPark
         protected int FindFoodBucketIndex(int FoodType_1, int FoodType_2)
         {
             FoodBucket item;
-            for (int i=0; i < FoodBuckets.Count; i++)
+            for (int i = 0; i < FoodBuckets.Count; i++)
             {
                 item = FoodBuckets[i];
-                if (( item.TypeFood_1 == FoodType_1 && item.TypeFood_2 == FoodType_2) ||
-                    ( item.TypeFood_2 == FoodType_1 && item.TypeFood_1 == FoodType_2))
+                if ((item.TypeFood_1 == FoodType_1 && item.TypeFood_2 == FoodType_2) ||
+                    (item.TypeFood_2 == FoodType_1 && item.TypeFood_1 == FoodType_2))
                 {
                     return i;
                 }
@@ -980,13 +1002,15 @@ namespace DbBest.ZooPark
                 {
                     sb.AppendFormat("\r\nHave {0} item of food type {1}", item.Value, item.Key);
                 }
-                DisplayMessage("Food Check 2: we cant feed animals that eat 2 food type. Have total: " + HaveFoodAmount.ToString() + "; Need Total: " + RequiredFoodAmount.ToString() );
+                DisplayMessage("Food Check 2: we cant feed animals that eat 2 food type. Have total: " + HaveFoodAmount.ToString() + "; Need Total: " + RequiredFoodAmount.ToString());
                 DisplayMessage("Details for food types: " + sb.ToString());
                 return false;
             }
 
             return true;
         }
+
+        #endregion
 
 
 
