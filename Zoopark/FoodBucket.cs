@@ -130,6 +130,22 @@ namespace DbBest.ZooPark
             return FillValue(ref _amountFood_2, amount, FoodBucket.FoodPerBucket * BucketsAmount - TotalAmountFood);
         }
 
+        public int PushFood(int amount, int type)
+        {
+            if (type == TypeFood_1)
+            {
+                return PushFood_1(amount);
+            }
+            else if (type == TypeFood_2)
+            {
+                return PushFood_2(amount);
+            }
+            else
+            {
+                throw new Exception("wrong type of FoodBucket");
+            }
+        }
+
         
     }
 }

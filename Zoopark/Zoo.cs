@@ -950,7 +950,6 @@ namespace DbBest.ZooPark
             FoodBucket target = FoodBuckets[index];
             bool result = false;
 
-            int FoodAmount;
             FoodBucket item;
             for (int i = 0; i < FoodBuckets.Count; i++ )
             {
