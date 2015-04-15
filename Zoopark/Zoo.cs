@@ -894,9 +894,7 @@ namespace DbBest.ZooPark
         protected void FoodPushToEmptyBuckets() {
             int FoodType_1 = 0;
             int FoodType_2 = 0;
-            // int NeedFood = 0;
 
-            Dictionary<int, int> Types;
             FoodBucket item;
 
             int i = 0;
@@ -938,15 +936,7 @@ namespace DbBest.ZooPark
                 if (item.NeedFood() > 0)
                 {
                     // ищем пары для используемых типов продуктов, и излишки этих пар есть на складе
-                    Types = FoodGetLinkedFreeFoodTypes(FoodType_1);
-                    FoodTryExchange(i, item, Types);   // пытаемся поменять с другими которые заняты но которые можно поменять на излишки
-
-                    // если не нашли для 1го типа - пытаемся для 2го типа
-                    if (item.NeedFood() > 0)
-                    {
-                        Types = FoodGetLinkedFreeFoodTypes(FoodType_2);
-                        FoodTryExchange(i, item, Types);
-                    }
+                    bool result = FoodGetLinkedFreeFoodTypes(i);
                 }
             }
             return;
@@ -955,41 +945,93 @@ namespace DbBest.ZooPark
 
 
 
-        Dictionary<int, int> FoodGetLinkedFreeFoodTypes(int type)
+        public bool FoodGetLinkedFreeFoodTypes(int index)
         {
-            Dictionary<int,int> Types = new Dictionary<int,int>();
+            FoodBucket target = FoodBuckets[index];
+            bool result = false;
+
             int FoodAmount;
-            foreach (var item in AnimalsRules)
+            FoodBucket item;
+            for (int i = 0; i < FoodBuckets.Count; i++ )
             {
-                // 1) тип еды такой же;  2) другой тип еды существует; 3) на складе есть излишки
-                if (item.Value.CanEatFood_1 == type && item.Value.CanEatFood_2 > 0 )
+                if (i == index) // dont use at search current bucket - we want fill it - not take from it )
                 {
-                    FoodAmount = FoodWorkStorage[item.Value.CanEatFood_2];
-                    if (FoodAmount > 0)
-                    {
-                        Zoo.DicAddOrUpdate(Types, item.Value.CanEatFood_2, FoodAmount);
-                    }
+                    continue;
                 }
 
-                // для второго типа тоже самое
-                if (item.Value.CanEatFood_2 == type && item.Value.CanEatFood_1 > 0)
+                item = FoodBuckets[i];
+
+                result = FoodTryExchange(TakedNeededType: item.TypeFood_1, TakedLinkedType: item.TypeFood_2, 
+                        TargetNeededType: target.TypeFood_1, TakedBucketIndex: i, TargetBucketIndex: index);
+                if (result)
                 {
-                    FoodAmount = FoodWorkStorage[item.Value.CanEatFood_1];
-                    if (FoodAmount > 0)
-                    {
-                        Zoo.DicAddOrUpdate(Types, item.Value.CanEatFood_1, FoodAmount);
-                    }
+                    return true;
                 }
+                //result = FoodTryExchange(ForType: item.TypeFood_1, ForType_2: item.TypeFood_2, FromType: target.TypeFood_2, FromBucket: i, ToBucket: index);
+                //if (result)
+                //{
+                //    return true;
+                //}
+                //result = FoodTryExchange(ForType: item.TypeFood_2, ForType_2: item.TypeFood_1, FromType: target.TypeFood_1, FromBucket: i, ToBucket: index);
+                //if (result)
+                //{
+                //    return true;
+                //}
+                //result = FoodTryExchange(ForType: item.TypeFood_2, ForType_2: item.TypeFood_1, FromType: target.TypeFood_2, FromBucket: i, ToBucket: index);
+                //if (result)
+                //{
+                //    return true;
+                //}
+
+                if (!(item.NeedFood() > 0)) // если получилось - 2 тип еды не пробуем
+                {
+                    return true;
+                }
+
             }
 
-            return Types;
+            return false;
         }
 
 
 
-        protected void FoodTryExchange(int index, FoodBucket item, Dictionary<int, int> Types)
+        protected bool FoodTryExchange( int TakedNeededType, int TakedLinkedType, int TargetNeededType, int TakedBucketIndex, int TargetBucketIndex)
         {
-         //   for
+            if (TakedNeededType != TargetNeededType)  // типы не совпадают
+            {
+                return false;
+            }
+            
+            if (FoodWorkStorage[TakedLinkedType] <= 0) // нет свободных излишков на складе связанного типа
+            {
+                return false;
+            }
+
+            FoodBucket TakedItem = FoodBuckets[TakedBucketIndex];
+            FoodBucket TargetItem = FoodBuckets[TargetBucketIndex];
+
+            int RequiredFoodAmount = TargetItem.NeedFood();
+
+            if (FoodWorkStorage[TakedLinkedType] > RequiredFoodAmount)
+            {
+                FoodWorkStorage[TakedLinkedType] -= RequiredFoodAmount;
+
+                // free TakedNeededType from TakedBucketIndex item by fill by TakedLinkedType
+                // ..
+
+                return true;    // only here we fully fill needed amount
+            }
+            else
+            {
+                int TakedAmount = FoodWorkStorage[TakedLinkedType];
+                FoodWorkStorage[TakedLinkedType] = 0;
+
+                // free TakedAmount from TakedBucketIndex item by fill by TakedLinkedType
+                // ... 
+            }
+
+            return false; 
+
         }
 
 
