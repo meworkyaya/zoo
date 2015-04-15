@@ -877,32 +877,36 @@ namespace DbBest.ZooPark
 
 
         protected void FoodPushToEmptyBuckets() {
-            int FoodNeed = 0;
-
             int FoodType_1 = 0;
             int FoodType_2 = 0;
             
             foreach (var item in FoodBuckets)
-            {                
+            {
                 FoodType_1 = item.TypeFood_1;
                 FoodType_2 = item.TypeFood_2;
 
-                // if food 1 empty - push it from food 2
-                FoodNeed = item.NeedFoodType_1();
-                if (FoodNeed > 0)
+                // if need food - try push it from food 2
+                if (item.NeedFood() > 0)
+                {
+                    if (FoodWorkStorage[FoodType_1] > 0)
+                    {
+                        FoodWorkStorage[FoodType_1] = item.PushFood_1(FoodWorkStorage[FoodType_1]);
+                    }
+                }
+
+                // if again need food - push it from food 1
+                if (item.NeedFood() > 0)
                 {
                     if (FoodWorkStorage[FoodType_2] > 0)
                     {
                         FoodWorkStorage[FoodType_2] = item.PushFood_2(FoodWorkStorage[FoodType_2]);
                     }
                 }
-
-
-
-
             }
             return;
         }
+
+
         protected void FoodTrySolveEmptyBuckets() { }
 
         protected bool FoodCheckBuckets() { return false; }

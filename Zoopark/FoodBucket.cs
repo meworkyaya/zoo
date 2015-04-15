@@ -60,14 +60,14 @@ namespace DbBest.ZooPark
         }
 
 
-        protected int FillValue(ref int filled, int amount, int maxUsed)
+        protected int FillValue(ref int filled, int amount, int CanUse )
         {
             if (amount <= 0)
             {
                 throw new Exception("amount must be > 0");
             }
 
-            int CanUse = maxUsed - filled;
+            // int CanUse = maxUsed - filled;
             if (amount < CanUse)
             {
                 filled += amount;
@@ -88,7 +88,7 @@ namespace DbBest.ZooPark
         /// <returns>amount of food that left from input after filling</returns>
         public int FillFoodType_1(int amount)
         {
-            return FillValue(ref _amountFood_1, amount, BucketsAmount);
+            return FillValue(ref _amountFood_1, amount, BucketsAmount - _amountFood_1);
         }
 
         /// <summary>
@@ -98,7 +98,14 @@ namespace DbBest.ZooPark
         /// <returns>amount of food that left from input after filling</returns>
         public int FillFoodType_2(int amount)
         {
-            return FillValue(ref _amountFood_2, amount, BucketsAmount);
+            return FillValue(ref _amountFood_2, amount, BucketsAmount - _amountFood_2);
+        }
+
+
+        public int NeedFood()
+        {
+            int CanHave = FoodBucket.FoodPerBucket * BucketsAmount - TotalAmountFood;
+            return CanHave;
         }
 
 
@@ -116,11 +123,11 @@ namespace DbBest.ZooPark
 
         public int PushFood_1(int amount)
         {
-            return FillValue(ref _amountFood_1, amount, FoodBucket.FoodPerBucket * BucketsAmount);
+            return FillValue(ref _amountFood_1, amount, FoodBucket.FoodPerBucket * BucketsAmount - TotalAmountFood);
         }
         public int PushFood_2(int amount)
         {
-            return FillValue(ref _amountFood_2, amount, FoodBucket.FoodPerBucket * BucketsAmount);
+            return FillValue(ref _amountFood_2, amount, FoodBucket.FoodPerBucket * BucketsAmount - TotalAmountFood);
         }
 
         
