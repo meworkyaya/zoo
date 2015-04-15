@@ -842,6 +842,13 @@ namespace DbBest.ZooPark
             FoodTrySolveEmptyBuckets();
 
 
+            // check solution
+            bool FoodNeedFood = FoodBucketsNeedFood();
+            string message = !FoodNeedFood ? "Food Solution Exists" : "Food Solution Dont Finded";
+
+            DisplayMessage(message);
+
+
 
             DisplayMessage("Search Food Solution Done");
 
@@ -909,7 +916,16 @@ namespace DbBest.ZooPark
 
         protected void FoodTrySolveEmptyBuckets() { }
 
-        protected bool FoodCheckBuckets() { return false; }
+        protected bool FoodBucketsNeedFood() { 
+            foreach (var item in FoodBuckets)
+            {
+                if (item.NeedFood() > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
 
 
