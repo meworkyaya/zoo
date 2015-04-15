@@ -40,11 +40,6 @@ namespace DbBest.ZooPark
 
         public int fillFood(int type, int amount)
         {
-            if (amount <= 0)
-            {
-                throw new Exception("amount must be > 0");
-            }
-
             if (TypeFood_1 == type)
             {
                 return FillFoodType_1(amount);
@@ -130,15 +125,26 @@ namespace DbBest.ZooPark
             return FillValue(ref _amountFood_2, amount, FoodBucket.FoodPerBucket * BucketsAmount - TotalAmountFood);
         }
 
-        public int PushFood(int amount, int type)
+
+        protected int ExchangeInner(int amount, ref int from, ref int too)
         {
+            return 0;
+        }
+
+        public int ExchangeFood(int amount, int type)
+        {
+            if (amount <= 0)
+            {
+                throw new Exception("amount must be > 0");
+            }
+
             if (type == TypeFood_1)
             {
-                return PushFood_1(amount);
+                return ExchangeInner(amount, ref _amountFood_1, ref _amountFood_2);
             }
             else if (type == TypeFood_2)
             {
-                return PushFood_2(amount);
+                return ExchangeInner(amount, ref _amountFood_2, ref _amountFood_1);
             }
             else
             {
