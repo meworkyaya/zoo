@@ -893,7 +893,7 @@ namespace DbBest.ZooPark
                 {
                     if (FoodWorkStorage[FoodType_2] > 0)
                     {
-                        FoodWorkStorage[FoodType_2] = item.PushFood_1(FoodWorkStorage[FoodType_2]);
+                        FoodWorkStorage[FoodType_2] = item.PushFood_2(FoodWorkStorage[FoodType_2]);
                     }
                 }
 

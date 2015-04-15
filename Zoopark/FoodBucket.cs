@@ -60,6 +60,27 @@ namespace DbBest.ZooPark
         }
 
 
+        protected int FillValue(ref int filled, int amount, int maxUsed)
+        {
+            if (amount <= 0)
+            {
+                throw new Exception("amount must be > 0");
+            }
+
+            int CanUse = maxUsed - filled;
+            if (amount < CanUse)
+            {
+                filled += amount;
+                return 0;
+            }
+            else
+            {
+                filled += CanUse;
+                return (amount - CanUse);
+            }
+        }
+
+
         /// <summary>
         /// use food of type with amount
         /// </summary>
@@ -67,22 +88,7 @@ namespace DbBest.ZooPark
         /// <returns>amount of food that left from input after filling</returns>
         public int FillFoodType_1(int amount)
         {
-            if (amount <= 0)
-            {
-                throw new Exception("amount must be > 0");
-            }
-
-            int CanUse = BucketsAmount - AmountFood_1;
-            if (amount < CanUse)
-            {
-                AmountFood_1 += amount;
-                return 0;
-            }
-            else
-            {
-                AmountFood_1 += CanUse;
-                return (amount - CanUse);
-            }
+            return FillValue(ref _amountFood_1, amount, BucketsAmount);
         }
 
         /// <summary>
@@ -92,22 +98,7 @@ namespace DbBest.ZooPark
         /// <returns>amount of food that left from input after filling</returns>
         public int FillFoodType_2(int amount)
         {
-            if (amount <= 0)
-            {
-                throw new Exception("amount must be > 0");
-            }
-
-            int CanUse = BucketsAmount - AmountFood_2;
-            if (amount < CanUse)
-            {
-                AmountFood_2 += amount;
-                return 0;
-            }
-            else
-            {
-                AmountFood_2 += CanUse;
-                return (amount - CanUse);
-            }
+            return FillValue(ref _amountFood_2, amount, BucketsAmount);
         }
 
 
@@ -125,8 +116,13 @@ namespace DbBest.ZooPark
 
         public int PushFood_1(int amount)
         {
-            return 0;
+            return FillValue(ref _amountFood_1, amount, FoodBucket.FoodPerBucket * BucketsAmount);
         }
+        public int PushFood_2(int amount)
+        {
+            return FillValue(ref _amountFood_2, amount, FoodBucket.FoodPerBucket * BucketsAmount);
+        }
+
         
     }
 }
