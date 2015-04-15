@@ -13,14 +13,22 @@ namespace DbBest.ZooPark
     {
         public int BucketsAmount { get; set; }  // amount of items of such bucket
 
-        public int TotalAmountFood { get; set; }
+        public int TotalAmountFood
+        {
+            get
+            {
+                return AmountFood_1 + AmountFood_2;
+            }
+            protected set;
+        }
         public int AmountFood_1 { get; set; }
         public int AmountFood_2 { get; set; }
 
         public int TypeFood_1 { get; set; }
         public int TypeFood_2 { get; set; }
 
-        public FoodBucket( int type_1, int type_2){
+        public FoodBucket(int type_1, int type_2)
+        {
             TypeFood_1 = type_1;
             TypeFood_2 = type_2;
         }
