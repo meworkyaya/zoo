@@ -770,13 +770,14 @@ namespace DbBest.ZooPark
 
             FoodCreateLists(ref AnimalsOfTypes, ref FoodWorkStorage, ref FoodRequirements);  // create required lists of data
 
-            if (!FoodCheckThatEatOnly_1_Food(FoodWorkStorage)) // check that we have food for animals that eat only one type of food 
+            // check that we have food for animals that eat only one type of food 
+            if (!FoodCheckThatEatOnly_1_Food(FoodWorkStorage)) 
             {
                 return false;
             }
 
             // now we have WorkFoodStorage with only food for animals that eat 2 types of food
-            // check minimal requirement list of food for animals that eat 2 types of food
+            // check minimal requirement list of food for them
             if (!FoodCheckMinimalRequirements(FoodRequirements, FoodWorkStorage))
             {
                 return false;
