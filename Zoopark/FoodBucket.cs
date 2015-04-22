@@ -14,6 +14,7 @@ namespace DbBest.ZooPark
         public static int FoodPerBucket = 2;
 
         public int BucketsAmount { get; set; }  // amount of items of such bucket
+        public bool IsTaked { get; set; }       // does bucket is used or not
 
         public int TotalAmountFood
         {

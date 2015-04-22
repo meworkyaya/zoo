@@ -859,8 +859,8 @@ namespace DbBest.ZooPark
             if (CurrentStep == 0)   // we filled all buckets - so have success result, return back from stack of calls
             {
                 SuccessCount++;
-                // DisplayMessage( Zoo.DisplayListInt( ref CurrentItems));  // display success result to console
-                LogMessage(Zoo.DisplayListInt(ref CurrentItems));           // log success result
+                DisplayMessage("Success");  // display success result to console
+                // LogMessage(Zoo.DisplayListInt(ref CurrentItems));           // log success result
                 return; // stop recursion
             }
 
@@ -871,23 +871,24 @@ namespace DbBest.ZooPark
                 return;
             }
 
-            int FoodType_1_Take = 0;    // amout of food of each types that we take from storage
-            int FoodType_2_Take = 0;
-
             int Type_1 = 0;
             int Type_2 = 0;
-
-            int FoodType_1_Take_Max = FoodWorkStorage[Type_1];
-            int FoodType_2_Take_Max = FoodWorkStorage[Type_2];
 
             int StepsCount = LeftBucketList.Count;
 
             int MinMax = 0;
             int TotalAmountToPlace = 0;
+            int Amount_1_ToPlace = 0;
             int Amount_2_ToPlace = 0;
 
-            for ( int i = StepsCount - 1; i >= 0; i-- ){
-                FoodBucket Bucket = LeftBucketList[i];  // get free bucket
+            for (int i = 0; i < StepsCount ; i++)
+            {
+                if (LeftBucketList[i].IsTaked)
+                {
+                    continue;   // skip buckets that are taked at previous levels
+                }
+
+                FoodBucket Bucket = LeftBucketList[i];  // select bucket
                 TotalAmountToPlace = Bucket.BucketsAmount * 2;   // amount of food that we must place
 
                 Type_1 = Bucket.TypeFood_1;
@@ -902,13 +903,13 @@ namespace DbBest.ZooPark
                 }
 
                 // amount of food at storage is enough for this step - try variants
-                LeftBucketList.RemoveAt(i);             // remove this free bucket form list of free buckets that will be used later at permutations
+                Bucket.IsTaked = true;
                 CurrentBucketList.Add(Bucket);
 
                 MinMax = FoodWorkStorage[Type_1] < Bucket.BucketsAmount ? FoodWorkStorage[Type_1] : Bucket.BucketsAmount;  // we cant take more than exists at storage, so this is maximal amount of food type 1 that we can take
 
                 // fill bucket by different amount of food
-                for (int Amount_1_ToPlace = 0; Amount_1_ToPlace <= MinMax; Amount_1_ToPlace++)
+                for (Amount_1_ToPlace = 0; Amount_1_ToPlace <= MinMax; Amount_1_ToPlace++)
                 {
                     Amount_2_ToPlace = TotalAmountToPlace - Amount_1_ToPlace;
                     if (Amount_2_ToPlace > FoodWorkStorage[Type_2])
@@ -922,6 +923,9 @@ namespace DbBest.ZooPark
 
                     MakeFoodPermutation(CurrentStep - 1, ref CurrentBucketList, ref LeftBucketList, ref FoodWorkStorage);
                 }
+
+                Bucket.IsTaked = false; // restore status of taked bucket
+                CurrentBucketList.RemoveAt(CurrentBucketList.Count - 1);    // remove bucket from result combination that we already tried
             }
 
             return;
