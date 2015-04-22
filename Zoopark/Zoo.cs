@@ -918,8 +918,8 @@ namespace DbBest.ZooPark
                         break;  // dont have more food of type 2  at storage
                     }
 
-                    Bucket.FillFoodType_1(Amount_1_ToPlace);
-                    Bucket.FillFoodType_2(Amount_2_ToPlace);
+                    Bucket.SetAmount_1(Amount_1_ToPlace);
+                    Bucket.SetAmount_2(Amount_2_ToPlace);
 
                     MakeFoodPermutation(CurrentStep - 1, ref CurrentBucketList, ref LeftBucketList, ref FoodWorkStorage);
                 }

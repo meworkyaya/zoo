@@ -30,6 +30,14 @@ namespace DbBest.ZooPark
         public int AmountFood_1 { get { return _amountFood_1; } protected set { _amountFood_1 = value; } }
         public int AmountFood_2 { get { return _amountFood_2; } protected set { _amountFood_2 = value; } }
 
+        public void SetAmount_1(int amount){
+            _amountFood_1 = amount;
+        }
+        public void SetAmount_2(int amount)
+        {
+            _amountFood_2 = amount;
+        }
+
         public int TypeFood_1 { get; set; }
         public int TypeFood_2 { get; set; }
 
