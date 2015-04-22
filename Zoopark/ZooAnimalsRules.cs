@@ -24,7 +24,7 @@ namespace DbBest.ZooPark
         public string DisplayRule()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("type: {0} | Food 1: \t{1} | Food 2: \t{2}", Type, CanEatFood_1, CanEatFood_2);
+            sb.AppendFormat("{{{0}: {1}, {2}}}", Type, CanEatFood_1, CanEatFood_2);
             return sb.ToString();
         }
 

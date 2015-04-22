@@ -380,48 +380,44 @@ namespace DbBest.ZooPark
         public string GetFoodDisplay()
         {
             StringBuilder sb = new StringBuilder();
-            int count = 0;
-
-            sb.AppendFormat("Food Types: {0} types; Food Storage: {1} items ================= \r\n", FoodTypesAmount, FoodPackagesAmount);
-            foreach (var pair in FoodStorage)
-            {
-                count++;
-                sb.AppendFormat("{0}: type: {1} | Amount: \t{2} \r\n", count, pair.Key, pair.Value);
-            }
-
+            sb.AppendFormat("Food: Types: {0}; Storage: {1} items; format: {{type: amount}},... ========\r\n", FoodTypesAmount, FoodPackagesAmount);
+            sb.Append(GetFoodContainerDisplay(FoodStorage));
             return sb.ToString();
         }
-
 
 
         public string GetFoodWorkDisplay()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine();
-            sb.AppendFormat("Work Food storage: {0} items ================= \r\n", FoodTypesAmount, FoodPackagesAmount);
-            foreach (var pair in FoodWorkStorage)
+            sb.Append(GetFoodContainerDisplay(FoodWorkStorage));
+            return sb.ToString();
+        }
+
+
+        protected string GetFoodContainerDisplay( Dictionary<int, int> container){
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+            foreach (var pair in container)
             {
-                sb.AppendFormat("type: {0} | Amount: \t{1} \r\n", pair.Key, pair.Value);
+                sb.AppendFormat("{{{0}: {1}}} ", pair.Key, pair.Value);
+                count += pair.Value;
             }
+            sb.AppendFormat(" Total: {0}", count );
+            sb.AppendLine();
 
             return sb.ToString();
         }
 
 
-
-
         public string GetAnimasRulesDisplay()
         {
             StringBuilder sb = new StringBuilder();
-            int count = 0;
-
-            sb.AppendFormat("AnimalsRules: {0} rules;  ===================================== \r\n", AnimalsRules.Count);
+            sb.Append("Animals Rules: format: {type: food_1, food_2}, ... =============\r\n");
             foreach (var pair in AnimalsRules)
             {
-                count++;
-
-                sb.AppendFormat("{0}: {1} \r\n", count, pair.Value.DisplayRule());
+                sb.AppendFormat("{0}, ", pair.Value.DisplayRule());
             }
+            sb.AppendLine();
 
             return sb.ToString();
         }
@@ -431,7 +427,7 @@ namespace DbBest.ZooPark
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("Animals Living Rules: {0} rules;  ===================================== \r\n", AnimalsLivingWithRules.Length);
+            sb.AppendFormat("Animals Living Rules: {0} rules;  =====================================\r\n", AnimalsLivingWithRules.Length);
 
             int PadLeft = 3;
 
@@ -784,6 +780,7 @@ namespace DbBest.ZooPark
 
             FoodCreateLists_Permutations( ref FoodWorkStorage, ref FoodBuckets);  // create required lists of data
 
+            DisplayMessage("Food after feed 1 type animals");
             DisplayMessage(GetFoodWorkDisplay());
 
             // check that we have food for animals that eat only one type of food 
@@ -797,16 +794,17 @@ namespace DbBest.ZooPark
 
             // алгоритм:
             // 
-            // 1) у нас есть набор бакетов еды: каждый бакет имеет: 
+            // 1) вся еда группируется по уникальным корзинам (бакетам), каждый бакет имеет: 
             // - тип еды 1, 
             // - тип еды 2,
-            // - число таких бакетов
+            // - требуемое число пар еды для этого бакета
             // - сколько еды помещено каждого типа
 
             // 2) у нас есть склад еды
             // 3) со склада мы раздали еду животным которые едят еду только одного типа. Если еды не хватило- стопим
-            // 4) в этой точке у нас есть склад с едой, и животные которые едят еду двух типов
-            // вся требуемые пары еды добавлены в соответствующие бакеты
+            // 4) в этой точке у нас есть склад с едой, и животные которые едят еду двух типов. 
+            // для каждого животного заводим единицу в соответствующем ему бакете еды
+            // 
             // 5) каждый бакет может находиться в 2 * N состояних, где N - максимальное число еды в бакете
             // если у нас в зоопарке M типов  пар еды ( бакетов) то общее число вараинтов: (2 * N ) ^ M
             // если в зоопарке X животных, то N может варьироваться от 1 до X
