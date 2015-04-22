@@ -397,12 +397,13 @@ namespace DbBest.ZooPark
         protected string GetFoodContainerDisplay( Dictionary<int, int> container){
             StringBuilder sb = new StringBuilder();
             int count = 0;
+            int PadLeft = 3;
             foreach (var pair in container)
             {
-                sb.AppendFormat("{{{0}: {1}}} ", pair.Key, pair.Value);
+                sb.AppendFormat("{{{0}: {1}}} ", pair.Key, pair.Value.ToString().PadLeft(PadLeft));
                 count += pair.Value;
             }
-            sb.AppendFormat(" Total: {0}", count );
+            sb.AppendFormat("Total: {0}", count );
             sb.AppendLine();
 
             return sb.ToString();
@@ -923,6 +924,8 @@ namespace DbBest.ZooPark
                     // change food storage state
                     FoodWorkStorage[Type_1] -= Amount_1_ToPlace;
                     FoodWorkStorage[Type_2] -= Amount_2_ToPlace;
+
+                    DisplayMessage(GetFoodWorkDisplay());
 
                     MakeFoodPermutation(CurrentStep - 1, ref CurrentBucketList, ref LeftBucketList, ref FoodWorkStorage);
 
