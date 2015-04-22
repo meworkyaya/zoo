@@ -776,6 +776,120 @@ namespace DbBest.ZooPark
 
 
 
+        #region food solution 2
+        public bool FindFoodSolution_Permutation()
+        {
+            FoodWorkStorage = new Dictionary<int, int>(FoodStorage);    // work copy of foodstorage
+            FoodRequirements = new Dictionary<int, int>();              // work copy of foodstorage
+            FoodBuckets = new List<FoodBucket>();
+
+            FoodCreateLists_Permutations( ref FoodWorkStorage, ref FoodRequirements, ref FoodBuckets);  // create required lists of data
+
+            DisplayMessage(GetFoodWorkDisplay());
+
+            // check that we have food for animals that eat only one type of food 
+            if (!FoodCheckThatEatOnly_1_Food(FoodWorkStorage))
+            {
+                return false;
+            }
+
+            // now we have WorkFoodStorage with only food for animals that eat 2 types of food
+            // check minimal requirement list of food for them
+            if (!FoodCheckMinimalRequirements(FoodRequirements, FoodWorkStorage))
+            {
+                return false;
+            }
+
+            // minimal cheсks passed - try feed 2-mode animals
+
+            // алгоритм:
+            // 
+            // у нас есть набор бакетов еды: каждый бакет имеет: 
+            // - тип еды 1, 
+            // - тип еды 2,
+            // - число таких бакетов
+            // - сколько еды помещено каждого типа
+
+            // используем идею системы сообщающихся сосудов - если в сообщающийся сосуд залить излишек - из второй части его лишнее выльется.. 
+            // каждый бакет - связываем с набором других бакетов в которые мы можем залить еду - втолкнув еду в первый бакет
+
+            // в конечном результате все бакеты должны быть заполнены доверху
+
+            // мы стараемся накормить животных сбалансированно
+            // 1) проходим по бакетам и заполняем до половины каждого корма своего типа, если корма не хватает - заливаем что есть
+            // 2) после этого будут заполнены половины кормов которых с избытком, не будет заполнены половины которых не хватает, на складе останутся избыточные корма
+            // наша цель - сбалансировать избыточные корма разного типа так чтобы их хватило на все бакеты с неполной второй половиной
+            // 3) после этого смотрим бакеты где вторая половина не заполнена и начинаем вталкивать избыточные корма в них            
+            // 4) может создаться взаимная блокировка: 
+            // если какого то корма (1) не хватает, связанного корма (2) тоже нет, но есть излишек парного корма (3) для связанного (2) 
+            // - то надо втолкнуть корм (3) чтобы освободить корм (2), и заполнить им пустоту для корма (1)
+
+            // пример: система тип-тип (колво, колво):  1-2 (1,1)  : 2-3 (0,1) : 1-3 (0,2) ; и на складе 1 ед типа 1.
+            // 2й бакет 2-3 пуст. но на складе есть излишек типа 1.
+            // тогда корм типа 1 можно втолкнуть в бакет 1-3, освободить корм типа 2, и втолкнуть его в бакет 2-3.                        
+            //
+            // ситуацию с блокировкой решаем проходом по пустым бакетам и пытаемся найти излишек для связанного корма заменив его на излишек на складе
+
+            FoodFillBucketsByHalf();
+            FoodPushToEmptyBuckets();
+
+
+            // check solution
+            bool FoodNeedFood = FoodBucketsNeedFood();
+            string message = !FoodNeedFood ? "Food Solution Exists" : "Food Solution Dont Finded";
+
+            DisplayMessage(message);
+
+
+
+            DisplayMessage("Search Food Solution Done");
+
+            return true;
+        }
+
+
+
+
+        protected void FoodCreateLists_Permutations(ref Dictionary<int, int> WorkFoodStorage, ref List<FoodBucket> foodBuckets)
+        {
+            int FoodType = 0;
+            int index = 0;
+
+            foreach (var item in Animals)
+            {
+                // at first check animals that eat only one type of food: deduct all food for animals that eat only one type of food
+                if (AnimalsRules[item.Type].CanEatFood_2 == 0)
+                {
+                    FoodType = AnimalsRules[item.Type].CanEatFood_1;
+                    WorkFoodStorage[FoodType] -= FoodAmountForOneAnimal;
+                }
+                else
+                {
+                    // animals that eat 2 types of food - add at food buckets; each bucket contais pairs: { type_1, type_2 } for each type of animal
+
+                    // try find bucket - if cant - create it; if can find - increase it amount
+                    index = FindFoodBucketIndex(AnimalsRules[item.Type].CanEatFood_1, AnimalsRules[item.Type].CanEatFood_2);
+                    if (index >= 0)
+                    {
+                        FoodBuckets[index].BucketsAmount += 1;                        
+                    }
+                    else
+                    {   
+                        // dont finded bucket - create it
+                        FoodBuckets.Add(new FoodBucket(AnimalsRules[item.Type].CanEatFood_1, AnimalsRules[item.Type].CanEatFood_2));
+                    }
+                }
+            }
+            return;
+        }
+
+
+
+        #endregion
+
+
+
+
 
 
 
