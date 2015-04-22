@@ -817,41 +817,118 @@ namespace DbBest.ZooPark
             // ограничение при переборе - бакет должен быть заполнен и на складе должна быть еда
             // если при заполнении последнего бакета условие выполняется - вариант верен
 
+            AttemptCount = 0;
+            DisplaySteps = 100;
+            SuccessCount = 0;
+            FailCount = 0;
 
+            int CurrentStep = FoodBuckets.Count;
+            List<FoodBucket> CurrentBucketList = new List<FoodBucket>();  // current is empty at start
+            List<FoodBucket> LeftBucketList = new List<FoodBucket>(FoodBuckets);    // left buckets are full at start
 
-            // в конечном результате все бакеты должны быть заполнены доверху
-
-            // мы стараемся накормить животных сбалансированно
-            // 1) проходим по бакетам и заполняем до половины каждого корма своего типа, если корма не хватает - заливаем что есть
-            // 2) после этого будут заполнены половины кормов которых с избытком, не будет заполнены половины которых не хватает, на складе останутся избыточные корма
-            // наша цель - сбалансировать избыточные корма разного типа так чтобы их хватило на все бакеты с неполной второй половиной
-            // 3) после этого смотрим бакеты где вторая половина не заполнена и начинаем вталкивать избыточные корма в них            
-            // 4) может создаться взаимная блокировка: 
-            // если какого то корма (1) не хватает, связанного корма (2) тоже нет, но есть излишек парного корма (3) для связанного (2) 
-            // - то надо втолкнуть корм (3) чтобы освободить корм (2), и заполнить им пустоту для корма (1)
-
-            // пример: система тип-тип (колво, колво):  1-2 (1,1)  : 2-3 (0,1) : 1-3 (0,2) ; и на складе 1 ед типа 1.
-            // 2й бакет 2-3 пуст. но на складе есть излишек типа 1.
-            // тогда корм типа 1 можно втолкнуть в бакет 1-3, освободить корм типа 2, и втолкнуть его в бакет 2-3.                        
-            //
-            // ситуацию с блокировкой решаем проходом по пустым бакетам и пытаемся найти излишек для связанного корма заменив его на излишек на складе
-
-            FoodFillBucketsByHalf();
-            FoodPushToEmptyBuckets();
-
-
-            // check solution
-            bool FoodNeedFood = FoodBucketsNeedFood();
-            string message = !FoodNeedFood ? "Food Solution Exists" : "Food Solution Dont Finded";
-
-            DisplayMessage(message);
-
-
+            MakeFoodPermutation(CurrentStep, ref CurrentBucketList, ref LeftBucketList, ref FoodWorkStorage);
 
             DisplayMessage("Search Food Solution Done");
 
             return true;
         }
+
+
+
+
+        /// <summary>
+        /// recurse procedure that make food permutations;
+        /// stack size for 64 bit systems is about 1Mb but this can be changed at app settings
+        /// from stack size and size of stack vars depends amount of steps that are allowed
+        /// http://stackoverflow.com/questions/823724/stack-capacity-in-c-sharp
+        /// https://msdn.microsoft.com/en-us/library/windows/desktop/ms686774(v=vs.85).aspx
+        /// </summary>
+        /// <param name="CurrentStep"></param>
+        /// <param name="CurrentItems"></param>
+        /// <param name="AnimalsThatLeft"></param>
+        public void MakeFoodPermutation(int CurrentStep, ref List<FoodBucket> CurrentBucketList, ref List<FoodBucket> LeftBucketList, ref Dictionary<int, int> FoodWorkStorage)
+        {
+            AttemptCount++; // calculate number of calls of functoin
+
+            if (AttemptCount % DisplaySteps == 0)  // sometimes display status
+            {
+                Console.Write("\rFunc calls: {0}: Finded: {1}; Failed: {2}", AttemptCount, SuccessCount, FailCount);
+            }
+
+
+            if (CurrentStep == 0)   // we filled all buckets - so have success result, return back from stack of calls
+            {
+                SuccessCount++;
+                // DisplayMessage( Zoo.DisplayListInt( ref CurrentItems));  // display success result to console
+                LogMessage(Zoo.DisplayListInt(ref CurrentItems));           // log success result
+                return; // stop recursion
+            }
+
+            if (LeftBucketList.Count == 0)     // if dont have more free bucket - return; must be only if some logical error trapped at code
+            {
+                DisplayMessage("Error: wrong place");
+                // this is no more items - so all items placed // stop recursion
+                return;
+            }
+
+            int FoodType_1_Take = 0;    // amout of food of each types that we take from storage
+            int FoodType_2_Take = 0;
+
+            int Type_1 = 0;
+            int Type_2 = 0;
+
+            int FoodType_1_Take_Max = FoodWorkStorage[Type_1];
+            int FoodType_2_Take_Max = FoodWorkStorage[Type_2];
+
+            int StepsCount = LeftBucketList.Count;
+
+            int MinMax = 0;
+            int TotalAmountToPlace = 0;
+            int Amount_2_ToPlace = 0;
+
+            for ( int i = StepsCount - 1; i >= 0; i-- ){
+                FoodBucket Bucket = LeftBucketList[i];  // get free bucket
+                TotalAmountToPlace = Bucket.BucketsAmount * 2;   // amount of food that we must place
+
+                Type_1 = Bucket.TypeFood_1;
+                Type_2 = Bucket.TypeFood_2;
+
+                // check - do we have amount of food at storage? amout of food at storage must be >= than amount of food in bucket
+                if ((FoodWorkStorage[Type_1] + FoodWorkStorage[Type_2]) < TotalAmountToPlace)
+                {
+                    // amount of food at storage is less than needed - fail for this permutation
+                    FailCount++;
+                    return;
+                }
+
+                // amount of food at storage is enough for this step - try variants
+                LeftBucketList.RemoveAt(i);             // remove this free bucket form list of free buckets that will be used later at permutations
+                CurrentBucketList.Add(Bucket);
+
+                MinMax = FoodWorkStorage[Type_1] < Bucket.BucketsAmount ? FoodWorkStorage[Type_1] : Bucket.BucketsAmount;  // we cant take more than exists at storage, so this is maximal amount of food type 1 that we can take
+
+                // fill bucket by different amount of food
+                for (int Amount_1_ToPlace = 0; Amount_1_ToPlace <= MinMax; Amount_1_ToPlace++)
+                {
+                    Amount_2_ToPlace = TotalAmountToPlace - Amount_1_ToPlace;
+                    if (Amount_2_ToPlace > FoodWorkStorage[Type_2])
+                    {
+                        FailCount++;
+                        break;  // dont have more food of type 2  at storage
+                    }
+
+                    Bucket.FillFoodType_1(Amount_1_ToPlace);
+                    Bucket.FillFoodType_2(Amount_2_ToPlace);
+
+                    MakeFoodPermutation(CurrentStep - 1, ref CurrentBucketList, ref LeftBucketList, ref FoodWorkStorage);
+                }
+            }
+
+            return;
+        }
+
+
+
 
 
 

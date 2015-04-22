@@ -83,7 +83,7 @@ namespace DbBest.ZooPark
         /// <returns>amount of food that left from input after filling</returns>
         public int FillFoodType_1(int amount)
         {
-            return FillValue(ref _amountFood_1, amount, BucketsAmount - _amountFood_1);
+            return FillValue(ref _amountFood_1, amount, FoodBucket.FoodPerBucket * BucketsAmount - _amountFood_1);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace DbBest.ZooPark
         /// <returns>amount of food that left from input after filling</returns>
         public int FillFoodType_2(int amount)
         {
-            return FillValue(ref _amountFood_2, amount, BucketsAmount - _amountFood_2);
+            return FillValue(ref _amountFood_2, amount, FoodBucket.FoodPerBucket * BucketsAmount - _amountFood_2);
         }
 
 
