@@ -918,12 +918,22 @@ namespace DbBest.ZooPark
                         break;  // dont have more food of type 2  at storage
                     }
 
+                    // change bucket state
                     Bucket.SetAmount_1(Amount_1_ToPlace);
                     Bucket.SetAmount_2(Amount_2_ToPlace);
 
+                    // change food storage state
+                    FoodWorkStorage[Type_1] -= Amount_1_ToPlace;
+                    FoodWorkStorage[Type_2] -= Amount_2_ToPlace;
+
                     MakeFoodPermutation(CurrentStep - 1, ref CurrentBucketList, ref LeftBucketList, ref FoodWorkStorage);
+
+                    // restore food storage state
+                    FoodWorkStorage[Type_1] += Amount_1_ToPlace;
+                    FoodWorkStorage[Type_2] += Amount_2_ToPlace;
                 }
 
+                // restore previous state for buckets
                 Bucket.IsTaked = false; // restore status of taked bucket
                 CurrentBucketList.RemoveAt(CurrentBucketList.Count - 1);    // remove bucket from result combination that we already tried
             }

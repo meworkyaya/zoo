@@ -63,7 +63,8 @@ namespace DbBest.ZooPark
         {
             Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4, logFile: "test.txt");
             ZooInstance.DisplayZooDebugInfo();
-            ZooInstance.FindFoodSolution();
+            // ZooInstance.FindFoodSolution();
+            ZooInstance.FindFoodSolution_Permutation();
             ZooInstance.ShutDownWork();
         }
 
