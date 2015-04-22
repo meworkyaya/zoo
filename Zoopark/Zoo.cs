@@ -780,10 +780,9 @@ namespace DbBest.ZooPark
         public bool FindFoodSolution_Permutation()
         {
             FoodWorkStorage = new Dictionary<int, int>(FoodStorage);    // work copy of foodstorage
-            FoodRequirements = new Dictionary<int, int>();              // work copy of foodstorage
             FoodBuckets = new List<FoodBucket>();
 
-            FoodCreateLists_Permutations( ref FoodWorkStorage, ref FoodRequirements, ref FoodBuckets);  // create required lists of data
+            FoodCreateLists_Permutations( ref FoodWorkStorage, ref FoodBuckets);  // create required lists of data
 
             DisplayMessage(GetFoodWorkDisplay());
 
@@ -793,25 +792,32 @@ namespace DbBest.ZooPark
                 return false;
             }
 
-            // now we have WorkFoodStorage with only food for animals that eat 2 types of food
-            // check minimal requirement list of food for them
-            if (!FoodCheckMinimalRequirements(FoodRequirements, FoodWorkStorage))
-            {
-                return false;
-            }
 
             // minimal cheсks passed - try feed 2-mode animals
 
             // алгоритм:
             // 
-            // у нас есть набор бакетов еды: каждый бакет имеет: 
+            // 1) у нас есть набор бакетов еды: каждый бакет имеет: 
             // - тип еды 1, 
             // - тип еды 2,
             // - число таких бакетов
             // - сколько еды помещено каждого типа
 
-            // используем идею системы сообщающихся сосудов - если в сообщающийся сосуд залить излишек - из второй части его лишнее выльется.. 
-            // каждый бакет - связываем с набором других бакетов в которые мы можем залить еду - втолкнув еду в первый бакет
+            // 2) у нас есть склад еды
+            // 3) со склада мы раздали еду животным которые едят еду только одного типа. Если еды не хватило- стопим
+            // 4) в этой точке у нас есть склад с едой, и животные которые едят еду двух типов
+            // вся требуемые пары еды добавлены в соответствующие бакеты
+            // 5) каждый бакет может находиться в 2 * N состояних, где N - максимальное число еды в бакете
+            // если у нас в зоопарке M типов  пар еды ( бакетов) то общее число вараинтов: (2 * N ) ^ M
+            // если в зоопарке X животных, то N может варьироваться от 1 до X
+            // т.е. максимальное число вариантов перебора меньше чем (2 * X) ^ M
+
+            // 6) сам перебор:
+            // берем бакет, заполняем его едой для вариантов от 0 до 2*N, и рекурсивно ищем варианты для оставшихся бакетов
+            // ограничение при переборе - бакет должен быть заполнен и на складе должна быть еда
+            // если при заполнении последнего бакета условие выполняется - вариант верен
+
+
 
             // в конечном результате все бакеты должны быть заполнены доверху
 
@@ -865,7 +871,7 @@ namespace DbBest.ZooPark
                 }
                 else
                 {
-                    // animals that eat 2 types of food - add at food buckets; each bucket contais pairs: { type_1, type_2 } for each type of animal
+                    // animals that eat 2 types of food - add at food buckets; each bucket contais pairs: { type_1, type_2 } for each type of food
 
                     // try find bucket - if cant - create it; if can find - increase it amount
                     index = FindFoodBucketIndex(AnimalsRules[item.Type].CanEatFood_1, AnimalsRules[item.Type].CanEatFood_2);
