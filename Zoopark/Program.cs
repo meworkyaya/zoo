@@ -10,17 +10,24 @@ namespace DbBest.ZooPark
     {
         static void Main(string[] args)
         {
-            // RunFoodZoo();
+            RunFoodZoo();
             // RunCeilZoo();
             // RunRandomZoo();
 
-            RunTests(); // used for testing some parts of code
+            // RunTests(); // used for testing some parts of code
 
             Console.ReadLine();     // wait to see output
         }
 
 
         static void RunTests()
+        {
+            // RunCeilTests();
+            RunFoodTests();
+        }
+
+
+        static void RunCeilTests()
         {
             int count = 0;
             Console.WriteLine("\r\nTEST create empty Zoo ##############");
@@ -32,23 +39,33 @@ namespace DbBest.ZooPark
             //ZooInstance.TestNumberWithBase(baseOfNumber: 2, numberOfDigits: 4);
             //ZooInstance.ShutDownWork();
 
-            Console.WriteLine("\r\nTEST create Zoo 3 animals 3 types 3 ceils 0 neighbour rule ##############");
-            count = 3;
-            Zoo ZooInstance_2 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test.txt");
-            ZooInstance_2.TestNxNxNCreate(count);
-            ZooInstance_2.FindCeilSolution();
-            ZooInstance_2.ShutDownWork();
-            Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
-
-            Console.WriteLine("\r\nTEST create Zoo 4 animals 4 types 4 ceils 0 neighbour rule ##############");
-            count = 4;
-            Zoo ZooInstance_3 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test.txt");
-            ZooInstance_3.TestNxNxNCreate(count);
-            ZooInstance_3.FindCeilSolution();
-            ZooInstance_3.ShutDownWork();
-            Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+            Zoo ZooInstance_2 = null;
+            for (int i = 1; i < 7; i++)
+            {
+                count = i;
+                Console.WriteLine("\r\nTEST create Zoo {0} animals {1} types {2} ceils 0 neighbour rule ##############", count, count, count);
+                ZooInstance_2 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test" + count + ".txt");
+                ZooInstance_2.TestNxNxNCreate(count);
+                ZooInstance_2.FindCeilSolution();
+                ZooInstance_2.ShutDownWork();
+                Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+            }
         }
 
+        static void RunFoodTests()
+        {
+            int count = 0;
+
+            Zoo ZooInstance_2 = null;
+
+            count = 1;
+            Console.WriteLine("\r\nTEST create Zoo {0} animals {1} types {2} food items 0 neighbour rule ##############", count, count, count);
+            ZooInstance_2 = new Zoo(animals: count, ceils: 0, foodPackage: count, animalsTypes: count, foodTypes: count, logFile: "test" + count + ".txt");
+            ZooInstance_2.TestFood_1_Create(count);
+            ZooInstance_2.FindFoodSolution_Permutation();
+            ZooInstance_2.ShutDownWork();
+            Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+        }
 
 
 

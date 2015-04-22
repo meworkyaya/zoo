@@ -712,7 +712,6 @@ namespace DbBest.ZooPark
                 Animals.Add(new Animal(type, AnimalTypesAmount));
             }
             TestInitAnimalLiveRules(count);
-
         }
 
         protected void TestInitAnimalLiveRules(int animalTypesAmount)
@@ -724,6 +723,23 @@ namespace DbBest.ZooPark
                 AnimalsLivingWithRules[i, 0] = 0;   // по умолчанию с пустой клеткой все могут жить.. 
                 AnimalsLivingWithRules[0, i] = 0;   // и пустая клетка может жить со всеми
             }
+        }
+
+
+        public void TestFood_1_Create(int count)
+        {
+            Animals.Clear();
+            int type = 0;
+            for (int i = 0; i < count; i++)
+            {
+                type = i;
+                Animals.Add(new Animal(type, AnimalTypesAmount));
+            }
+            TestInitAnimalLiveRules(count);
+
+
+
+
         }
 
 
@@ -827,7 +843,10 @@ namespace DbBest.ZooPark
 
             MakeFoodPermutation(CurrentStep, ref CurrentBucketList, ref LeftBucketList, ref FoodWorkStorage);
 
-            DisplayMessage("Search Food Solution Done");
+            DisplayMessage("\r\nSearch Food Solution Done =========================");
+            DisplayMessage("Result: Success: " + SuccessCount + ";     Failed: " + FailCount);
+            DisplayMessage("If logging enabled - success results placed at log file ");
+
 
             return true;
         }
