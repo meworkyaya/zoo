@@ -10,20 +10,14 @@ namespace DbBest.ZooPark
     {
         static void Main(string[] args)
         {
-            RunFoodZoo();
+            // RunFoodZoo();
             // RunCeilZoo();
             // RunRandomZoo();
 
-            // RunTests(); // used for testing some parts of code
+            RunFoodTests(); // used for testing some parts of code
+            // RunCeilTests(); // used for testing some parts of code
 
             Console.ReadLine();     // wait to see output
-        }
-
-
-        static void RunTests()
-        {
-            // RunCeilTests();
-            RunFoodTests();
         }
 
 
@@ -58,9 +52,9 @@ namespace DbBest.ZooPark
 
             Zoo ZooInstance_2 = null;
 
-            count = 1;
-            Console.WriteLine("\r\nTEST create Zoo {0} animals {1} types {2} food items 0 neighbour rule ##############", count, count, count);
-            ZooInstance_2 = new Zoo(animals: count, ceils: 0, foodPackage: count, animalsTypes: count, foodTypes: count, logFile: "test" + count + ".txt");
+            count = 0;
+            Console.WriteLine("\r\nTEST Food 1 ##############");
+            ZooInstance_2 = new Zoo(animals: count, ceils: 0, foodPackage: count, animalsTypes: count, foodTypes: count, logFile: "test.txt");
             ZooInstance_2.TestFood_1_Create(count);
             ZooInstance_2.FindFoodSolution_Permutation();
             ZooInstance_2.ShutDownWork();
