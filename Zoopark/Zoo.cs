@@ -345,11 +345,11 @@ namespace DbBest.ZooPark
             }
         }
 
-        public void LogMessage(string message, string Preffix = null)
+        public void LogMessage(string message, string preffix = null)
         {
             if (LogFile != null)
             {
-                LogFile.WriteLine(Preffix + message);
+                LogFile.WriteLine(preffix + message);
             }
         }
 
@@ -508,11 +508,11 @@ namespace DbBest.ZooPark
         /// 
         /// введение
         /// берем первое животное - N вариантов
-        /// но в этих N вариантах есть повторяющиеся типы, перебор по которым создает дубликаты вариантов.
+        /// но в этих N вариантах есть M повторяющихся типов, перебор по которым создает дубликаты вариантов.
         /// поэтому для перебора нам надо выбрать только животных уникальных типов
         /// 
         /// Итого:
-        /// - выбираем из N животных  А животных уникальных типов
+        /// - выбираем из N животных M животных уникальных типов
         /// - и каждого из этих животных садим в 1ю клетку
         /// - смотрим - есть у животного соседи слева? если есть - смотрим ограничение - может мы эти животные посадить вместе?
         /// - если можем - садим, и делаем перебор для оставшихся животных (рекурсия)
@@ -520,10 +520,10 @@ namespace DbBest.ZooPark
         /// - пустая клетка работает как дополнительный тип животного
         /// 
         /// оценка числа вариантов: перебор из N элементов из которых M уникальных - число вариантов порядка N! / (N-M)!
-        /// и еще отсеиваются вараинты для которых срабатывает ограничение на соседей
-        /// 
+        /// и еще отсеиваются варианты для которых срабатывает ограничение на соседей        /// 
         /// 
         /// возможный вариант улучшения быстродействия - векторизация - выделить начальные цепочки которые можно считать в разных потоках
+        /// один поток на ядро процессора
         /// 
         /// 
         /// 
@@ -677,11 +677,19 @@ namespace DbBest.ZooPark
 
         #region test
 
+        /// <summary>
+        /// использовался для старта тестов
+        /// </summary>
         public void Tests()
         {
             // TestNumberWithBase();
         }
 
+        /// <summary>
+        /// тест класса чисел по произвольной базе
+        /// </summary>
+        /// <param name="baseOfNumber"></param>
+        /// <param name="numberOfDigits"></param>
         public void TestNumberWithBase(int baseOfNumber, int numberOfDigits)
         {
             string bits;
@@ -702,6 +710,10 @@ namespace DbBest.ZooPark
         }
 
 
+        /// <summary>
+        /// создает набор животных - по одному животному разного типа
+        /// </summary>
+        /// <param name="count"></param>
         public void TestNxNxNCreate(int count)
         {
             Animals.Clear();
@@ -714,6 +726,11 @@ namespace DbBest.ZooPark
             TestInitAnimalLiveRules(count);
         }
 
+        
+        /// <summary>
+        /// создает тестовые правила расселения животных - все могут жить со всеми
+        /// </summary>
+        /// <param name="animalTypesAmount"></param>
         protected void TestInitAnimalLiveRules(int animalTypesAmount)
         {
             AnimalsLivingWithRules = new int[animalTypesAmount + 1, animalTypesAmount + 1]; // we need add rules for types pairs like :  { Animal Type, No Animal }
@@ -792,6 +809,14 @@ namespace DbBest.ZooPark
 
 
         #region food solution 2
+
+        /// <summary>
+        /// решение для задачи питания
+        /// метод: выбрасываем тех которые едят 1 еду
+        /// группируем наборы еды из 2х элементов
+        /// после группировки делаем переборы по распределению еды  по наборам еды
+        /// </summary>
+        /// <returns></returns>
         public bool FindFoodSolution_Permutation()
         {
             FoodWorkStorage = new Dictionary<int, int>(FoodStorage);    // work copy of foodstorage
@@ -968,7 +993,12 @@ namespace DbBest.ZooPark
 
 
 
-
+        /// <summary>
+        /// 1) вычитаем еду для животных 1 го типа еды
+        /// 2) создаем группы бакетов разного типа { еда1, еда 2 }
+        /// </summary>
+        /// <param name="WorkFoodStorage"></param>
+        /// <param name="foodBuckets"></param>
         protected void FoodCreateLists_Permutations(ref Dictionary<int, int> WorkFoodStorage, ref List<FoodBucket> foodBuckets)
         {
             int FoodType = 0;
@@ -1014,8 +1044,13 @@ namespace DbBest.ZooPark
 
 
 
-        #region food solution
+        #region food solution dont finished
 
+        /// <summary>
+        /// один из вариантов решения распределения еды, до конца не добивал.. 
+        /// может хорошо работать для большого числа животных и большого числа разных типво животных
+        /// </summary>
+        /// <returns></returns>
         public bool FindFoodSolution()
         {
             FoodWorkStorage = new Dictionary<int, int>(FoodStorage);    // work copy of foodstorage
