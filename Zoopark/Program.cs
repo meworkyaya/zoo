@@ -97,14 +97,8 @@ namespace DbBest.ZooPark
         static void RunCeilTests()
         {
             int count = 0;
-            Console.WriteLine("\r\nTEST create empty Zoo ##############");
-            Zoo ZooInstance = new Zoo(animals: 0, ceils: 0, foodPackage: 0, animalsTypes: 0, foodTypes: 0, logFile: "test.txt");
-            ZooInstance.ShutDownWork();
-            Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
 
-            //Console.WriteLine("\r\nTEST inc numbers ====================");
-            //ZooInstance.TestNumberWithBase(baseOfNumber: 2, numberOfDigits: 4);
-            //ZooInstance.ShutDownWork();
+            TestCreateEmptyZoo();
 
             Zoo ZooInstance_2 = null;
             for (int i = 1; i < 7; i++)
@@ -121,10 +115,38 @@ namespace DbBest.ZooPark
 
 
         /// <summary>
+        /// test number with base
+        /// </summary>
+        public static void TestNumberWithBase()
+        {
+            Console.WriteLine("\r\nTEST inc numbers ====================");
+            Zoo ZooInstance = new Zoo(animals: 0, ceils: 0, foodPackage: 0, animalsTypes: 0, foodTypes: 0, logFile: "test.txt");
+            ZooInstance.TestNumberWithBase(baseOfNumber: 2, numberOfDigits: 4);
+            ZooInstance.ShutDownWork();
+        }
+
+
+        /// <summary>
+        /// create empty zoo for test
+        /// </summary>
+        public static void TestCreateEmptyZoo()
+        {
+            Console.WriteLine("\r\nTEST create empty Zoo ##############");
+            Zoo ZooInstance = new Zoo(animals: 0, ceils: 0, foodPackage: 0, animalsTypes: 0, foodTypes: 0, logFile: "test.txt");
+            ZooInstance.ShutDownWork();
+            Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+        }
+
+
+
+
+        /// <summary>
         /// tests for food task
         /// </summary>
         static void RunFoodTests()
         {
+            TestCreateEmptyZoo();
+
             int count = 0;
 
             Zoo ZooInstance_2 = null;
