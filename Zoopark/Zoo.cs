@@ -13,17 +13,17 @@ namespace DbBest.ZooPark
 
         // common Model Part
         public int AnimalTypesAmount { get; set; }     // amount of types of animal
-        public int AnimalsAmount { get; set; }         // mount of animals
+        public int AnimalsAmount { get; set; }         // amount of animals
 
         protected List<Animal> Animals;                    // list with animals that live at Zoo: index - id of animal;
         protected Dictionary<int, ZooAnimalsRules> AnimalsRules;      // dict of rules for each type of Animal: <type of animal, animalRule>
 
-        protected int[,] AnimalsLivingWithRules;            // rules for animals - with what they can live; 0 - can live together; 1 - cant live together
-        protected static int CantLiveWithFlag = 1;          // flag when cant live with
-
 
         // ceil Model
-        protected int CeilsAmount { get; set; }
+        protected int[,] AnimalsLivingWithRules;            // rules for animals - with what animal type they can live; 0 - can live together; 1 - cant live together
+        protected static int CantLiveWithFlag = 1;          // flag when cant live with
+
+        protected int CeilsAmount { get; set; }         // total amount of ceils
 
         protected long FailCount = 0;
         protected long SuccessCount = 0;

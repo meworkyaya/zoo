@@ -23,7 +23,7 @@ namespace DbBest.ZooPark
             //inputArgument = "random";
 
             //======= tests
-            //inputArgument = "foodTests";
+            inputArgument = "foodTests";
             //inputArgument = "ceilTests";
 
             RunTask(inputArgument);
