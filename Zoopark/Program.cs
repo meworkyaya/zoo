@@ -23,7 +23,7 @@ namespace DbBest.ZooPark
             //inputArgument = "random";
 
             //======= tests
-            inputArgument = "foodTests";
+            //inputArgument = "foodTests";
             //inputArgument = "ceilTests";
 
             RunTask(inputArgument);
@@ -54,10 +54,10 @@ namespace DbBest.ZooPark
 
 
                 // tests
-                case "foodTests":
+                case "foodtest":
                     RunFoodTests(); // used for testing some parts of code
                     break;
-                case "ceilTests":
+                case "ceiltest":
                     RunCeilTests(); // used for testing some parts of code
                     break;
 
@@ -75,16 +75,19 @@ namespace DbBest.ZooPark
         /// display help for usage
         /// </summary>
         static void DisplayHelp(){
-            string help = @"Basic usage:
-        Zoopark             - display help;
-        Zoopark help        - display help;
-        Zoopark food        - find solution for food task and display it;
-        Zoopark ceil        - find solution for food task and display it;
-        Zoopark random      - create random zoo and find solution for food and ceil task, and display it;
+            string help = @"Usage:
+help:
+    Zoopark             - display help;
+    Zoopark help        - display help;
 
-        Tests:
-        Zoopark foodTests   - run predefined tests for food task;
-        Zoopark ceilTests   - run predefined tests for ceil task;
+run:
+    Zoopark food        - find solution for food task and display it;
+    Zoopark ceil        - find solution for food task and display it;
+    Zoopark random      - create random zoo and find solution for food and ceil task, and display it;
+
+tests:
+    Zoopark foodtest   - run predefined tests for food task;
+    Zoopark ceiltest   - run predefined tests for ceil task;
 ";
             Console.WriteLine(help);
             return;
