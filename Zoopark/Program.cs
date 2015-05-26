@@ -149,14 +149,14 @@ namespace DbBest.ZooPark
 
             int count = 0;
 
-            Zoo ZooInstance_2 = null;
+            Zoo ZooInstance = null;
 
             count = 0;
             Console.WriteLine("\r\nTEST Food 1 ##############");
-            ZooInstance_2 = new Zoo(animals: count, ceils: 0, foodPackage: count, animalsTypes: count, foodTypes: count, logFile: "test.txt");
-            ZooInstance_2.TestFood_1_Create(count);
-            ZooInstance_2.FindFoodSolution_Permutation();
-            ZooInstance_2.ShutDownWork();
+            ZooInstance = new Zoo(animals: count, ceils: 0, foodPackage: count, animalsTypes: count, foodTypes: count, logFile: "test.txt");
+            ZooInstance.TestFood_1_Create(count);
+            ZooInstance.FindFoodSolution_Permutation();
+            ZooInstance.ShutDownWork();
             Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
         }
 
