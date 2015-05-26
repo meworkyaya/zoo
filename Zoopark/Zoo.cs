@@ -1044,7 +1044,7 @@ namespace DbBest.ZooPark
 
 
 
-        #region food solution dont finished
+        #region food solution - dont finished version
 
         /// <summary>
         /// один из вариантов решения распределения еды, до конца не добивал.. 

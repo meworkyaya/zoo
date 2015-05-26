@@ -9,18 +9,91 @@ namespace DbBest.ZooPark
     class Program
     {
         static void Main(string[] args)
-        {
-            // RunFoodZoo();
-            // RunCeilZoo();
-            // RunRandomZoo();
+        {            
+            string inputArgument = ""; // help
 
-            RunFoodTests(); // used for testing some parts of code
-            // RunCeilTests(); // used for testing some parts of code
+            if (args.Count() > 0)
+            {
+                inputArgument = args[0];
+            }
 
+            //======= run 
+            //inputArgument = "food";
+            //inputArgument = "ceil";
+            //inputArgument = "random";
+
+            //======= tests
+            //inputArgument = "foodTests";
+            //inputArgument = "ceilTests";
+
+            RunTask(inputArgument);
+
+            Console.WriteLine("\r\nPress Enter to close window");
             Console.ReadLine();     // wait to see output
         }
 
 
+        /// <summary>
+        /// run task by selection
+        /// </summary>
+        /// <param name="task"></param>
+        static void RunTask(string task )
+        {
+            switch (task)
+            {
+                // main run modes
+                case "food":
+                    RunFoodZoo(); // used for testing some parts of code
+                    break;
+                case "ceil":
+                    RunCeilZoo(); // used for testing some parts of code
+                    break;
+                case "random":
+                    RunRandomZoo(); // used for testing some parts of code
+                    break;
+
+
+                // tests
+                case "foodTests":
+                    RunFoodTests(); // used for testing some parts of code
+                    break;
+                case "ceilTests":
+                    RunCeilTests(); // used for testing some parts of code
+                    break;
+
+                case "help":
+                default:
+                    DisplayHelp();
+                    break;
+
+            }
+            return;
+        }
+
+
+        /// <summary>
+        /// display help for usage
+        /// </summary>
+        static void DisplayHelp(){
+            string help = @"Basic usage:
+        Zoopark             - display help;
+        Zoopark help        - display help;
+        Zoopark food        - find solution for food task and display it;
+        Zoopark ceil        - find solution for food task and display it;
+        Zoopark random      - create random zoo and find solution for food and ceil task, and display it;
+
+        Tests:
+        Zoopark foodTests   - run predefined tests for food task;
+        Zoopark ceilTests   - run predefined tests for ceil task;
+";
+            Console.WriteLine(help);
+            return;
+        }
+
+
+        /// <summary>
+        /// tests for ceil task
+        /// </summary>
         static void RunCeilTests()
         {
             int count = 0;
@@ -46,6 +119,10 @@ namespace DbBest.ZooPark
             }
         }
 
+
+        /// <summary>
+        /// tests for food task
+        /// </summary>
         static void RunFoodTests()
         {
             int count = 0;
@@ -63,7 +140,9 @@ namespace DbBest.ZooPark
 
 
 
-
+        /// <summary>
+        /// solution for ceil task
+        /// </summary>
         static void RunCeilZoo()
         {
             Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 0, animalsTypes: 3, foodTypes: 0, logFile: "test.txt");
@@ -73,6 +152,9 @@ namespace DbBest.ZooPark
         }
 
 
+        /// <summary>
+        /// solution for food task
+        /// </summary>
         static void RunFoodZoo()
         {
             Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4, logFile: "test.txt");
@@ -83,6 +165,9 @@ namespace DbBest.ZooPark
         }
 
 
+        /// <summary>
+        /// create random zoo and find solution for ceil task and for food task
+        /// </summary>
         static void RunRandomZoo()
         {
             int animalLimit = 11;
