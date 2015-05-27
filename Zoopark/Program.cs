@@ -23,8 +23,8 @@ namespace DbBest.ZooPark
             //inputArgument = "random";
 
             //======= tests
-            //inputArgument = "foodTests";
-            //inputArgument = "ceilTests";
+            inputArgument = "foodtest";
+            //inputArgument = "ceiltest";
 
             RunTask(inputArgument);
 
@@ -149,18 +149,39 @@ tests:
         static void RunFoodTests()
         {
             TestCreateEmptyZoo();
+            Zoo ZooInstance = null;
 
             int count = 0;
 
-            Zoo ZooInstance = null;
 
-            count = 0;
+            // 1 animal, eat 1 type of food, at storage is 1 item of food
+            count = 1;            
             Console.WriteLine("\r\nTEST Food 1 ##############");
             ZooInstance = new Zoo(animals: count, ceils: 0, foodPackage: count, animalsTypes: count, foodTypes: count, logFile: "test.txt");
-            ZooInstance.TestFood_1_Create(count);
+
+            ZooInstance.TestSetAnimalsType(0, 0, 1);  // tune test case
+            ZooInstance.TestSetAnimalsFoodType(1, 1, 1, 0);
+            ZooInstance.TestSetFoodStorage( new int[] { 1 } );
+
             ZooInstance.FindFoodSolution_Permutation();
             ZooInstance.ShutDownWork();
             Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+
+
+            // 1 animal, eat 1 type of food, at storage is 2 item of food
+            count = 1;
+            Console.WriteLine("\r\nTEST Food 1 ##############");
+            ZooInstance = new Zoo(animals: count, ceils: 0, foodPackage: 2, animalsTypes: count, foodTypes: count, logFile: "test.txt");
+
+            ZooInstance.TestSetAnimalsType(0, 0, 1);  // tune test case
+            ZooInstance.TestSetAnimalsFoodType(1, 1, 1, 0);
+            ZooInstance.TestSetFoodStorage(new int[] { 2 });
+
+            ZooInstance.FindFoodSolution_Permutation();
+            ZooInstance.ShutDownWork();
+            Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+
+
         }
 
 

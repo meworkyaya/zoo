@@ -46,9 +46,9 @@ namespace DbBest.ZooPark
 
 
 
-        // results
-        public List<List<uint>> CeilsResults;           // results for ceils: array of array of <id of ceil => animal id>
-        public List<List<Animal>> FoodResults;          // results for foods: array of array of <id of animal : animal with food settings>
+        // results - not used now
+        // public List<List<uint>> CeilsResults;           // results for ceils: array of array of <id of ceil => animal id>
+        // public List<List<Animal>> FoodResults;          // results for foods: array of array of <id of animal : animal with food settings>
 
 
         #region logging
@@ -91,8 +91,8 @@ namespace DbBest.ZooPark
             FoodStorage = new Dictionary<int, int>();
             AnimalsRules = new Dictionary<int, ZooAnimalsRules>();
 
-            CeilsResults = new List<List<uint>>();
-            FoodResults = new List<List<Animal>>();
+            // CeilsResults = new List<List<uint>>();
+            // FoodResults = new List<List<Animal>>();
 
             GenerateZooModel(animals, animalsTypes, ceils, foodPackage, foodTypes);
         }
@@ -124,8 +124,8 @@ namespace DbBest.ZooPark
             FoodStorage.Clear();
             AnimalsRules.Clear();
 
-            CeilsResults.Clear();
-            FoodResults.Clear();
+            // CeilsResults.Clear();
+            // FoodResults.Clear();
 
             // generate new lists
             InitAnimals(AnimalsAmount, AnimalTypesAmount);
@@ -743,10 +743,83 @@ namespace DbBest.ZooPark
         }
 
 
+
+        /// <summary>
+        /// create basic structures for count animals
+        /// </summary>
+        /// <param name="count"></param>
+        public void TestFoodCreateNAnimals(int count, int animalTypesAmount, int foodStorage)
+        {
+            AnimalTypesAmount = animalTypesAmount;
+
+            Animals.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                Animals.Add(new Animal(type: 0, maxType: animalTypesAmount));
+            }
+        }
+
+
+        /// <summary>
+        /// for animals for index from: to: set type
+        /// </summary>
+        /// <param name="indexStart"></param>
+        /// <param name="indexEnd"></param>
+        /// <param name="type"></param>
+        public void TestSetAnimalsType(int indexStart, int indexEnd, int type)
+        {
+            for (int i = indexStart; i <= indexEnd; i++)
+            {
+                Animals[i].Type = type;
+            }
+            return;
+        }
+
+
+        /// <summary>
+        /// set food types that can eat animals
+        /// </summary>
+        /// <param name="indexStart"></param>
+        /// <param name="indexEnd"></param>
+        /// <param name="foodType_1"></param>
+        /// <param name="foodType_2"></param>
+        public void TestSetAnimalsFoodType(int indexTypeStart, int indexTypeEnd, int foodType_1, int foodType_2)
+        {
+            for (int i = indexTypeStart; i <= indexTypeEnd; i++)
+            {
+                AnimalsRules[i].CanEatFood_1 = foodType_1;
+                AnimalsRules[i].CanEatFood_2 = foodType_2;
+            }
+            return;
+        }
+
+
+        /// <summary>
+        /// set food amounts of different type for food storage
+        /// </summary>
+        /// <param name="foodAmounts"></param>
+        public void TestSetFoodStorage(int[] foodAmounts)
+        {
+            FoodStorage.Clear();
+
+            int count = 0;
+            for (int i = 0; i < foodAmounts.Count(); i++)
+            {
+                count += foodAmounts[i];
+                FoodStorage[i + 1] = foodAmounts[i];
+            }
+
+            // debug check integrity: must have at total count packages
+            DebugInitFoodAssert(count, FoodStorage.Count() );
+
+            return;
+        }
+
+
+
+
         public void TestFood_1_Create(int count)
         {
-
-
             Animals.Clear();
             int type = 0;
             for (int i = 0; i < count; i++)
@@ -755,10 +828,6 @@ namespace DbBest.ZooPark
                 Animals.Add(new Animal(type, AnimalTypesAmount));
             }
             TestInitAnimalLiveRules(count);
-
-
-
-
         }
 
 
