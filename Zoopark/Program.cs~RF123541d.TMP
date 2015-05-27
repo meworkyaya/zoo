@@ -149,97 +149,80 @@ tests:
         static void RunFoodTests()
         {
             TestCreateEmptyZoo();
+            Zoo ZooInstance = null;
 
+            int count = 0;
 
-            ZooAnimalsRules[] Animals1_1FoodTypes = new ZooAnimalsRules[] {
+            
+              
+            // 1 animal, eat 1 type of food, at storage is 1 item of food - result : false
+            TestCreateFoodTest(animalsTypes: 1, Animals: new int[] { 1 },
+                AnimalsRulesList: new ZooAnimalsRules[] {
                     new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 0)
-            };
-
-            // 1 animal, eat 1 type of food, at storage is 1 item of food; different combinations at storage 
-            TestCreateFoodTest(result: false, Animals: new int[] { 1 },
-                AnimalsRulesList: Animals1_1FoodTypes,
+                },
                 foodTypesAmounts: new int[] { 1 } );
 
-            TestCreateFoodTest(result: true, Animals: new int[] { 1 },
-                AnimalsRulesList: Animals1_1FoodTypes,
-                foodTypesAmounts: new int[] { 2 });
 
-            TestCreateFoodTest(result: false, Animals: new int[] { 1 },
-                AnimalsRulesList: Animals1_1FoodTypes,
-                foodTypesAmounts: new int[] { 1, 2 });
-
-
+            // 1 animal, eat 1 type of food, at storage is 2 item of food - result : true
+            TestCreateFoodTest(animalsTypes: 1, Animals: new int[] { 1 },
+                AnimalsRulesList: new ZooAnimalsRules[] {
+                    new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 0)
+                },
+                foodTypesAmounts: new int[] { 2 } );
 
 
+            // 1 animal, eat 1 type of food, at storage is 1 item of his food, and 2 item of OTHER food - result : false
+            TestCreateFoodTest(animalsTypes: 1, Animals: new int[] { 1 },
+                AnimalsRulesList: new ZooAnimalsRules[] {
+                    new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 0)
+                },
+                foodTypesAmounts: new int[] { 1, 2 } );
 
-            ZooAnimalsRules[] Animals1_2FoodTypes = new ZooAnimalsRules[] {
+            
+
+            // 1 animal, eat 2 type of food, at storage is 1 item of his food - result : false
+            TestCreateFoodTest(animalsTypes: 1, Animals: new int[] { 1 },
+                AnimalsRulesList: new ZooAnimalsRules[] {
                     new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2)
-            };
-
-            // 1 animal, eat 2 type of food; different combinations at storage 
-            TestCreateFoodTest(result: false, Animals: new int[] { 1 },
-                AnimalsRulesList: Animals1_2FoodTypes,
+                },
                 foodTypesAmounts: new int[] { 1, 0 } );
 
-            TestCreateFoodTest(result: false, Animals: new int[] { 1 },
-                AnimalsRulesList: Animals1_2FoodTypes,
-                foodTypesAmounts: new int[] { 0, 1 });
+            // 1 animal, eat 2 type of food, at storage is 1 item of his food - result : true
+            TestCreateFoodTest(animalsTypes: 1, Animals: new int[] { 1 },
+                AnimalsRulesList: new ZooAnimalsRules[] {
+                    new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2)
+                },
+                foodTypesAmounts: new int[] { 0, 1 } );
 
-            TestCreateFoodTest(result: true, Animals: new int[] { 1 },
-                AnimalsRulesList: Animals1_2FoodTypes,
+
+            // 1 animal, eat 2 type of food, at storage is 1 item of his food - result : true
+            TestCreateFoodTest(animalsTypes: 1, Animals: new int[] { 1 },
+                AnimalsRulesList: new ZooAnimalsRules[] {
+                    new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2)
+                },
+                foodTypesAmounts: new int[] { 2, 0 } );
+
+
+            //=== 1 animal, eat 2 type of food, at storage is 2 item of his food - result : true
+            Console.WriteLine("\r\nTEST Food 1 ##############");
+            ZooInstance = new Zoo(animals: 1, ceils: 0, foodPackage: 2, animalsTypes: 1, foodTypes: 1, logFile: "test.txt");
+
+            ZooInstance.TestSetAnimalsType(new int[] { 1 });  // tune test case
+            ZooInstance.TestSetAnimalsFoodType(1, 1, 1, 1);
+            ZooInstance.TestSetFoodStorage(new int[] { 2 });
+
+            ZooInstance.FindFoodSolution_Permutation();
+            ZooInstance.ShutDownWork();
+            Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+             */
+
+
+            //=== 1 animal, eat 2 type of food, at storage is 2 item of his food - result : true
+            TestCreateFoodTest(animalsTypes: 1, Animals: new int[] { 1 },                 
+                AnimalsRulesList: new ZooAnimalsRules[] {
+                    new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2)
+                }, 
                 foodTypesAmounts: new int[] { 2, 0 });
-
-            TestCreateFoodTest(result: true, Animals: new int[] { 1 },
-                AnimalsRulesList: Animals1_2FoodTypes,
-                foodTypesAmounts: new int[] { 1, 1 });
-
-            TestCreateFoodTest(result: true, Animals: new int[] { 1 },
-                AnimalsRulesList: Animals1_2FoodTypes,
-                foodTypesAmounts: new int[] { 0, 2 });
-
-            TestCreateFoodTest(result: false, Animals: new int[] { 1 },
-                AnimalsRulesList: Animals1_2FoodTypes,
-                foodTypesAmounts: new int[] { 1, 2 });
-
-
-
-
-
-            // 2 animal, each eat 2 type of foods, 3 types of food, different combinations at storage   
-            ZooAnimalsRules[] Animals2_3FoodTypes = new ZooAnimalsRules[] {
-                    new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2),
-                    new ZooAnimalsRules( type: 2, canEatFood_1: 1, canEatFood_2: 3)
-            };
-
-            TestCreateFoodTest(result: true, Animals: new int[] { 1, 2 }, 
-                AnimalsRulesList: Animals2_3FoodTypes,
-                foodTypesAmounts: new int[] { 2, 0, 2 });
-
-            TestCreateFoodTest(result: true, Animals: new int[] { 1, 2 },
-                AnimalsRulesList: Animals2_3FoodTypes,
-                foodTypesAmounts: new int[] { 1, 1, 2 });
-
-            TestCreateFoodTest(result: true, Animals: new int[] { 1, 2 },
-                AnimalsRulesList: Animals2_3FoodTypes,
-                foodTypesAmounts: new int[] { 0, 2, 2 });
-
-            TestCreateFoodTest(result: true, Animals: new int[] { 1, 2 },
-                AnimalsRulesList: Animals2_3FoodTypes,
-                foodTypesAmounts: new int[] { 1, 3, 0 });
-
-            TestCreateFoodTest(result: true, Animals: new int[] { 1, 2 },
-                AnimalsRulesList: Animals2_3FoodTypes,
-                foodTypesAmounts: new int[] { 1, 2, 1 });
-
-            TestCreateFoodTest(result: true, Animals: new int[] { 1, 2 },
-                AnimalsRulesList: Animals2_3FoodTypes,
-                foodTypesAmounts: new int[] { 2, 2, 0 });
-
-            TestCreateFoodTest(result: true, Animals: new int[] { 1, 2 },
-                AnimalsRulesList: Animals2_3FoodTypes,
-                foodTypesAmounts: new int[] { 2, 1, 0, 1 });
-
-
         }
 
 
@@ -255,13 +238,12 @@ tests:
         /// <param name="AnimalsRulesList"></param>
         /// <param name="foodTypesAmounts"></param>
         /// <param name="logFile"></param>
-        public static void TestCreateFoodTest(bool result, int[] Animals, ZooAnimalsRules[] AnimalsRulesList, int[] foodTypesAmounts, string logFile = "test.txt" 
+        public static void TestCreateFoodTest(int animalsTypes, int[] Animals, ZooAnimalsRules[] AnimalsRulesList, int[] foodTypesAmounts, string logFile = "test.txt" 
         )
         {
             Zoo ZooInstance = null;
 
             int animals = Animals.Count();
-            int animalsTypes = AnimalsRulesList.Count();
             int ceils = 0;
             int foodTypes = foodTypesAmounts.Count();
 
