@@ -805,7 +805,7 @@ namespace DbBest.ZooPark
             for (int i = 1; i <= foodAmounts.Count(); i++)
             {
                 count += foodAmounts[i];
-                FoodStorage[i] = foodAmounts[i];
+                FoodStorage[i] = foodAmounts[i - 1];
             }
 
             // debug check integrity: must have at total count packages
