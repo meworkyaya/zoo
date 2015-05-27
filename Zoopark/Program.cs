@@ -171,6 +171,31 @@ tests:
 
 
 
+            ZooAnimalsRules[] Animals1_1FoodTypes_2 = new ZooAnimalsRules[] {
+                    new ZooAnimalsRules( type: 1, canEatFood_1: 0, canEatFood_2: 1)
+            };
+
+
+            // 1 animal, eat 1 type of food, at storage is 1 item of food; different combinations at storage 
+            TestCreateFoodTest(result: false, Animals: new int[] { 1 },
+                AnimalsRulesList: Animals1_1FoodTypes_2,
+                foodTypesAmounts: new int[] { 1 });
+
+            TestCreateFoodTest(result: true, Animals: new int[] { 1 },
+                AnimalsRulesList: Animals1_1FoodTypes_2,
+                foodTypesAmounts: new int[] { 1, 2 });
+
+            TestCreateFoodTest(result: false, Animals: new int[] { 1 },
+                AnimalsRulesList: Animals1_1FoodTypes_2,
+                foodTypesAmounts: new int[] { 2, 1 });
+
+            TestCreateFoodTest(result: true, Animals: new int[] { 1 },
+                AnimalsRulesList: Animals1_1FoodTypes_2,
+                foodTypesAmounts: new int[] { 0, 2 });
+
+
+
+
 
             ZooAnimalsRules[] Animals1_2FoodTypes = new ZooAnimalsRules[] {
                     new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2)
