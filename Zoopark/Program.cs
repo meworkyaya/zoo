@@ -224,23 +224,14 @@ tests:
             Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
              */
 
-            Animal[] testAnimals = new Animal[] {
-                    new Animal( type: 1 )
-            };
-            ZooAnimalsRules[] testAnimalsRulesList = new ZooAnimalsRules[] {
-                    new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2)
-            };
 
             //=== 1 animal, eat 2 type of food, at storage is 2 item of his food - result : true
-            TestCreateFoodTest(animals: 1, animalsTypes: 1, ceils: 0, foodPackage: 2, foodTypes: 1, 
-                Animals: new Animal[] {
-                    new Animal( type: 1 )
-                },
-
+            TestCreateFoodTest(animalsTypes: 1, 
+                Animals: new int[] { 1 },                 
                 AnimalsRulesList: new ZooAnimalsRules[] {
                     new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2)
                 }, 
-                foodTypesAmounts: new int[] { 2 });
+                foodTypesAmounts: new int[] { 2, 0 });
         }
 
 
@@ -252,14 +243,24 @@ tests:
         /// <param name="ceils"></param>
         /// <param name="foodPackage"></param>
         /// <param name="foodTypes"></param>
-        /// <param name="Animals"></param>
+        /// <param name="Animals">array with type of animal for each animal</param>
         /// <param name="AnimalsRulesList"></param>
         /// <param name="foodTypesAmounts"></param>
         /// <param name="logFile"></param>
-        public static void TestCreateFoodTest( int animals, int animalsTypes, int ceils, int foodPackage, int foodTypes, Animal[] Animals, ZooAnimalsRules[] AnimalsRulesList, int[] foodTypesAmounts, string logFile = "test.txt" 
+        public static void TestCreateFoodTest(int animalsTypes, int[] Animals, ZooAnimalsRules[] AnimalsRulesList, int[] foodTypesAmounts, string logFile = "test.txt" 
         )
         {
             Zoo ZooInstance = null;
+
+            int animals = Animals.Count();
+            int ceils = 0;
+            int foodTypes = foodTypesAmounts.Count();
+
+            int foodPackage = 0;
+            foreach (var item in foodTypesAmounts)
+            {
+                foodPackage += item;
+            }
 
             //=== 1 animal, eat 2 type of food, at storage is 2 item of his food - result : true
             Console.WriteLine("\r\nTEST Food ##############");

@@ -764,11 +764,11 @@ namespace DbBest.ZooPark
         /// set list of animals for test
         /// </summary>
         /// <param name="AnimalsList"></param>
-        public void TestSetAnimals(Animal[] AnimalsList)
+        public void TestSetAnimals(int[] AnimalsList)
         {
             for (int i = 0; i < AnimalsList.Count(); i++)
             {
-                Animals[i] = AnimalsList[i];
+                Animals[i] = new Animal( AnimalsList[i] );
             }
             return;
         }
@@ -802,10 +802,10 @@ namespace DbBest.ZooPark
             FoodStorage.Clear();
 
             int count = 0;
-            for (int i = 0; i < foodAmounts.Count(); i++)
+            for (int i = 1; i <= foodAmounts.Count(); i++)
             {
                 count += foodAmounts[i];
-                FoodStorage[i + 1] = foodAmounts[i];
+                FoodStorage[i] = foodAmounts[i];
             }
 
             // debug check integrity: must have at total count packages
