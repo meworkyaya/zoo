@@ -761,19 +761,19 @@ namespace DbBest.ZooPark
 
 
         /// <summary>
-        /// for animals for index from: to: set type
+        /// set list of animals for test
         /// </summary>
-        /// <param name="indexStart"></param>
-        /// <param name="indexEnd"></param>
-        /// <param name="type"></param>
-        public void TestSetAnimalsType(int indexStart, int indexEnd, int type)
+        /// <param name="AnimalsList"></param>
+        public void TestSetAnimals(Animal[] AnimalsList)
         {
-            for (int i = indexStart; i <= indexEnd; i++)
+            for (int i = 0; i < AnimalsList.Count(); i++)
             {
-                Animals[i].Type = type;
+                Animals[i] = AnimalsList[i];
             }
             return;
         }
+
+
 
 
         /// <summary>
@@ -783,12 +783,11 @@ namespace DbBest.ZooPark
         /// <param name="indexEnd"></param>
         /// <param name="foodType_1"></param>
         /// <param name="foodType_2"></param>
-        public void TestSetAnimalsFoodType(int indexTypeStart, int indexTypeEnd, int foodType_1, int foodType_2)
+        public void TestSetAnimalsFoodType(ZooAnimalsRules[] AnimalsRulesList )
         {
-            for (int i = indexTypeStart; i <= indexTypeEnd; i++)
+            for (int i = 0; i < AnimalsRulesList.Count(); i++)
             {
-                AnimalsRules[i].CanEatFood_1 = foodType_1;
-                AnimalsRules[i].CanEatFood_2 = foodType_2;
+                AnimalsRules[i] = AnimalsRulesList[i];
             }
             return;
         }
@@ -1537,4 +1536,6 @@ namespace DbBest.ZooPark
 
 
     }
+
+
 }

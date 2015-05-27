@@ -160,7 +160,7 @@ tests:
             Console.WriteLine("\r\nTEST Food 1 ##############");
             ZooInstance = new Zoo(animals: count, ceils: 0, foodPackage: count, animalsTypes: count, foodTypes: count, logFile: "test.txt");
 
-            ZooInstance.TestSetAnimalsType(0, 0, 1);  // tune test case
+            ZooInstance.TestSetAnimalsType(new int[] { 1 });  // tune test case
             ZooInstance.TestSetAnimalsFoodType(1, 1, 1, 0);
             ZooInstance.TestSetFoodStorage( new int[] { 1 } );
 
@@ -174,7 +174,7 @@ tests:
             Console.WriteLine("\r\nTEST Food 1 ##############");
             ZooInstance = new Zoo(animals: count, ceils: 0, foodPackage: 2, animalsTypes: count, foodTypes: count, logFile: "test.txt");
 
-            ZooInstance.TestSetAnimalsType(0, 0, 1);  // tune test case
+            ZooInstance.TestSetAnimalsType(new int[] { 1 });  // tune test case
             ZooInstance.TestSetAnimalsFoodType(1, 1, 1, 0);
             ZooInstance.TestSetFoodStorage(new int[] { 2 });
 
@@ -187,7 +187,7 @@ tests:
             Console.WriteLine("\r\nTEST Food 1 ##############");
             ZooInstance = new Zoo(animals: 1, ceils: 0, foodPackage: 1 + 2, animalsTypes: 2, foodTypes: 2, logFile: "test.txt");
 
-            ZooInstance.TestSetAnimalsType(0, 0, 1);  // tune test case
+            ZooInstance.TestSetAnimalsType(new int[] { 1 });  // tune test case
             ZooInstance.TestSetAnimalsFoodType(1, 1, 1, 0);
             ZooInstance.TestSetFoodStorage(new int[] { 1, 2 });
 
@@ -195,14 +195,13 @@ tests:
             ZooInstance.ShutDownWork();
             Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
 
-            */
-
+            
 
             //=== 1 animal, eat 2 type of food, at storage is 1 item of his food - result : false
             Console.WriteLine("\r\nTEST Food 1 ##############");
             ZooInstance = new Zoo(animals: 1, ceils: 0, foodPackage: 1, animalsTypes: 1, foodTypes: 1, logFile: "test.txt");
 
-            ZooInstance.TestSetAnimalsType(0, 0, 1);  // tune test case
+            ZooInstance.TestSetAnimalsType(new int[] { 1 });  // tune test case
             ZooInstance.TestSetAnimalsFoodType(1, 1, 1, 1);
             ZooInstance.TestSetFoodStorage(new int[] { 1 });
 
@@ -216,16 +215,65 @@ tests:
             Console.WriteLine("\r\nTEST Food 1 ##############");
             ZooInstance = new Zoo(animals: 1, ceils: 0, foodPackage: 2, animalsTypes: 1, foodTypes: 1, logFile: "test.txt");
 
-            ZooInstance.TestSetAnimalsType(0, 0, 1);  // tune test case
+            ZooInstance.TestSetAnimalsType(new int[] { 1 });  // tune test case
             ZooInstance.TestSetAnimalsFoodType(1, 1, 1, 1);
             ZooInstance.TestSetFoodStorage(new int[] { 2 });
 
             ZooInstance.FindFoodSolution_Permutation();
             ZooInstance.ShutDownWork();
             Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+             */
+
+            Animal[] testAnimals = new Animal[] {
+                    new Animal( type: 1 )
+            };
+            ZooAnimalsRules[] testAnimalsRulesList = new ZooAnimalsRules[] {
+                    new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2)
+            };
+
+            //=== 1 animal, eat 2 type of food, at storage is 2 item of his food - result : true
+            TestCreateFoodTest(animals: 1, animalsTypes: 1, ceils: 0, foodPackage: 2, foodTypes: 1, 
+                Animals: new Animal[] {
+                    new Animal( type: 1 )
+                },
+
+                AnimalsRulesList: new ZooAnimalsRules[] {
+                    new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2)
+                }, 
+                foodTypesAmounts: new int[] { 2 });
+        }
 
 
+        /// <summary>
+        /// create test for food task
+        /// </summary>
+        /// <param name="animals"></param>
+        /// <param name="animalsTypes"></param>
+        /// <param name="ceils"></param>
+        /// <param name="foodPackage"></param>
+        /// <param name="foodTypes"></param>
+        /// <param name="Animals"></param>
+        /// <param name="AnimalsRulesList"></param>
+        /// <param name="foodTypesAmounts"></param>
+        /// <param name="logFile"></param>
+        public static void TestCreateFoodTest( int animals, int animalsTypes, int ceils, int foodPackage, int foodTypes, Animal[] Animals, ZooAnimalsRules[] AnimalsRulesList, int[] foodTypesAmounts, string logFile = "test.txt" 
+        )
+        {
+            Zoo ZooInstance = null;
 
+            //=== 1 animal, eat 2 type of food, at storage is 2 item of his food - result : true
+            Console.WriteLine("\r\nTEST Food ##############");
+            ZooInstance = new Zoo(animals, animalsTypes, ceils, foodPackage, foodTypes, logFile);
+
+            ZooInstance.TestSetAnimals(Animals);  // tune test case
+            ZooInstance.TestSetAnimalsFoodType(AnimalsRulesList);
+            ZooInstance.TestSetFoodStorage(foodTypesAmounts );
+
+            ZooInstance.FindFoodSolution_Permutation();
+            ZooInstance.ShutDownWork();
+            Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+
+            return;
         }
 
 
