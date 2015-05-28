@@ -25,8 +25,8 @@ namespace DbBest.ZooPark
             //inputArgument = "random";
 
             //======= tests
-            inputArgument = "foodtest";
-            //inputArgument = "ceiltest";
+            //inputArgument = "foodtest";
+            inputArgument = "ceiltest";
 
             RunTask(inputArgument);
 
@@ -103,18 +103,19 @@ tests:
         {
             int count = 0;
 
-            TestCreateEmptyZoo();
+            TestCreateEmptyZoo("test_ceil.txt" );
 
             Zoo ZooInstance_2 = null;
             for (int i = 1; i < 7; i++)
             {
                 count = i;
-                Console.WriteLine("\r\nTEST create Zoo {0} animals {1} types {2} ceils 0 neighbour rule ##############", count, count, count);
-                ZooInstance_2 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test" + count + ".txt");
+                Console.WriteLine("\r\n\r\n\r\nTEST create Zoo; {0} animals; {1} types; {2} ceils; 0 neighbours rule ##############", count, count, count);
+                ZooInstance_2 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test_ceil.txt");
                 ZooInstance_2.TestNxNxNCreate(count);
+                ZooInstance_2.DisplayZooDebugInfo();
                 ZooInstance_2.FindCeilSolution();
                 ZooInstance_2.ShutDownWork();
-                Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+                Console.WriteLine("Test Done\r\n#######################################");
             }
         }
 
@@ -134,10 +135,12 @@ tests:
         /// <summary>
         /// create empty zoo for test
         /// </summary>
-        public static void TestCreateEmptyZoo()
+        public static void TestCreateEmptyZoo(string logFile)
         {
             Console.WriteLine("\r\nTEST create empty Zoo ##############");
-            Zoo ZooInstance = new Zoo(animals: 0, ceils: 0, foodPackage: 0, animalsTypes: 0, foodTypes: 0, logFile: "test.txt", keepOldLog: false);
+            
+            Zoo ZooInstance = new Zoo(animals: 0, ceils: 0, foodPackage: 0, animalsTypes: 0, foodTypes: 0, logFile: logFile, keepOldLog: false);
+            ZooInstance.DisplayZooDebugInfo();
             ZooInstance.ShutDownWork();
             Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
         }
@@ -150,7 +153,7 @@ tests:
         /// </summary>
         static void RunFoodTests()
         {
-            TestCreateEmptyZoo();
+            TestCreateEmptyZoo("test_food.txt");
 
 
             ZooAnimalsRules[] Animals_FoodTypes;
@@ -419,6 +422,7 @@ tests:
             ZooInstance.TestSetAnimalsFoodType(AnimalsRulesList);
             ZooInstance.TestSetFoodStorage(foodTypesAmounts );
 
+            ZooInstance.DisplayZooDebugInfo();
             bool taskResult = ZooInstance.FindFoodSolution_Permutation();
             ZooInstance.ShutDownWork();
 
@@ -468,7 +472,8 @@ tests:
         {
             int animalLimit = 11;
             int animalMinCount = 2;
-            // ====== generate random zoo 
+
+            // ====== generate random zoo - prepare params
             Random rnd = new Random();
             int animals = rnd.Next(animalMinCount, animalLimit);
             int ceils = animals + rnd.Next(1, 6); // more than animal
@@ -477,6 +482,7 @@ tests:
             int foodPackage = rnd.Next(1, 10);
             int foodTypes = rnd.Next(1, 10);
 
+            // generate zoo and run it
             Zoo ZooInstance = new Zoo(animals: animals, ceils: ceils, foodPackage: foodPackage, animalsTypes: animalsTypes, foodTypes: foodTypes, logFile: "test.txt");
 
             ZooInstance.DisplayZooDebugInfo();

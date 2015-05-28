@@ -367,13 +367,12 @@ namespace DbBest.ZooPark
             StringBuilder sb = new StringBuilder();
             int count = 0;
 
-            sb.AppendFormat("Animals: {0}; Animal Types: {1}, Ceils: {2}  ===================== \r\n", Animals.Count, AnimalTypesAmount, CeilsAmount);
+            sb.AppendFormat("Animals: {0}; Animal Types: {1}, Ceils: {2}", Animals.Count, AnimalTypesAmount, CeilsAmount);
             foreach (Animal a in Animals)
             {
                 count++;
                 sb.AppendFormat("{0}: \t{1} \r\n", count, a.DisplayAnimal(1));
             }
-
 
             return sb.ToString();
         }
@@ -543,7 +542,8 @@ namespace DbBest.ZooPark
         /// <param name="successLimit">not used now, can use if want limit number of success variants</param>
         public void findCeilSolutionByUniquePermutation(int successLimit)
         {
-            DisplayMessage("Begin ceil placing search ... =========================");
+            DisplayMessage("===============================================");
+            DisplayMessage("Begin ceil placing search ... ");
 
             AttemptCount = 0;
             SuccessCount = 0;
@@ -553,10 +553,11 @@ namespace DbBest.ZooPark
             List<int> AnimalsThatLeft = GetAllAnimalsAndEmptyCeilsAsListInt();  // all not placed yet animals
 
             MakePermutation(CurrentStep: CeilsAmount, CurrentItems: ref CurrentItems, AnimalsThatLeft: ref AnimalsThatLeft);
-
-            DisplayMessage("\r\nDone =========================");
+            
             DisplayMessage("Result: Success: " + SuccessCount + ";     Failed: " + FailCount);
-            DisplayMessage("If logging enabled - success results placed at log file ");
+            DisplayMessage("Logfile: " + LogFileName);
+            DisplayMessage("Done");
+            DisplayMessage("================================================\r\n\r\n");
         }
 
 
@@ -877,8 +878,6 @@ namespace DbBest.ZooPark
         public int FindCeilSolution()
         {
             findCeilSolutionByUniquePermutation(100);
-
-            DisplayMessage("done");
             return 0;
         }
 
@@ -950,9 +949,9 @@ namespace DbBest.ZooPark
 
             result = (SuccessCount > 0);
 
-            DisplayMessage("\r\nSearch Food Solution Done =========================");
             DisplayMessage("Result: Success: " + SuccessCount + ";     Failed: " + FailCount);
-            DisplayMessage("If logging enabled - success results placed at log file ");
+            DisplayMessage("logfile: " + LogFileName );
+            DisplayMessage("\r\nSearch Food Solution Done =========================");
 
 
             return result;
