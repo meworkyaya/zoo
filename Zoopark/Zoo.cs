@@ -563,7 +563,7 @@ namespace DbBest.ZooPark
             DisplayMessage("Result: Success: " + SuccessCount + ";     Failed: " + FailCount);
             DisplayMessage("Logfile: " + LogFileName);
             DisplayMessage("Done");
-            DisplayMessage("================================================\r\n\r\n");
+            DisplayMessage("================================================\r\n");
         }
 
 

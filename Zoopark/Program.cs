@@ -110,12 +110,12 @@ tests:
             {
                 count = i;
                 ZooInstance_2 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test_ceil.txt");
-                ZooInstance_2.DisplayMessage("\r\n\r\n\r\nTEST create Zoo; " + count + " animals; " + count + " types; " + count + " ceils; 0 neighbours rule ##################");
+                ZooInstance_2.DisplayMessage("\r\n\r\n\r\nTEST create Zoo; " + count + " animals; " + count + " types; " + count + " ceils; 0 neighbours rule \r\n##################################");
                 ZooInstance_2.TestNxNxNCreate(count);
                 ZooInstance_2.DisplayZooDebugInfo();
-                ZooInstance_2.FindCeilSolution();
-                ZooInstance_2.ShutDownWork();
+                ZooInstance_2.FindCeilSolution();                
                 ZooInstance_2.DisplayMessage("Test Done\r\n#######################################");
+                ZooInstance_2.ShutDownWork();
             }
         }
 
@@ -137,12 +137,11 @@ tests:
         /// </summary>
         public static void TestCreateEmptyZoo(string logFile)
         {
-            Console.WriteLine("\r\nTEST create empty Zoo ##############");
-            
             Zoo ZooInstance = new Zoo(animals: 0, ceils: 0, foodPackage: 0, animalsTypes: 0, foodTypes: 0, logFile: logFile, keepOldLog: false);
-            ZooInstance.DisplayZooDebugInfo();
+            ZooInstance.DisplayMessage("TEST create empty Zoo\r\n##################################");
+            ZooInstance.DisplayZooDebugInfo();            
+            ZooInstance.DisplayMessage("Test Done\r\n#####################################\r\n\r\n");
             ZooInstance.ShutDownWork();
-            Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
         }
 
 
