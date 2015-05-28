@@ -22,10 +22,10 @@ namespace DbBest.ZooPark
             //======= run 
             //inputArgument = "food";
             //inputArgument = "ceil";
-            inputArgument = "random";
+            //inputArgument = "random";
 
             //======= tests
-            //inputArgument = "foodtest";
+            inputArgument = "foodtest";
             //inputArgument = "ceiltest";
 
             RunTask(inputArgument);
@@ -137,7 +137,7 @@ tests:
         public static void TestCreateEmptyZoo()
         {
             Console.WriteLine("\r\nTEST create empty Zoo ##############");
-            Zoo ZooInstance = new Zoo(animals: 0, ceils: 0, foodPackage: 0, animalsTypes: 0, foodTypes: 0, logFile: "test.txt");
+            Zoo ZooInstance = new Zoo(animals: 0, ceils: 0, foodPackage: 0, animalsTypes: 0, foodTypes: 0, logFile: "test.txt", keepOldLog: false);
             ZooInstance.ShutDownWork();
             Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
         }
@@ -442,7 +442,7 @@ tests:
         /// </summary>
         static void RunCeilZoo()
         {
-            Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 0, animalsTypes: 3, foodTypes: 0, logFile: "test.txt");
+            Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 0, animalsTypes: 3, foodTypes: 0, logFile: "test.txt", keepOldLog: false);
             ZooInstance.DisplayZooDebugInfo();
             ZooInstance.FindCeilSolution();
             ZooInstance.ShutDownWork();
@@ -454,7 +454,7 @@ tests:
         /// </summary>
         static void RunFoodZoo()
         {
-            Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4, logFile: "test.txt");
+            Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4, logFile: "test.txt", keepOldLog: false);
             ZooInstance.DisplayZooDebugInfo();
             ZooInstance.FindFoodSolution_Permutation();
             ZooInstance.ShutDownWork();

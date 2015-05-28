@@ -81,9 +81,9 @@ namespace DbBest.ZooPark
         #region init
         // init data methods
 
-        public Zoo(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackage = 40, int foodTypes = 3, string logFile = "")
+        public Zoo(int animals = 10, int animalsTypes = 3, int ceils = 15, int foodPackage = 40, int foodTypes = 3, string logFile = "", bool keepOldLog = true )
         {
-            CreateLogFile(logFile);
+            CreateLogFile(logFile, keepOldLog);
 
             _rnd = new Random();
 
@@ -312,7 +312,7 @@ namespace DbBest.ZooPark
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        protected void CreateLogFile(string fileName)
+        protected void CreateLogFile(string fileName, bool keepOldLog = true )
         {
             CloseLogFile();
 
@@ -321,7 +321,7 @@ namespace DbBest.ZooPark
             {
                 try
                 {
-                    LogFile = new System.IO.StreamWriter(fileName);
+                    LogFile = new System.IO.StreamWriter(fileName, keepOldLog);
                     LogFile.AutoFlush = true;
                     result = (LogFile != null);
                 }
