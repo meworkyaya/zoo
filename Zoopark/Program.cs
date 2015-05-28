@@ -12,7 +12,7 @@ namespace DbBest.ZooPark
 
         static void Main(string[] args)
         {            
-            string inputArgument = ""; // help
+            string inputArgument = "help"; // help
 
             if (args.Count() > 0)
             {
