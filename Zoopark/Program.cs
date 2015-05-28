@@ -109,13 +109,13 @@ tests:
             for (int i = 1; i < 7; i++)
             {
                 count = i;
-                Console.WriteLine("\r\n\r\n\r\nTEST create Zoo; {0} animals; {1} types; {2} ceils; 0 neighbours rule ##############", count, count, count);
                 ZooInstance_2 = new Zoo(animals: count, ceils: count, foodPackage: 0, animalsTypes: count, foodTypes: 0, logFile: "test_ceil.txt");
+                ZooInstance_2.DisplayMessage("\r\n\r\n\r\nTEST create Zoo; " + count + " animals; " + count + " types; " + count + " ceils; 0 neighbours rule ##################");
                 ZooInstance_2.TestNxNxNCreate(count);
                 ZooInstance_2.DisplayZooDebugInfo();
                 ZooInstance_2.FindCeilSolution();
                 ZooInstance_2.ShutDownWork();
-                Console.WriteLine("Test Done\r\n#######################################");
+                ZooInstance_2.DisplayMessage("Test Done\r\n#######################################");
             }
         }
 

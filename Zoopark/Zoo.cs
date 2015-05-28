@@ -367,12 +367,15 @@ namespace DbBest.ZooPark
             StringBuilder sb = new StringBuilder();
             int count = 0;
 
-            sb.AppendFormat("Animals: {0}; Animal Types: {1}, Ceils: {2}", Animals.Count, AnimalTypesAmount, CeilsAmount);
+            sb.AppendFormat("Animals: {0}; Animal Types: {1}, Ceils: {2} \r\n", Animals.Count, AnimalTypesAmount, CeilsAmount);
+
+            sb.Append("Animal List: {");
             foreach (Animal a in Animals)
             {
                 count++;
-                sb.AppendFormat("{0}: \t{1} \r\n", count, a.DisplayAnimal(1));
+                sb.Append( a.Type + ", " );
             }
+            sb.Append("}\r\n");
 
             return sb.ToString();
         }
@@ -382,7 +385,7 @@ namespace DbBest.ZooPark
         public string GetFoodDisplay()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("Food: Types: {0}; Storage: {1} items; format: {{type: amount}},... ========\r\n", FoodTypesAmount, FoodPackagesAmount);
+            sb.AppendFormat("Food: Types: {0}; Storage: {1} items; format: {{type: amount}},... \r\n", FoodTypesAmount, FoodPackagesAmount);
             sb.Append(GetFoodContainerDisplay(FoodStorage));
             return sb.ToString();
         }
@@ -400,13 +403,14 @@ namespace DbBest.ZooPark
             StringBuilder sb = new StringBuilder();
             int count = 0;
             int PadLeft = 3;
+
+            sb.Append("FoodStorage: ");
             foreach (var pair in container)
             {
                 sb.AppendFormat("{{{0}: {1}}} ", pair.Key, pair.Value.ToString().PadLeft(PadLeft));
                 count += pair.Value;
             }
             sb.AppendFormat("Total: {0}", count );
-            sb.AppendLine();
 
             return sb.ToString();
         }
@@ -415,7 +419,7 @@ namespace DbBest.ZooPark
         public string GetAnimasRulesDisplay()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Animals Rules: format: {type: food_1, food_2}, ... =============\r\n");
+            sb.Append("Food Rules: format: {type: food_1, food_2}, ...\r\n");
             foreach (var pair in AnimalsRules)
             {
                 sb.AppendFormat("{0}, ", pair.Value.DisplayRule());
@@ -430,7 +434,7 @@ namespace DbBest.ZooPark
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("Animals Living Rules: {0} rules;  =====================================\r\n", AnimalsLivingWithRules.Length);
+            sb.AppendFormat("Animals Living Rules: {0} rules; \r\n", AnimalsLivingWithRules.Length);
 
             int PadLeft = 3;
 
@@ -473,11 +477,13 @@ namespace DbBest.ZooPark
         {
             StringBuilder sb = new StringBuilder();
 
+            sb.AppendLine("========================================");
             sb.AppendLine(GetAnimalsDisplay());
             sb.AppendLine(GetAnimasLivingRulesDisplay());
 
             sb.AppendLine(GetAnimasRulesDisplay());
             sb.AppendLine(GetFoodDisplay());
+            sb.AppendLine("========================================");
 
             return sb.ToString();
         }
@@ -724,7 +730,7 @@ namespace DbBest.ZooPark
             int type = 0;
             for (int i = 0; i < count; i++)
             {
-                type = i;
+                type = i + 1;
                 Animals.Add(new Animal(type, AnimalTypesAmount));
             }
             TestInitAnimalLiveRules(count);
