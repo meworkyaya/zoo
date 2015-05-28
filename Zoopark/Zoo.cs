@@ -957,7 +957,7 @@ namespace DbBest.ZooPark
 
             DisplayMessage("Result: Success: " + SuccessCount + ";     Failed: " + FailCount);
             DisplayMessage("logfile: " + LogFileName );
-            DisplayMessage("\r\nSearch Food Solution Done =========================");
+            DisplayMessage("\r\nSearch Food Solution Done\r\n============================================");
 
 
             return result;

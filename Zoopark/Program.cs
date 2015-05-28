@@ -8,7 +8,7 @@ namespace DbBest.ZooPark
 {
     class Program
     {
-        protected static bool debug = true;
+        protected static bool debug = false;
 
         static void Main(string[] args)
         {            
@@ -26,7 +26,7 @@ namespace DbBest.ZooPark
 
             //======= tests
             //inputArgument = "foodtest";
-            inputArgument = "ceiltest";
+            //inputArgument = "ceiltest";
 
             RunTask(inputArgument);
 
@@ -397,7 +397,7 @@ tests:
         /// <param name="AnimalsRulesList"></param>
         /// <param name="foodTypesAmounts"></param>
         /// <param name="logFile"></param>
-        public static void TestCreateFoodTest(bool expectedResult, int[] Animals, ZooAnimalsRules[] AnimalsRulesList, int[] foodTypesAmounts, string logFile = "test.txt" 
+        public static void TestCreateFoodTest(bool expectedResult, int[] Animals, ZooAnimalsRules[] AnimalsRulesList, int[] foodTypesAmounts, string logFile = "test_food.txt" 
         )
         {
             Zoo ZooInstance = null;
@@ -414,8 +414,8 @@ tests:
             }
 
             //=== 1 animal, eat 2 type of food, at storage is 2 item of his food - result : true
-            Console.WriteLine("\r\nTEST Food ##############");
             ZooInstance = new Zoo(animals, animalsTypes, ceils, foodPackage, foodTypes, logFile);
+            ZooInstance.DisplayMessage("TEST Food\r\n#############################");
 
             ZooInstance.TestSetAnimals(Animals);  // tune test case
             ZooInstance.TestSetAnimalsFoodType(AnimalsRulesList);
@@ -423,7 +423,7 @@ tests:
 
             ZooInstance.DisplayZooDebugInfo();
             bool taskResult = ZooInstance.FindFoodSolution_Permutation();
-            ZooInstance.ShutDownWork();
+            
 
             bool testSuccess = (taskResult == expectedResult);
 
@@ -433,7 +433,9 @@ tests:
             }
 
             string message = testSuccess  ? "SUCCESS" : "FAILED";
-            Console.WriteLine("\r\nTest " + message + " #############################\r\n\r\n");
+            ZooInstance.DisplayMessage("Test " + message + "\r\n#############################\r\n\r\n");
+
+            ZooInstance.ShutDownWork();
 
             return;
         }
@@ -482,7 +484,7 @@ tests:
             int foodTypes = rnd.Next(1, 10);
 
             // generate zoo and run it
-            Zoo ZooInstance = new Zoo(animals: animals, ceils: ceils, foodPackage: foodPackage, animalsTypes: animalsTypes, foodTypes: foodTypes, logFile: "test.txt");
+            Zoo ZooInstance = new Zoo(animals: animals, ceils: ceils, foodPackage: foodPackage, animalsTypes: animalsTypes, foodTypes: foodTypes, logFile: "test.txt", keepOldLog: false);
 
             ZooInstance.DisplayZooDebugInfo();
 
