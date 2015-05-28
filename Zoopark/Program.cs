@@ -252,7 +252,7 @@ tests:
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 0, 2 });
 
-            TestCreateFoodTest(expectedResult: false, Animals: new int[] { 1 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 1, 2 });
 

@@ -1014,7 +1014,7 @@ namespace DbBest.ZooPark
                 }
 
                 FoodBucket Bucket = LeftBucketList[i];  // select bucket
-                TotalAmountToPlace = Bucket.BucketsAmount * 2;   // amount of food that we must place
+                TotalAmountToPlace = Bucket.BucketsAmount * FoodAmountForOneAnimal;   // amount of food that we must place
 
                 Type_1 = Bucket.TypeFood_1;
                 Type_2 = Bucket.TypeFood_2;
@@ -1031,7 +1031,7 @@ namespace DbBest.ZooPark
                 Bucket.IsTaked = true;
                 CurrentBucketList.Add(Bucket);
 
-                MinMax = FoodWorkStorage[Type_1] < Bucket.BucketsAmount ? FoodWorkStorage[Type_1] : Bucket.BucketsAmount;  // we cant take more than exists at storage, so this is maximal amount of food type 1 that we can take
+                MinMax = FoodWorkStorage[Type_1] < TotalAmountToPlace ? FoodWorkStorage[Type_1] : TotalAmountToPlace;  // we cant take more than exists at storage, so this is maximal amount of food type 1 that we can take; if have many at storage - maximum is what can fit at bucket
 
                 // fill bucket by different amount of food
                 for (Amount_1_ToPlace = 0; Amount_1_ToPlace <= MinMax; Amount_1_ToPlace++)
@@ -1040,7 +1040,7 @@ namespace DbBest.ZooPark
                     if (Amount_2_ToPlace > FoodWorkStorage[Type_2])
                     {
                         FailCount++;
-                        break;  // dont have more food of type 2  at storage
+                        continue;  // dont have more food of type 2  at storage; try next combination of: food type 1 : food type 2
                     }
 
                     // change bucket state
