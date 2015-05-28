@@ -887,6 +887,8 @@ namespace DbBest.ZooPark
         /// <returns></returns>
         public bool FindFoodSolution_Permutation()
         {
+            bool result = false;
+
             FoodWorkStorage = new Dictionary<int, int>(FoodStorage);    // work copy of foodstorage
             FoodBuckets = new List<FoodBucket>();
 
@@ -938,12 +940,14 @@ namespace DbBest.ZooPark
 
             MakeFoodPermutation(CurrentStep, ref CurrentBucketList, ref LeftBucketList, ref FoodWorkStorage);
 
+            result = (SuccessCount > 0);
+
             DisplayMessage("\r\nSearch Food Solution Done =========================");
             DisplayMessage("Result: Success: " + SuccessCount + ";     Failed: " + FailCount);
             DisplayMessage("If logging enabled - success results placed at log file ");
 
 
-            return true;
+            return result;
         }
 
 

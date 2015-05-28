@@ -280,7 +280,7 @@ tests:
         /// <param name="AnimalsRulesList"></param>
         /// <param name="foodTypesAmounts"></param>
         /// <param name="logFile"></param>
-        public static void TestCreateFoodTest(bool result, int[] Animals, ZooAnimalsRules[] AnimalsRulesList, int[] foodTypesAmounts, string logFile = "test.txt" 
+        public static void TestCreateFoodTest(bool expectedResult, int[] Animals, ZooAnimalsRules[] AnimalsRulesList, int[] foodTypesAmounts, string logFile = "test.txt" 
         )
         {
             Zoo ZooInstance = null;
@@ -304,9 +304,11 @@ tests:
             ZooInstance.TestSetAnimalsFoodType(AnimalsRulesList);
             ZooInstance.TestSetFoodStorage(foodTypesAmounts );
 
-            ZooInstance.FindFoodSolution_Permutation();
+            bool taskResult = ZooInstance.FindFoodSolution_Permutation();
             ZooInstance.ShutDownWork();
-            Console.WriteLine("\r\nTest Done #############################\r\n\r\n");
+
+            string message = (taskResult == expectedResult) ? "SUCCESS" : "FAILED";
+            Console.WriteLine("\r\nTest " + message + " #############################\r\n\r\n");
 
             return;
         }
