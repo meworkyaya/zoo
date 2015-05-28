@@ -8,6 +8,8 @@ namespace DbBest.ZooPark
 {
     class Program
     {
+        protected static bool debug = true;
+
         static void Main(string[] args)
         {            
             string inputArgument = ""; // help
@@ -264,31 +266,31 @@ tests:
                     new ZooAnimalsRules( type: 2, canEatFood_1: 1, canEatFood_2: 3)
             };
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 2, 0, 2 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 1, 1, 2 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 0, 2, 2 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 1, 3, 0 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 1, 2, 1 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 2, 2, 0 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 2, 1, 0, 1 });
 
@@ -335,7 +337,14 @@ tests:
             bool taskResult = ZooInstance.FindFoodSolution_Permutation();
             ZooInstance.ShutDownWork();
 
-            string message = (taskResult == expectedResult) ? "SUCCESS" : "FAILED";
+            bool testSuccess = (taskResult == expectedResult);
+
+            if ( debug && !testSuccess)
+            {
+                throw new Exception("Test Failed");
+            }
+
+            string message = testSuccess  ? "SUCCESS" : "FAILED";
             Console.WriteLine("\r\nTest " + message + " #############################\r\n\r\n");
 
             return;

@@ -1084,6 +1084,8 @@ namespace DbBest.ZooPark
             int FoodType = 0;
             int index = 0;
 
+            FoodBucket newBucket;
+
             foreach (var item in Animals)
             {
                 
@@ -1114,7 +1116,9 @@ namespace DbBest.ZooPark
                     else
                     {   
                         // dont finded bucket - create it
-                        FoodBuckets.Add(new FoodBucket(AnimalsRules[item.Type].CanEatFood_1, AnimalsRules[item.Type].CanEatFood_2));
+                        newBucket = new FoodBucket(AnimalsRules[item.Type].CanEatFood_1, AnimalsRules[item.Type].CanEatFood_2);
+                        newBucket.BucketsAmount = 1;
+                        FoodBuckets.Add(newBucket);
                     }
                 }
             }
