@@ -1086,14 +1086,23 @@ namespace DbBest.ZooPark
 
             foreach (var item in Animals)
             {
+                
+                if (AnimalsRules[item.Type].CanEatFood_1 == 0 && AnimalsRules[item.Type].CanEatFood_2 == 0)
+                {
+                    // skip this type of animals - they dont eat at all )
+
+                }
                 // at first check animals that eat only one type of food: deduct all food for animals that eat only one type of food
-                if (AnimalsRules[item.Type].CanEatFood_2 == 0)
+                else if (AnimalsRules[item.Type].CanEatFood_2 == 0)
                 {
                     FoodType = AnimalsRules[item.Type].CanEatFood_1;
                     WorkFoodStorage[FoodType] -= FoodAmountForOneAnimal;
                 }
-                else
+                else if (AnimalsRules[item.Type].CanEatFood_1 == 0)
                 {
+                    FoodType = AnimalsRules[item.Type].CanEatFood_2;
+                    WorkFoodStorage[FoodType] -= FoodAmountForOneAnimal;
+                } else {
                     // animals that eat 2 types of food - add at food buckets; each bucket contais pairs: { type_1, type_2 } for each type of food
 
                     // try find bucket - if cant - create it; if can find - increase it amount
