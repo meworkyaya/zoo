@@ -22,10 +22,10 @@ namespace DbBest.ZooPark
             //======= run 
             //inputArgument = "food";
             //inputArgument = "ceil";
-            //inputArgument = "random";
+            inputArgument = "random";
 
             //======= tests
-            inputArgument = "foodtest";
+            //inputArgument = "foodtest";
             //inputArgument = "ceiltest";
 
             RunTask(inputArgument);
@@ -456,7 +456,6 @@ tests:
         {
             Zoo ZooInstance = new Zoo(animals: 10, ceils: 15, foodPackage: 40, animalsTypes: 3, foodTypes: 4, logFile: "test.txt");
             ZooInstance.DisplayZooDebugInfo();
-            // ZooInstance.FindFoodSolution();
             ZooInstance.FindFoodSolution_Permutation();
             ZooInstance.ShutDownWork();
         }
@@ -470,7 +469,7 @@ tests:
             int animalLimit = 11;
             // ====== generate random zoo 
             Random rnd = new Random();
-            int animals = rnd.Next(1, animalLimit);
+            int animals = rnd.Next(2, animalLimit);
             int ceils = animals + rnd.Next(1, 6); // more than animal
             int animalsTypes = animals - rnd.Next(1, animals - 1); // 1 <  animalsTypes <  animals
 
