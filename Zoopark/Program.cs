@@ -335,6 +335,33 @@ tests:
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 2, 1, 0, 1 });
 
+
+
+            // 3 animals
+            Animals_FoodTypes = new ZooAnimalsRules[] {
+                    new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2),
+                    new ZooAnimalsRules( type: 2, canEatFood_1: 1, canEatFood_2: 3),
+                    new ZooAnimalsRules( type: 3, canEatFood_1: 2, canEatFood_2: 3)
+            };
+
+            TestCreateFoodTest(expectedResult: false, Animals: new int[] { 1, 2, 3 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 6, 0, 0 });
+
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2, 3 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 4, 2, 0 });
+
+            TestCreateFoodTest(expectedResult: false, Animals: new int[] { 1, 2, 3 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 2, 2, 1, 1 });
+
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2, 3 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 2, 2, 2 });
+
+
+
         }
 
 
