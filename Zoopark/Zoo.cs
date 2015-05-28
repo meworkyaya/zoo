@@ -173,6 +173,9 @@ namespace DbBest.ZooPark
             int FoodTypeAmount = 0;
             int Left = count;
 
+            // add food storage for food type 0 - this type set to animal when  animal dont eat second type of food
+            FoodStorage[0] = 0;
+
             // !! attention: at cycle we dont step to last step; last setp we set after end of cycle becasue we cant set random value at last step
             for (int i = 1; i < typesAmount; i++)
             {
@@ -785,9 +788,9 @@ namespace DbBest.ZooPark
         /// <param name="foodType_2"></param>
         public void TestSetAnimalsFoodType(ZooAnimalsRules[] AnimalsRulesList )
         {
-            for (int i = 0; i < AnimalsRulesList.Count(); i++)
+            foreach (var item in AnimalsRulesList)
             {
-                AnimalsRules[i] = AnimalsRulesList[i];
+                AnimalsRules[item.Type] = item;
             }
             return;
         }
@@ -799,17 +802,22 @@ namespace DbBest.ZooPark
         /// <param name="foodAmounts"></param>
         public void TestSetFoodStorage(int[] foodAmounts)
         {
-            FoodStorage.Clear();
+            // set all food amount to 0; 
+            foreach ( int key in FoodStorage.Keys.ToList())
+            {
+                FoodStorage[key] = 0;
+            }
 
             int count = 0;
             for (int i = 1; i <= foodAmounts.Count(); i++)
             {
-                count += foodAmounts[i];
+                count += foodAmounts[i - 1];
                 FoodStorage[i] = foodAmounts[i - 1];
             }
 
             // debug check integrity: must have at total count packages
-            DebugInitFoodAssert(count, FoodStorage.Count() );
+            int foodTypesAmount = FoodStorage.Count() - 1;
+            DebugInitFoodAssert(count, foodTypesAmount );
 
             return;
         }
