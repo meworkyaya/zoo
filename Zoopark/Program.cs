@@ -259,41 +259,81 @@ tests:
 
 
 
+            // 2 animals
+            TestCreateFoodTest(expectedResult: false, Animals: new int[] { 1, 1 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 0, 0 });
 
-            // 2 animal, each eat 2 type of foods, 3 types of food, different combinations at storage   
+            TestCreateFoodTest(expectedResult: false, Animals: new int[] { 1, 1 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 0, 1 });
+
+            TestCreateFoodTest(expectedResult: false, Animals: new int[] { 1, 1 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 0, 2 });
+
+            TestCreateFoodTest(expectedResult: false, Animals: new int[] { 1, 1 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 1, 2 });
+
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 1, 3 });
+
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 2, 2 });
+
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 2, 2 });
+
+            TestCreateFoodTest(expectedResult: false, Animals: new int[] { 1, 1 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 0, 3 });
+
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 0, 4 });
+
+
+            // 2 animals, each eat 2 type of foods, 3 types of food, different combinations at storage   
             Animals_FoodTypes = new ZooAnimalsRules[] {
                     new ZooAnimalsRules( type: 1, canEatFood_1: 1, canEatFood_2: 2),
                     new ZooAnimalsRules( type: 2, canEatFood_1: 1, canEatFood_2: 3)
             };
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 2, 0, 2 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 1, 1, 2 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 0, 2, 2 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+            TestCreateFoodTest(expectedResult: false, Animals: new int[] { 1, 2 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 1, 3, 0 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 1, 2, 1 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 2, 2, 0 });
 
-            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 1 },
+            TestCreateFoodTest(expectedResult: true, Animals: new int[] { 1, 2 },
+                AnimalsRulesList: Animals_FoodTypes,
+                foodTypesAmounts: new int[] { 2, 1, 1 });
+
+            TestCreateFoodTest(expectedResult: false, Animals: new int[] { 1, 2 },
                 AnimalsRulesList: Animals_FoodTypes,
                 foodTypesAmounts: new int[] { 2, 1, 0, 1 });
-
 
         }
 
@@ -301,7 +341,7 @@ tests:
         /// <summary>
         /// create test for food task
         /// </summary>
-        /// <param name="animals"></param>
+        /// <param name="animals">array of animals: array item: animal type</param>
         /// <param name="animalsTypes"></param>
         /// <param name="ceils"></param>
         /// <param name="foodPackage"></param>
