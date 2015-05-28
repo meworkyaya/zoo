@@ -467,9 +467,10 @@ tests:
         static void RunRandomZoo()
         {
             int animalLimit = 11;
+            int animalMinCount = 2;
             // ====== generate random zoo 
             Random rnd = new Random();
-            int animals = rnd.Next(2, animalLimit);
+            int animals = rnd.Next(animalMinCount, animalLimit);
             int ceils = animals + rnd.Next(1, 6); // more than animal
             int animalsTypes = animals - rnd.Next(1, animals - 1); // 1 <  animalsTypes <  animals
 
@@ -481,6 +482,8 @@ tests:
             ZooInstance.DisplayZooDebugInfo();
 
             ZooInstance.FindCeilSolution();
+            ZooInstance.FindFoodSolution_Permutation();
+
             ZooInstance.ShutDownWork();
         }
 
