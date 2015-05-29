@@ -47,6 +47,7 @@ namespace DbBest.ZooPark
 
 
         // results - not used now
+        protected StringBuilder FoodResults_1;             // results for food - part 1 - for animals that eat only 1 type of food;
         // public List<List<uint>> CeilsResults;           // results for ceils: array of array of <id of ceil => animal id>
         // public List<List<Animal>> FoodResults;          // results for foods: array of array of <id of animal : animal with food settings>
 
@@ -91,6 +92,7 @@ namespace DbBest.ZooPark
             FoodStorage = new Dictionary<int, int>();
             AnimalsRules = new Dictionary<int, ZooAnimalsRules>();
 
+            FoodResults_1 = new StringBuilder();
             // CeilsResults = new List<List<uint>>();
             // FoodResults = new List<List<Animal>>();
 
@@ -124,6 +126,7 @@ namespace DbBest.ZooPark
             FoodStorage.Clear();
             AnimalsRules.Clear();
 
+            FoodResults_1.Clear();
             // CeilsResults.Clear();
             // FoodResults.Clear();
 
@@ -947,6 +950,9 @@ namespace DbBest.ZooPark
                 return false;
             }
 
+            // add feed 1 animals result 
+            FoodPrepareResult_1(FoodStorage, FoodWorkStorage);
+
             // minimal cheсks passed - try feed 2-mode animals
 
             AttemptCount = 0;
@@ -968,6 +974,50 @@ namespace DbBest.ZooPark
 
 
             return result;
+        }
+
+
+
+        /// <summary>
+        /// prepare display food result for animals that eat only 1 food
+        /// we have too samples of storage - one - source, second copy of it with deducted food
+        /// just find differences between them, and save diff as used food
+        /// </summary>
+        public void FoodPrepareResult_1( Dictionary<int, int> FoodStorage, Dictionary<int, int> FoodWorkStorage)
+        {
+            int delta = 0;
+            string descr;
+            foreach( var item in FoodStorage ){
+                delta = item.Value - FoodWorkStorage[item.Key];
+                if ( delta > 0) {
+                    descr = string.Format("{0} => {1}, ", item.Key, delta);
+                    FoodResults_1.Append( descr );
+                }
+            }
+            return;
+        }
+
+
+        public void FoodDisplayResult(List<FoodBucket> buckets)
+        {
+            string res = "Food Success: ";
+            if (FoodResults_1.Length > 0)
+            {
+                res += "Animals that eat 1 food (food type => amount): " + FoodResults_1.ToString() + "\r\n";
+            }
+
+            if (buckets.Count() > 0)
+            {
+                res += "animals that eat 2 foods: buckets: (type => amount): ";
+                foreach (var item in buckets)
+                {
+                    res += string.Format("({0} => {1}, {2} => {3}), ", item.TypeFood_1, item.AmountFood_1, item.TypeFood_2, item.AmountFood_2);
+                }
+            }
+
+            res += "\r\n";
+
+            DisplayMessage(res);
         }
 
 
@@ -996,8 +1046,8 @@ namespace DbBest.ZooPark
             if (CurrentStep == 0)   // we filled all buckets - so have success result, return back from stack of calls
             {
                 SuccessCount++;
-                DisplayMessage("Success");  // display success result to console
-                // LogMessage(Zoo.DisplayListInt(ref CurrentItems));           // log success result
+                // DisplayMessage("Success");  // display success result to console
+                FoodDisplayResult(CurrentBucketList);
                 return; // stop recursion
             }
 
@@ -1063,7 +1113,7 @@ namespace DbBest.ZooPark
                     FoodWorkStorage[Type_1] -= Amount_1_ToPlace;
                     FoodWorkStorage[Type_2] -= Amount_2_ToPlace;
 
-                    DisplayMessage(GetFoodWorkDisplay());
+                    // DisplayMessage(GetFoodWorkDisplay());
 
                     MakeFoodPermutation(CurrentStep - 1, ref CurrentBucketList, ref LeftBucketList, ref FoodWorkStorage);
 
